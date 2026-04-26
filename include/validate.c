@@ -1,6 +1,8 @@
 #include "validate.h"
+
 #include <stdio.h>
 #include "structure.h"
+#include <string.h>
 
 static int is_alpha(char x){
     //check variable x is character ?
