@@ -20,4 +20,8 @@ typedef struct Violation{
     double fine;
 }Violation;
 
+Member Init_Member();
+Account Init_Account();
+Violation Init_Violation();
+
 #endif
