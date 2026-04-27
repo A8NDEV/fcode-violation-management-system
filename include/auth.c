@@ -15,7 +15,7 @@ void menu(account *accountList,int *quantity,int *isLogin,account *session) {
                 }
                 else {
                     // thêm mở setting khi đã login r
-                    setting(((*(session)).role),&currentState);
+                    //setting(((*(session)).role),&currentState);
                     currentState = exitState; // thíu 1 state mở menu khi phát hiện đã logout rồi
                 }   
                 break;
@@ -171,7 +171,7 @@ void changePassword(account *accountList,int role, int *quantity) {
             strcpy(passwordChange,(*(accountList)).password);
             printf("Đã đổi mật khẩu thành công!\n");
             // ghi mat khau vo file
-            FILE *file = fopen("accounts.dat", "rb+"); // rb+ cho phép vừa đọc vừa ghi đè mà k xóa nd cũ của file dat
+            FILE *file = fopen("data/accounts.dat", "rb+"); // rb+ cho phép vừa đọc vừa ghi đè mà k xóa nd cũ của file dat
             if (file == NULL) {
             printf("Có lỗi xảy ra khi đổi mật khẩu.\n");
             exit(0);
@@ -214,7 +214,7 @@ void changePassword(account *accountList,int role, int *quantity) {
                 printf("Đang thực hiện đổi\n");
                 strcpy(accountList[i].password, passwordChange);
                 printf("Đã thực hiện đổi thành công!\n");
-                FILE *file = fopen("accounts.dat", "rb+");
+                FILE *file = fopen("data/accounts.dat", "rb+");
                 if (file != NULL) {
                     account tempAcc;
                     while (fread(&tempAcc, sizeof(account), 1, file) == 1) {
