@@ -43,7 +43,7 @@ void start(account *accountList,int *quantity) {
     printf("-----------------------------\n");
     printf("ADMIN LOG!\n");
     printf("ĐANG KHỞI ĐỘNG CHƯƠNG TRÌNH\n");
-    FILE *file = fopen("accounts.dat","rb+"); 
+    FILE *file = fopen("data/accounts.dat", "rb+"); 
     if (file == NULL) {
         printf("Lỗi ! Không tìm thấy file accounts.dat!\n");
         exit(1);
