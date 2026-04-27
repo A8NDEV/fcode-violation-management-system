@@ -1,4 +1,4 @@
-#include "structure.h"
+#include "types.h"
 #include <string.h>
 #include <time.h>
 

@@ -1,6 +1,6 @@
 #include "member.h"
 
-#include "structure.h"
+#include "types.h"
 #include "utils.h"
 #include "validate.h"
 #include <stdio.h>

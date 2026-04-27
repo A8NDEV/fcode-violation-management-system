@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "structure.h"
+#include "types.h"
 
 void Stdin_string(char str[],int siz){
     fgets(str,siz,stdin);

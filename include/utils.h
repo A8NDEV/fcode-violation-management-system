@@ -1,7 +1,7 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include <structure.h>
+#include "types.h"
 
 void clear_buffer(void);
 void Stdin_string(char str[],int siz);

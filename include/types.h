@@ -1,5 +1,5 @@
-#ifndef STRUCTRE_H
-#define STRUCTRE_H
+#ifndef TYPES_H
+#define TYPES_H
 
 #include <time.h>
 #define LONG_SIZE 50
