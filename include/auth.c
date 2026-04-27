@@ -47,7 +47,9 @@ void menu(account *accountList,int *quantity,int *isLogin,account *session) {
                     login(accountList,quantity,isLogin,&currentState,session);
                 }
                 else {
-                    currentState = exitState;
+                    // thêm mở setting khi đã login r
+                    setting(((*(session)).role),&currentState);
+                    currentState = exitState; // thíu 1 state mở menu khi phát hiện đã logout rồi
                 }   
                 break;
             case logoutState:
@@ -60,6 +62,7 @@ void menu(account *accountList,int *quantity,int *isLogin,account *session) {
                 break;
             case changePasswordState:
                 changePassword(accountList, ((*(session)).role), quantity);
+                currentState = loginState; // thêm cái này vô 
                 break;
             case exitState:
                 break;
