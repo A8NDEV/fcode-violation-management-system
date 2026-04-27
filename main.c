@@ -1,4 +1,4 @@
-#include "auth.h"
+#include "include/auth.h"
 
 int main() {
 //--------------------------------------------------------
@@ -11,3 +11,5 @@ int main() {
 //--------------------------------------------------------
     return 0;
 }
+//gcc main.c include/auth.c -o fcode_program
+//./fcode_program
