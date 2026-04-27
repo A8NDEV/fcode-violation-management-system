@@ -15,8 +15,7 @@ void menu(account *accountList,int *quantity,int *isLogin,account *session) {
                 }
                 else {
                     // thêm mở setting khi đã login r
-                    //setting(((*(session)).role),&currentState);
-                    currentState = exitState; // thíu 1 state mở menu khi phát hiện đã logout rồi
+                    setting(((*(session)).role),&currentState);
                 }   
                 break;
             case logoutState:
@@ -112,6 +111,7 @@ void login(account *accountList,int *quantity,int *isLogin, Menu *currentState, 
         }
     } 
 }
+// truyền thêm islogin cho
 void setting(int role, Menu *currentState) {
     if (role == 0) {
         int choice;
@@ -151,6 +151,7 @@ void setting(int role, Menu *currentState) {
         }
         else if (choice == 3) {
             *currentState = logoutState;
+
         }
     }
 }
