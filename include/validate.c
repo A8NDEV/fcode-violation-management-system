@@ -21,11 +21,17 @@ int Validate_studentId(char studentId[]){
     /* DK để studentId thỏa mãn là:
         + n == 8
         + 2 kí tự đầu phải là chữ
+        + kí tự chữ đầu phải là chữ cái đầu của các campus
         + dãy sau 2 kí tự đầu phải là số
     */
     int n = strlen(studentId);
     if(n != 8)  return 0;
-    if(is_alpha(studentId[0]) == 0 || is_alpha(studentId[1]) == 0)  return 0;//*********** */
+
+    char campus[5] = {'H','S','D','C','Q'};
+    int is_campus = 0;
+    for(int i = 0;i < 5;++i)    is_campus = (is_campus || (studentId[0] == campus[i]));
+
+    if(is_campus == 0 || is_alpha(studentId[1]) == 0)  return 0;
     for(int i = 2;i < n;++i)    if(is_number(studentId[i]) == 0)    return 0;
     return 1;
 }
