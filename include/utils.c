@@ -5,10 +5,19 @@
 #include <stdlib.h>
 #include <string.h>
 #include "types.h"
+#include "validate.h"
 
 void Stdin_string(char str[],int siz){
-    fgets(str,siz,stdin);
-    str[strcspn(str,"\n")] = '\0';
+    if(fgets(str,siz,stdin) == NULL){
+        str[0] = '\0';
+        return;
+    }
+    size_t len = strcspn(str, "\n");
+    if(str[len] == '\n')    str[len] = '\0';//inputuser is not greater than SHORT_SIZE 
+    else{
+        // don't have '\n' => inputuser is greater than SHORT_SIZE
+        clear_buffer();//clear
+    }
 }
 void clear_buffer(void){
     int c;
@@ -30,7 +39,6 @@ void Announcement_uaivailable_member(){
     Sleep(3000);
     system("cls");
 }
-
 
 int Find_studentId(int member_size,Member member_list[],char studentId[]){
     //WARNNING
