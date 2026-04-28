@@ -6,6 +6,9 @@
 void clear_buffer(void);
 void Stdin_string(char str[],int siz);
 
+//Input function group
+void Input_studentId(char varriable[]);
+
 //Announment function  group
 void Announcement_unaivailable_option();
 void Announcement_wrong_format();

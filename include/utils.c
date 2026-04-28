@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include "types.h"
 #include "validate.h"
 
@@ -38,6 +39,18 @@ void Announcement_uaivailable_member(){
     printf("Member khong ton tai.");
     Sleep(3000);
     system("cls");
+}
+
+void Input_studentId(char varriable[]){
+    bool ok = false;
+    bool wrong = false;
+    while(ok == false){
+        if(wrong == false)   printf("Enter your Student ID: ");
+        else    printf("Wrong stucture, Please enter your Student ID again: ");
+        Stdin_string(varriable,SHORT_SIZE);
+        ok = (ok || Validate_studentId(varriable));
+        wrong |= 1;
+    }
 }
 
 int Find_studentId(int member_size,Member member_list[],char studentId[]){
