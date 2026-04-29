@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <windows.h>
 
 static void create_member(int member_size,Member member_list[],Member new_member){
     //add to member_list array
@@ -39,33 +40,29 @@ static void create_account(int member_size,Account account_list[],Account new_ac
 }
 static void Menu_create(int *member_size,Member member_list[],Account account_list[]){
     Member new_member = Init_Member();
-    printf("Fullname: ");
-    Stdin_string(new_member.fullName,LONG_SIZE);
-    printf("Email: ");
-    Stdin_string(new_member.email,LONG_SIZE);
-    printf("Phone: ");
-    Stdin_string(new_member.phone,SHORT_SIZE);
-    printf("studentId: ");
-    Stdin_string(new_member.studentId,SHORT_SIZE);
-    printf("team: ");
-    scanf("%d",&new_member.team);
-    printf("role: ");
-    scanf("%d",&new_member.role);
-
-    Account new_account = Init_Account();
-    strcpy(new_account.studentId,new_member.studentId);
-    printf("Account password: ");
-    Stdin_string(new_account.password,LONG_SIZE);
-    new_account.role = new_member.role;
-    /*NEED TO VALIDATE FORM BY utils.h library*/
+    Input_fullname(new_member.fullName);
+    Input_email(new_member.email);
+    Input_phone(new_member.phone);
+    Input_studentId(new_member.studentId);
     if(Find_studentId(*member_size,member_list,new_member.studentId) != -1){
-        printf("Da co member voi MSSV la %s\n.Tao tai khoan that bai\n",new_member.studentId);
+        printf("Da co member voi MSSV la %s.\nTao tai khoan that bai\n",new_member.studentId);
+        Sleep(3000);
         system("cls");
         return;
     }
+    Input_team(&new_member.team);
+    Input_role(&new_member.role);
+
+    Account new_account = Init_Account();
+    strcpy(new_account.studentId,new_member.studentId);
+    Input_password(new_account.password);
+    new_account.role = new_member.role;
+    
     create_account(*member_size,account_list,new_account);
     create_member(*member_size,member_list,new_member);
     ++(*member_size);
+    printf("Create new member complete!");
+    Sleep(3000);
 }
 
 static void remove_member_account(int *member_size,Member member_list[],Account account_list[],int idx){
@@ -88,10 +85,7 @@ static void Menu_remove(int *member_size,Member member_list[],Account account_li
     int tmp = 0,idx = -1; 
     while(tmp == 0 || idx == -1){
         printf("======================================\n");
-        printf("Vui long nhap MSSV cua member can xoa : ");
-        Stdin_string(studentId,SHORT_SIZE);
-        tmp = Validate_studentId(studentId);
-        printf("%d %d",tmp,idx);
+        Input_studentId(studentId);
         if(tmp != 0)    idx = Find_studentId(*member_size,member_list,studentId);
         if(tmp == 0) Announcement_wrong_format();
         else if(idx == -1)   Announcement_uaivailable_member();
