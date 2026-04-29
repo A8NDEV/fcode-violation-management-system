@@ -46,9 +46,20 @@ void Input_fullname(char fullname[]){
     bool wrong = false;
     while(!ok){
         if(wrong == false)  printf("Enter Full-name: ");
-        else    printf("Invalid input, Please enter Full-name again: ");
+        else    printf("Invalid input, try again: ");
         Stdin_string(fullname,LONG_SIZE);
         ok = (ok || Validate_fullname(fullname));
+        wrong |= 1;
+    }
+}
+void Input_email(char email[]){
+    bool ok = false;
+    bool wrong = false;
+    while(!ok){
+        if(wrong == false)   printf("Enter email: ");
+        else    printf("Invalid input, try again: ");
+        Stdin_string(email,LONG_SIZE);
+        ok = (ok || Validate_email(email));
         wrong |= 1;
     }
 }

@@ -8,6 +8,7 @@ void Stdin_string(char str[],int siz);
 
 //Input function group
 void Input_fullname(char fullname[]);
+void Input_email(char email[]);
 void Input_studentId(char varriable[]);
 void Input_phone(char phone_num[]);
 void Input_team(int *input);
