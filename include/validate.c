@@ -28,6 +28,13 @@ static bool is_lowercase(char x){
     if((int)x > 122)    return false;
     return true;
 }
+static bool is_special_character(char x){
+    char special_list[] = "!@#$%^&*()_-+=|:;'<>,.?~`";
+    for(int i = 0;special_list[i] != '\0';++i)  if(special_list[i] == x){
+        return true;
+    }
+    return false;
+}
 bool Validate_fullname(char fullname[]){
     int n = strlen(fullname);
     if(n == 0) return false;
@@ -39,24 +46,6 @@ bool Validate_fullname(char fullname[]){
         if(fullname[i - 1] != ' ' && fullname[i] != ' ' &&  is_lowercase(fullname[i]) == false)    return false;
     }
     return true;
-}
-bool Validate_studentId(char studentId[]){
-    /* DK để studentId thỏa mãn là:
-        + n == 8
-        + 2 kí tự đầu phải là chữ
-        + kí tự chữ đầu phải là chữ cái đầu của các campus
-        + dãy sau 2 kí tự đầu phải là số
-    */
-    int n = strlen(studentId);
-    if(n != 8)  return 0;
-
-    char campus[5] = {'H','S','D','C','Q'};
-    int is_campus = 0;
-    for(int i = 0;i < 5;++i)    is_campus = (is_campus || (studentId[0] == campus[i]));
-
-    if(is_campus == 0 || is_alpha(studentId[1]) == 0)  return 0;
-    for(int i = 2;i < n;++i)    if(is_number(studentId[i]) == 0)    return 0;
-    return 1;
 }
 static int Validate_email_local_part(char local_part[]){
     /* DK để local_part thỏa mãn là:
@@ -135,4 +124,69 @@ bool Validate_email(char email[]){
     if(Validate_email_local_part(local_part) == 0)  return 0;
     if(Validate_email_domain(domain) == 0)  return 0;
     return 1;
+}
+bool Validate_phone(char phone[]){
+    int n = strlen(phone);
+    if(n != 10) return false;
+    if(phone[0] != '0') return false;
+    for(int i = 1;i < n;++i)    if(is_number(phone[i]) == false)    return false;
+
+    bool is_same = true;
+    for(int i = 1;i < n;++i)    if(phone[1] != phone[i]){
+        is_same = false;
+        break;
+    }
+    return (is_same == false);
+}
+bool Validate_studentId(char studentId[]){
+    /* DK để studentId thỏa mãn là:
+        + n == 8
+        + 2 kí tự đầu phải là chữ
+        + kí tự chữ đầu phải là chữ cái đầu của các campus
+        + dãy sau 2 kí tự đầu phải là số
+    */
+    int n = strlen(studentId);
+    if(n != 8)  return 0;
+
+    char campus[5] = {'H','S','D','C','Q'};
+    int is_campus = 0;
+    for(int i = 0;i < 5;++i)    is_campus = (is_campus || (studentId[0] == campus[i]));
+
+    if(is_campus == 0 || is_alpha(studentId[1]) == 0)  return 0;
+    for(int i = 2;i < n;++i)    if(is_number(studentId[i]) == 0)    return 0;
+    return 1;
+}
+bool Validate_team(int input){
+    return !(input < 0 || input > 3);
+}
+bool Validate_role(int input){
+    return !(input < 0 || input > 2);
+}
+bool Validate_violation_reason(int input){
+    return !(input < 0 || input > 3);
+}
+bool Validate_password(char pass[]){
+    /*Some condition to make a valid password:
+    - Its length is from 8 to 40 characters
+    - It contains at least 1 uppercase letter
+    - It contains at least 1 lowercase letter
+    - It contains at least 1 digit
+    - It contains at least 1 special character
+    - It does not contain spaces
+    - It is not made up of only one repeated character
+    */
+    int n = strlen(pass);
+    if(n < 8 || 40 < n) return false;
+
+    bool ok[5] = {0,0,0,0,0};
+    for(int i = 0;i < n;++i){
+        if(pass[i] == ' ')  return false;
+        ok[0] |= is_uppercase(pass[i]);
+        ok[1] |= is_lowercase(pass[i]);
+        ok[2] |= is_number(pass[i]);
+        ok[3] |= is_special_character(pass[i]);
+        ok[4] |= (pass[0] != pass[i]);
+    }
+    for(int i = 0;i < 5;++i)    if(ok[i] == false)  return false;
+    return true;
 }
