@@ -2,8 +2,10 @@
 #define VALIDATE_H
 
 #include "types.h"
+#include <stdbool.h>
 
-int Validate_studentId(char studentId[]);
-int Validate_email(char email[]);
+bool Validate_fullname(char fullname[]);
+bool Validate_studentId(char studentId[]);
+bool Validate_email(char email[]);
 
 #endif

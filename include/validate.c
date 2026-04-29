@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include "types.h"
 #include <string.h>
+#include <stdbool.h>
 
 static int is_alpha(char x){
     //check variable x is character ?
@@ -17,7 +18,29 @@ static int is_number(char x){
     if(57 < (int)x) return 0;
     return 1;
 }
-int Validate_studentId(char studentId[]){
+static bool is_uppercase(char x){
+    if((int)x < 65) return false;
+    if((int)x > 90) return false;
+    return true;
+}
+static bool is_lowercase(char x){
+    if((int)x < 97) return false;
+    if((int)x > 122)    return false;
+    return true;
+}
+bool Validate_fullname(char fullname[]){
+    int n = strlen(fullname);
+    if(n == 0) return false;
+    if(fullname[0] == ' ' || fullname[n - 1] == ' ') return false;
+    if(!is_uppercase(fullname[0])) return false;
+    
+    for(int i = 1;i < n;++i){
+        if(fullname[i - 1] == ' ' && (fullname[i] == ' ' || (is_uppercase(fullname[i])) == false))  return false;
+        if(fullname[i - 1] != ' ' && fullname[i] != ' ' &&  is_lowercase(fullname[i]) == false)    return false;
+    }
+    return true;
+}
+bool Validate_studentId(char studentId[]){
     /* DK để studentId thỏa mãn là:
         + n == 8
         + 2 kí tự đầu phải là chữ
@@ -84,7 +107,7 @@ static int Validate_email_domain(char domain[]){
     for(int i = 1; i <= last_dot_len; ++i)  if(is_alpha(last_dot[i]) == 0) return 0;
     return 1;
 }
-int Validate_email(char email[]){
+bool Validate_email(char email[]){
     int n = strlen(email);
     if(n == 0) return 0;
 
