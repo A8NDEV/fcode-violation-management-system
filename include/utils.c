@@ -41,14 +41,80 @@ void Announcement_uaivailable_member(){
     system("cls");
 }
 
-void Input_studentId(char varriable[]){
+void Input_fullname(char fullname[]){
     bool ok = false;
     bool wrong = false;
-    while(ok == false){
-        if(wrong == false)   printf("Enter your Student ID: ");
-        else    printf("Wrong stucture, Please enter your Student ID again: ");
-        Stdin_string(varriable,SHORT_SIZE);
-        ok = (ok || Validate_studentId(varriable));
+    while(!ok){
+        if(wrong == false)  printf("Enter Full-name: ");
+        else    printf("Invalid input, Please enter Full-name again: ");
+        Stdin_string(fullname,LONG_SIZE);
+        ok = (ok || Validate_fullname(fullname));
+        wrong |= 1;
+    }
+}
+void Input_studentId(char studentId[]){
+    bool ok = false;
+    bool wrong = false;
+    while(!ok){
+        if(wrong == false)   printf("Enter Student ID: ");
+        else    printf("Invalid input, try again: ");
+        Stdin_string(studentId,SHORT_SIZE);
+        ok = (ok || Validate_studentId(studentId));
+        wrong |= 1;
+    }
+}
+void Input_phone(char phone_num[]){
+    bool ok = false;
+    bool wrong = false;
+    while(!ok){
+        if(wrong == false)  printf("Enter phone number: ");
+        else    printf("Invalid input, try again: ");
+        Stdin_string(phone_num,SHORT_SIZE);
+        ok |= Validate_phone(phone_num);
+        wrong |= 1;
+    }
+}
+void Input_team(int *input){
+    bool ok = false;
+    bool wrong = false;
+    while(!ok){
+        if(wrong == false)  printf("Enter member's team: ");
+        else    printf("Invalid input, try again: ");
+        scanf("%d",input);
+        clear_buffer();
+        ok |= Validate_team(*input);
+        wrong |= 1;
+    }
+}
+void Input_role(int *input){
+    bool ok = false,wrong = false;
+    while(!ok){
+        if(wrong == false)  printf("Enter member's role: ");
+        else    printf("Invalid input, try again: ");
+        scanf("%d",input);
+        clear_buffer();
+        ok |= Validate_role(*input);
+        wrong |= 1;
+    }
+}
+void Input_violation_reason(int *input){
+    bool ok = false,wrong = false;
+    while(!ok){
+        if(wrong == false)  printf("Enter reason of violation: ");
+        else    printf("Invalid input, try again: ");
+        scanf("%d",input);
+        clear_buffer();
+        ok |= Validate_violation_reason(*input);
+        wrong |= 1;
+    }
+}
+void Input_password(char pass[]){
+    bool ok = false,wrong = false;
+    while(!ok){
+        if(wrong == false)  printf("Enter password: ");
+        else    printf("Invalid input, try again: ");
+        Stdin_string(pass,LONG_SIZE);
+        ok |= Validate_password(pass);
         wrong |= 1;
     }
 }
