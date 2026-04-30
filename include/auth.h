@@ -10,6 +10,10 @@
 #define MAX_ID_LEN 9
 #define MAX_PASS_LEN 50
 #define MAX_ACCOUNT 1000
+
+
+
+/// BẢNG MÀU
 #define CLEAR_SCREEN       "\e[1;1H\e[2J"
 #define ANSI_COLOR_CYAN    "\x1b[36m"
 #define ANSI_COLOR_YELLOW  "\x1b[33m"
