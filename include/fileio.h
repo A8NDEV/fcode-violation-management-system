@@ -10,9 +10,9 @@ int Count_members_dat();
 int Count_accounts_dat();
 int Count_violations_dat();
 
-// int Read_members_dat(Member member_list[], int max_records);
-// int Read_accounts_dat(Account account_list[], int max_records);
-// int Read_violations_dat(Violation violation_list[], int max_records);
+int Read_members_dat(const int size,Member member_list[]);
+int Read_accounts_dat(const int size,Account account_list[]);
+int Read_violations_dat(const int size,Violation violation_list[]);
 
 // bool Append_member_dat(const Member *member);
 // bool Append_account_dat(const Account *account);
