@@ -27,7 +27,7 @@ void menu(account *accountList,int *quantity,int *isLogin,account *session) {
                 currentState = loginState;
                 break;
             case changePasswordState:
-                changePassword(accountList, ((*(session)).role), quantity);
+                changePassword(accountList, ((*(session)).role), quantity,session);
                 currentState = loginState;
                 break;
             case exitState:
@@ -55,6 +55,7 @@ void start(account *accountList,int *quantity) {
         if (*quantity >= MAX_ACCOUNT) 
             break;
     }
+    fclose(file);
     printf("TÌM THẤY TỔNG CỘNG: %d TÀI KHOẢN\n",*quantity);
     printf("-----------------------------\n");
 
@@ -68,11 +69,10 @@ void login(account *accountList,int *quantity,int *isLogin, Menu *currentState, 
         printf("║             MENU ĐĂNG NHẬP             ║\n");
         printf("╚════════════════════════════════════════╝\n");
         printf(ANSI_COLOR_RESET "\n");
-        printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ MÃ SINH VIÊN: " ANSI_COLOR_RESET); 
-        scanf(" %8[^\n]", studentIdInput);
-        printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ MẬT KHẨU    : " ANSI_COLOR_RESET);  // SẼ ADD CƠ CHẾ THAY MẬT KHẨU THÀNH *
-        scanf(" %49[^\n]", studentPasswordInput);
 
+        printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ MÃ SINH VIÊN: " ANSI_COLOR_RESET); 
+        scanf(" %8[^\n]", studentIdInput); // THIẾU CẮT KHOẢNG TRẮNG ĐẦU ĐUÔI KHI INPUT    
+        
         int foundIndex = -1;
 
         for (int i = 0 ; i < *quantity; i++) {
@@ -81,7 +81,10 @@ void login(account *accountList,int *quantity,int *isLogin, Menu *currentState, 
                 break;
             }
         }
-        //printf("KHÔNG TÌM THẤY MÃ SINH VIÊN TRONG HỆ THỐNG!\n");
+        if (foundIndex == -1) {
+            printf("\n");
+            printf(ANSI_COLOR_RED "MÃ SINH VIÊN BẠN NHẬP KHÔNG HỢP LỆ\n");
+        }
 
 
         if (foundIndex != -1) {
@@ -90,6 +93,11 @@ void login(account *accountList,int *quantity,int *isLogin, Menu *currentState, 
                 *currentState = loginState;
                 return;
             }
+            
+            printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ MẬT KHẨU    : " ANSI_COLOR_RESET);  // SẼ ADD CƠ CHẾ THAY MẬT KHẨU THÀNH *
+            scanf(" %49[^\n]", studentPasswordInput); // THIẾU CẮT KHOẢNG TRẮNG ĐẦU ĐUÔI KHI INPUT
+            
+
             if (strcmp(accountList[foundIndex].password,studentPasswordInput) == 0) { // k khóa thì check password ng dùng nhập vào
                 printf("\n");
                 printf(ANSI_BRIGHT_GREEN  "ĐÃ ĐĂNG NHẬP THÀNH CÔNG!\n");
@@ -101,8 +109,7 @@ void login(account *accountList,int *quantity,int *isLogin, Menu *currentState, 
                 printf("CHECK SESSION lúc đăng nhập thành công\n");
                 printf("%s | %s | %d | %d\n",(*(session)).studentId, (*(session)).password , (*(session)).role , (*(session)).isLocked);
                 printf("\n");
-                // mở menu setting
-                setting((*(session)).role,currentState);
+                
             }
             else {
             printf("\n");
@@ -173,63 +180,62 @@ void setting(int role, Menu *currentState) {
         }
     }
 }
-void changePassword(account *accountList,int role, int *quantity) {
+void changePassword(account *accountList,int role, int *quantity,account *session) {
     int found = 0;
+    int foundIndex = 0;
     if (role == 0) {
-        char studentIdFind[MAX_ID_LEN]; char password[100];
+        char passwordChange[MAX_PASS_LEN], oldPassword[MAX_PASS_LEN];
+            printf("\n");
+            printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ MẬT KHẨU CŨ : " ANSI_COLOR_RESET); 
+            scanf(" %49[^\n]",oldPassword);
+            if (strcmp(oldPassword,session->password) == 0) {
+                printf("\n");
+                printf(ANSI_BRIGHT_GREEN "XÁC MINH MẬT KHẨU CŨ THÀNH CÔNG!\n");
+                printf("\n");
+                printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ NHẬP MẬT KHẨU CẦN ĐỔI : " ANSI_COLOR_RESET); // bị trôi lệnh
+                scanf(" %49[^\n]",passwordChange);
+                printf("\n");
+                printf(ANSI_BRIGHT_CYAN "ĐANG THỰC HIỆN ĐỔI..\n");
 
-        printf("\n");
-        printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ NHẬP MÃ SINH VIÊN CỦA BẠN: " ANSI_COLOR_RESET); 
-        char studentIDneedtochangePassword[MAX_ID_LEN];
-        scanf(" %[^\n]",studentIDneedtochangePassword);
-        char passwordChange[100];
-        for (int i = 0 ; i < *quantity ; i++) {
-            if (strcmp(accountList[i].studentId,studentIDneedtochangePassword) == 0) {
-                found = 1;
-                int foundIndex = i;
-                printf("\n");
-                printf(ANSI_BRIGHT_GREEN "ĐÃ XÁC THỰC MÃ SINH VIÊN CẦN ĐỔI!: %s\n",studentIDneedtochangePassword);
-                // thiếu 1 phase nhập lại mk cũ
-                char oldPassword[MAX_PASS_LEN];
-                printf("\n");
-                printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ MẬT KHẨU CŨ : " ANSI_COLOR_RESET); 
-                scanf(" %49[^\n]",oldPassword);
-                if (strcmp(oldPassword,accountList[foundIndex].password) == 0) {
-                    printf("\n");
-                    printf(ANSI_BRIGHT_GREEN "XÁC MINH MẬT KHẨU CŨ THÀNH CÔNG!\n");
-                    printf("\n");
-                    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ NHẬP MẬT KHẨU CẦN ĐỔI : " ANSI_COLOR_RESET); // bị trôi lệnh
-                    char passwordChange[MAX_PASS_LEN];
-                    scanf(" %49[^\n]",passwordChange);
-                    printf("\n");
-                    printf(ANSI_BRIGHT_CYAN "ĐANG THỰC HIỆN ĐỔI..\n");
-                    strcpy(accountList[i].password, passwordChange);
-                    FILE *file = fopen("data/accounts.dat", "rb+");
-                    if (file != NULL) {
-                        account tempAcc;
-                        while (fread(&tempAcc, sizeof(account), 1, file) == 1) {
-                            if (strcmp(tempAcc.studentId, studentIDneedtochangePassword) == 0) {
-                                fseek(file, -sizeof(account), SEEK_CUR);
-                                fwrite(&accountList[i], sizeof(account), 1, file);
-                                break;
-                            }
-                        }
-                        fclose(file);
+                // dùng loop tìm account session trong accountList vị trí thứ mấy sau đó 
+                // sẽ đổi mk ở accountList[vi tri tìm thấy] và ghi vào file => đồng bộ trạng thái
+                for (int i = 0; i < *quantity; i++) {
+                    if (strcmp(accountList[i].studentId, session->studentId) == 0) {
+                        foundIndex = i;
+                        break;
                     }
+                }
+                if (foundIndex != -1) {
+                    strcpy(session->password, passwordChange);
+                    strcpy(accountList[foundIndex].password, passwordChange);
+                }
+                FILE *file = fopen("data/accounts.dat", "rb+");
+                if (file != NULL) {
+                    account tempAcc;
+                    while (fread(&tempAcc, sizeof(account), 1, file) == 1) {
+                        if (strcmp(tempAcc.studentId, session->studentId) == 0) {
+                            fseek(file, -sizeof(account), SEEK_CUR);
+                            fwrite(session, sizeof(account), 1, file);
+                            break;
+                        }
+                    }
+                    fclose(file);
                     printf("\n");
                     printf(ANSI_BRIGHT_GREEN "ĐỔI MẬT KHẨU THÀNH CÔNG!\n");
                     printf("\n");
-                    break;
+                
                 }
             }
-        }
-        if (found == 0) {
-        printf("\n");
-        printf(ANSI_BRIGHT_RED "KHÔNG TÌM THẤY MÃ SINH VIÊN CẦN ĐỔI TRONG HỆ THỐNG\n");
-        printf("\n");
-        }
+                
+            else {
+                printf("\n");
+                printf(ANSI_BRIGHT_RED "BẠN ĐÃ NHẬP SAI MẬT KHẨU\n");
+                printf("\n");
+        
+        
     }
     
+}   
     
     else {
         printf("\n");
