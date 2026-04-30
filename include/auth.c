@@ -156,55 +156,61 @@ void setting(int role, Menu *currentState) {
     }
 }
 void changePassword(account *accountList,int role, int *quantity) {
+    int found = 0;
     if (role == 0) {
+        char studentIdFind[MAX_ID_LEN]; char password[100];
+
         printf("Bạn là member F-Code\n");
-        printf("Hãy nhập mã sinh viên của bạn: ");
-        char studentIdFind[MAX_ID_LEN];
-        scanf(" %8[^\n]",studentIdFind);
-        printf("Hãy nhập mật khẩu cũ: ");
-        char password[100];
-        scanf(" %49[^\n]",password);
-        if (strcmp((*(accountList)).password,password) == 0) {
-            printf("Mật khẩu bạn nhập hợp lệ\n");
-            printf("Nhập mật khẩu bạn muốn đổi: ");
-            char passwordChange[100];
-            scanf(" %99[^\n]",passwordChange);
-            strcpy(passwordChange,(*(accountList)).password);
-            printf("Đã đổi mật khẩu thành công!\n");
-            // ghi mat khau vo file
-            FILE *file = fopen("data/accounts.dat", "rb+"); // rb+ cho phép vừa đọc vừa ghi đè mà k xóa nd cũ của file dat
-            if (file == NULL) {
-            printf("Có lỗi xảy ra khi đổi mật khẩu.\n");
-            exit(0);
-            int found = 0;
-            while (fread(&accountList, sizeof(accountList),1,file) == 1) {
-                if (strcmp((*(accountList)).studentId, studentIdFind) == 0) {
-                    found = 1;
-                    // Cập nhật mật khẩu mới vào Struct trên RAM (dùng strncpy cho an toàn)
-                    strncpy((*(accountList)).password, passwordChange, sizeof((*(accountList)).password) - 1);
-                    (*(accountList)).password[sizeof((*(accountList)).password) - 1] = '\0';
-
-                    fseek(file, -sizeof(*accountList), SEEK_CUR);
-
-                    fwrite(&accountList,sizeof(*accountList),1,file);
-                    if (strcmp((*(accountList)).password,passwordChange) == 0) printf("Đã đổi mật khẩu thành công!\n");
-                    break;
-                }
-            }
-            if (found != 1) {
-                printf("Đổi mk k thành công!\n");
-                }
-            } 
-        }
-    } 
-
-    else {
-        printf("Bạn là Ban chủ nhiệm F-Code\n");
-        printf("Nhập mã sinh viên của thành viên cần đổi: ");
+        printf("Nhập mã sinh viên của sinh viên của bạn: ");
         char studentIDneedtochangePassword[MAX_ID_LEN];
         scanf(" %[^\n]",studentIDneedtochangePassword);
         char passwordChange[100];
-        int found = 0;
+        for (int i = 0 ; i < *quantity ; i++) {
+            if (strcmp(accountList[i].studentId,studentIDneedtochangePassword) == 0) {
+                found = 1;
+                int foundIndex = i;
+                printf("Đã tìm thấy mã sinh viên cần đổi: %s\n",studentIDneedtochangePassword);
+                // thiếu 1 phase nhập lại mk cũ
+                char oldPassword[MAX_PASS_LEN];
+                printf("Nhập mật khẩu cũ: "); scanf(" %49[^\n]",oldPassword);
+                if (strcmp(oldPassword,accountList[foundIndex].password) == 0) {
+                    printf("Xác minh mật khẩu cũ thành công!\n");
+                    printf("Nhập mật khẩu cần đổi cho sinh viên %s: ",studentIDneedtochangePassword); // bị trôi lệnh
+                    char passwordChange[MAX_PASS_LEN];
+                    scanf(" %49[^\n]",passwordChange);
+                    printf("Đang thực hiện đổi\n");
+                    strcpy(accountList[i].password, passwordChange);
+                    printf("Đã thực hiện đổi thành công!\n");
+                    FILE *file = fopen("data/accounts.dat", "rb+");
+                    if (file != NULL) {
+                        account tempAcc;
+                        while (fread(&tempAcc, sizeof(account), 1, file) == 1) {
+                            if (strcmp(tempAcc.studentId, studentIDneedtochangePassword) == 0) {
+                                fseek(file, -sizeof(account), SEEK_CUR);
+                                fwrite(&accountList[i], sizeof(account), 1, file);
+                                break;
+                            }
+                        }
+                        fclose(file);
+                    }
+                    
+                    printf("Đã đổi mật khẩu thành công!\n"); 
+                    break;
+                }
+            }
+        }
+        if (found == 0) {
+        printf("Không tìm thấy sinh viên %s trong hệ thống!\n", studentIDneedtochangePassword);
+        }
+    }
+    
+    
+    else {
+        printf("Bạn là Ban chủ nhiệm F-Code\n");
+        printf("Nhập mã sinh viên của sinh viên cần đổi: ");
+        char studentIDneedtochangePassword[MAX_ID_LEN];
+        scanf(" %[^\n]",studentIDneedtochangePassword);
+        char passwordChange[100];
         for (int i = 0 ; i < *quantity ; i++) {
             if (strcmp(accountList[i].studentId,studentIDneedtochangePassword) == 0) {
                 found = 1;
@@ -236,7 +242,7 @@ void changePassword(account *accountList,int role, int *quantity) {
         }
         if (found == 0) {
         printf("Không tìm thấy sinh viên %s trong hệ thống!\n", studentIDneedtochangePassword);
-}
+        }
     }
 }
 
