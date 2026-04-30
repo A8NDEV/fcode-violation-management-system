@@ -63,6 +63,6 @@ void start(account *accountList, int *quantity);
 void login(account *accountList, int *quantity, int *isLogin, Menu *currentState, account *session);
 void setting(int role, Menu *currentState);
 void menu(account *accountList, int *quantity, int *isLogin, account *session);
-void changePassword(account *accountList, int role, int *quantity);
+void changePassword(account *accountList,int role, int *quantity,account *session);
 
 #endif 
