@@ -98,3 +98,22 @@ bool Update_accounts_dat(const int index,const Account record){
 bool Update_violations_dat(const int index,const Violation record){
     return Update_dat("data/violations.dat",index,&record,sizeof(Violation));
 }
+
+static bool Rewrite_dat(const char path[],const int size,const void *record,size_t record_size){
+    if(size < 0 || (size > 0 && record == NULL))  return false;
+
+    FILE *file = fopen(path,"wb");
+    if(file == NULL)    return false;
+    size_t written = fwrite(record,record_size,(size_t)size,file);
+    fclose(file);
+    return (written == (size_t)size);
+}
+bool Rewrite_members_dat(const int member_size,Member member_list[]){
+    return Rewrite_dat("data/members.dat",member_size,member_list,sizeof(Member));
+}
+bool Rewrite_accounts_dat(const int member_size,Account account_list[]){
+    return Rewrite_dat("data/accounts.dat",member_size,account_list,sizeof(Account));
+}
+bool Rewrite_violations_dat(const int violation_size,Violation violation_list[]){ 
+    return Rewrite_dat("data/violations.dat",violation_size,violation_list,sizeof(Violation));
+}

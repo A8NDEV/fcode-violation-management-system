@@ -22,4 +22,8 @@ bool Update_members_dat(const int index,const Member record);
 bool Update_accounts_dat(const int index,const Account record);
 bool Update_violations_dat(const int index,const Violation record);
 
+bool Rewrite_members_dat(const int member_size,Member member_list[]);
+bool Rewrite_accounts_dat(const int member_size,Account account_list[]);
+bool Rewrite_violations_dat(const int violation_size,Violation violation_list[]);
+
 #endif
