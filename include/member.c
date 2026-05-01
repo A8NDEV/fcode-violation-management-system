@@ -44,20 +44,31 @@ static void Menu_create(int *member_size,Member member_list[],Account account_li
     else    Announcement_complete_action();
 }
 
-static void remove_member_account(int *member_size,Member member_list[],Account account_list[],int idx){
-    //Certain that member_list and account_list have a same order.
-    for(int i = idx + 1;i < *member_size;++i){
+static int Delete_member_account(const int index,int *member_size,Member member_list[],Account account_list[]){
+    for(int i = index + 1;i < (*member_size);++i){
         member_list[i - 1] = member_list[i];
         account_list[i - 1] = account_list[i];
     }
     --(*member_size);
-}
-static void remove_violation_index(int *violation_size,Violation violation_list[],int idx){
-    //delete a specific index in violation list
-    for(int i = idx + 1;i < *violation_size;++i){
-        violation_list[i - 1] = violation_list[i];
+    if(Rewrite_members_dat(*member_size,member_list) == 0 || Rewrite_accounts_dat(*member_size,account_list) == 0){
+        return 0;
     }
-    --(*violation_size);
+    return 1;
+}
+static int Delete_violation(const char studentId[],int *violation_size,Violation violation_list[]){
+    for(int i = 0;i < (*violation_size);++i)    if(strcmp(studentId,violation_list[i].studentId)){
+        for(int j = i + 1;j < (*violation_size);++j){
+            violation_list[i - 1] = violation_list[i];
+        }
+        --(*violation_size);
+    }
+    if(Rewrite_violations_dat(*violation_size,violation_list) == 0) return 0;
+    return 1;
+}
+int Delete_member(const int index,char studentId[],int *member_size,Member member_list[],Account account_list[],int *violation_size,Violation violation_list[]){
+    if(Delete_member_account(index,member_size,member_list,account_list) == 0)  return 0;
+    if(Delete_violation(studentId,violation_size,violation_list) == 0) return 0;
+    return 1;
 }
 static void Menu_remove(int *member_size,Member member_list[],Account account_list[],int *violation_size,Violation violation_list[]){
     char studentId[SHORT_SIZE];
@@ -65,7 +76,6 @@ static void Menu_remove(int *member_size,Member member_list[],Account account_li
     int idx = Find_studentId(*member_size,member_list,studentId);
     while(idx == -1){
         printf("ko ton tai member voi MSSV %s\n",studentId);
-        printf("Action Fail!\n");
         int user_choose = -1;
         printf("[0] | back to memnu\n");
         printf("[1] | try again\n");
@@ -77,11 +87,26 @@ static void Menu_remove(int *member_size,Member member_list[],Account account_li
         Input_studentId(studentId);
         idx = Find_studentId(*member_size,member_list,studentId);
     }
-    remove_member_account(member_size,member_list,account_list,idx);
-    for(int i = 0;i < *violation_size;++i)   if(strcmp(studentId,violation_list[i].studentId)){
-        remove_violation_index(violation_size,violation_list,i);
+    printf("WARNING: This action will delete the member, account, and related violations.\n");
+    printf("Do you want to continue?\n");
+    printf("[0] | No, cancel\n");
+    printf("[1] | Yes, delete\n");
+    int user_choose = 0;
+    Input_user_choose(&user_choose);
+    switch (user_choose){
+        case 0:
+            system("cls");
+            return;
+        case 1:
+            if(Delete_member(idx,studentId,member_size,member_list,account_list,violation_size,violation_list) == false){
+                Announcement_error_acction();
+            }
+            else    Announcement_complete_action();
+            break;
+        default:
+            Announcement_unaivailable_option();
+            break;
     }
-    Announcement_complete_action();
 }
 
 static void Menu_update(){
