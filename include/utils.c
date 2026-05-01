@@ -40,7 +40,24 @@ void Announcement_uaivailable_member(){
     Sleep(3000);
     system("cls");
 }
+void Announcement_complete_action(){
+    system("cls");
+    printf("Action completed!\n");
+    Sleep(2000);
+    system("cls");
+}
+void Announcement_error_acction(){
+    system("cls");
+    printf("Action Error!\n");
+    Sleep(2000);
+    system("cls");
+}
 
+void Input_user_choose(int *input){
+    printf("Your choose: ");
+    scanf("%d",input);
+    clear_buffer();
+}
 void Input_fullname(char fullname[]){
     bool ok = false;
     bool wrong = false;
@@ -88,6 +105,7 @@ void Input_phone(char phone_num[]){
 void Input_team(int *input){
     bool ok = false;
     bool wrong = false;
+    printf("[0] | Academic\n[1] | Planning\n[2] | HR\n[3] | Media\n");
     while(!ok){
         if(wrong == false)  printf("Enter member's team: ");
         else    printf("Invalid input, try again: ");
@@ -99,6 +117,7 @@ void Input_team(int *input){
 }
 void Input_role(int *input){
     bool ok = false,wrong = false;
+    printf("[0] | Member\n[1] | Leader/Vice\n[2] | Ban Chu Nhiem\n");
     while(!ok){
         if(wrong == false)  printf("Enter member's role: ");
         else    printf("Invalid input, try again: ");
