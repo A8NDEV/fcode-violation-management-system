@@ -112,17 +112,35 @@ void login(account *accountList,int *quantity,int *isLogin, Menu *currentState, 
                 
             }
             else {
-            printf("\n");
-            printf(ANSI_BRIGHT_RED  "MẬT KHẨU KHÔNG ĐÚNG!\n");
-            (accountList[foundIndex].failCount)++; 
-            if (accountList[foundIndex].failCount >= 3) {
-                accountList[foundIndex].isLocked = 1;
                 printf("\n");
-                printf(ANSI_BRIGHT_RED "TÀI KHOẢN ĐÃ BỊ KHÓA DO NHẬP SAI MẬT KHẨU 3 LẦN!\n");
-                printf(ANSI_BRIGHT_BLUE "ĐANG THOÁT KHỎI CHƯƠNG TRÌNH DO NHẬP SAI 3 LẦN!\n");
-                printf("\n");
-                *currentState = exitState;
-                return;
+                printf(ANSI_BRIGHT_RED  "MẬT KHẨU KHÔNG ĐÚNG!\n");
+                (accountList[foundIndex].failCount)++; 
+
+                // Persist change to file immediately
+                FILE *file_upd = fopen("data/accounts.dat", "rb+");
+                if (file_upd != NULL) {
+                    fseek(file_upd, (long)foundIndex * sizeof(account), SEEK_SET);
+                    fwrite(&accountList[foundIndex], sizeof(account), 1, file_upd);
+                    fclose(file_upd);
+                }
+
+                if (accountList[foundIndex].failCount >= 3) {
+                    accountList[foundIndex].isLocked = 1;
+
+                    // Persist lock to file
+                    FILE *file_lock = fopen("data/accounts.dat", "rb+");
+                    if (file_lock != NULL) {
+                        fseek(file_lock, (long)foundIndex * sizeof(account), SEEK_SET);
+                        fwrite(&accountList[foundIndex], sizeof(account), 1, file_lock);
+                        fclose(file_lock);
+                    }
+
+                    printf("\n");
+                    printf(ANSI_BRIGHT_RED "TÀI KHOẢN ĐÃ BỊ KHÓA DO NHẬP SAI MẬT KHẨU 3 LẦN!\n");
+                    printf(ANSI_BRIGHT_BLUE "ĐANG THOÁT KHỎI CHƯƠNG TRÌNH DO NHẬP SAI 3 LẦN!\n");
+                    printf("\n");
+                    *currentState = exitState;
+                    return;
                 }
             } 
         break;
@@ -182,7 +200,7 @@ void setting(int role, Menu *currentState) {
 }
 void changePassword(account *accountList,int role, int *quantity,account *session) {
     int found = 0;
-    int foundIndex = 0;
+    int foundIndex = -1; // <-- initialize to -1
     if (role == 0) {
         char passwordChange[MAX_PASS_LEN], oldPassword[MAX_PASS_LEN];
             printf("\n");
@@ -208,22 +226,19 @@ void changePassword(account *accountList,int role, int *quantity,account *sessio
                 if (foundIndex != -1) {
                     strcpy(session->password, passwordChange);
                     strcpy(accountList[foundIndex].password, passwordChange);
-                }
-                FILE *file = fopen("data/accounts.dat", "rb+");
-                if (file != NULL) {
-                    account tempAcc;
-                    while (fread(&tempAcc, sizeof(account), 1, file) == 1) {
-                        if (strcmp(tempAcc.studentId, session->studentId) == 0) {
-                            fseek(file, -sizeof(account), SEEK_CUR);
-                            fwrite(session, sizeof(account), 1, file);
-                            break;
-                        }
+                    // Persist by seeking directly to record offset
+                    FILE *file = fopen("data/accounts.dat", "rb+");
+                    if (file != NULL) {
+                        fseek(file, (long)foundIndex * sizeof(account), SEEK_SET);
+                        fwrite(&accountList[foundIndex], sizeof(account), 1, file);
+                        fclose(file);
                     }
-                    fclose(file);
                     printf("\n");
                     printf(ANSI_BRIGHT_GREEN "ĐỔI MẬT KHẨU THÀNH CÔNG!\n");
                     printf("\n");
-                
+                } else {
+                    // not found
+                    printf(ANSI_BRIGHT_RED "KHÔNG TÌM THẤY TÀI KHOẢN TRONG HỆ THỐNG\n");
                 }
             }
                 
