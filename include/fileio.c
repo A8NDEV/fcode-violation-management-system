@@ -51,3 +51,19 @@ int Read_accounts_dat(const int size,Account account_list[]){
 int Read_violations_dat(const int size,Violation violation_list[]){
     return Read_dat("data/violations.dat",size,violation_list,sizeof(Violation));
 }
+
+static bool Append_dat(const char path[],const void *record,int record_size){
+    FILE *file = fopen(path,"ab");
+    if(file == NULL)    return false;
+    fwrite(record,record_size,1,file);
+    fclose(file);
+}
+bool Append_members_dat(const Member *record){
+    return Append_dat("data/members.dat",record,sizeof(Member));
+}
+bool Append_accounts_dat(const Account *record){
+    return Append_dat("data/accounts.dat",record,sizeof(Account));
+}
+bool Append_violations_dat(const Violation *record){
+    return Append_dat("data/violations.dat",record,sizeof(Violation));
+}

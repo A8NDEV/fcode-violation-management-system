@@ -14,9 +14,9 @@ int Read_members_dat(const int size,Member member_list[]);
 int Read_accounts_dat(const int size,Account account_list[]);
 int Read_violations_dat(const int size,Violation violation_list[]);
 
-// bool Append_member_dat(const Member *member);
-// bool Append_account_dat(const Account *account);
-// bool Append_violation_dat(const Violation *violation);
+bool Append_members_dat(const Member *member);
+bool Append_accounts_dat(const Account *account);
+bool Append_violations_dat(const Violation *violation);
 
 // bool Update_member_dat(int idx, const Member *member);
 // bool Update_account_dat(int idx, const Account *account);
