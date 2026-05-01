@@ -11,8 +11,8 @@
 
 static int create_member(int *member_size,Member member_list[],Member new_member,Account account_list[],Account new_account){
     //add to member_list array
-    member_list[*member_size + 1] = new_member;
-    account_list[*member_size + 1] = new_account;
+    member_list[*member_size] = new_member;
+    account_list[*member_size] = new_account;
     //add new binary record at end file
     if(Append_members_dat(new_member) == 0 || Append_accounts_dat(new_account) == 0)    return 0;
     ++(*member_size);
@@ -35,7 +35,7 @@ static void Menu_create(int *member_size,Member member_list[],Account account_li
 
     Account new_account = Init_Account();
     strcpy(new_account.studentId,new_member.studentId);
-    Input_password(new_account.password);
+    strcpy(new_account.password,new_member.studentId);
     new_account.role = new_member.role;
 
     if(create_member(member_size,member_list,new_member,account_list,new_account) == 0){
@@ -56,11 +56,14 @@ static int Delete_member_account(const int index,int *member_size,Member member_
     return 1;
 }
 static int Delete_violation(const char studentId[],int *violation_size,Violation violation_list[]){
-    for(int i = 0;i < (*violation_size);++i)    if(strcmp(studentId,violation_list[i].studentId)){
-        for(int j = i + 1;j < (*violation_size);++j){
-            violation_list[i - 1] = violation_list[i];
+    for(int i = 0;i < (*violation_size);++i){
+        if(strcmp(studentId,violation_list[i].studentId) == 0){
+            for(int j = i + 1;j < (*violation_size);++j){
+                violation_list[j - 1] = violation_list[j];
+            }
+            --(*violation_size);
+            --i; // continue scanning from current index after shift
         }
-        --(*violation_size);
     }
     if(Rewrite_violations_dat(*violation_size,violation_list) == 0) return 0;
     return 1;
@@ -109,9 +112,6 @@ static void Menu_remove(int *member_size,Member member_list[],Account account_li
     }
 }
 
-static void Menu_update(){
-
-}
 void main_menu_CRUD(int *member_size,Member member_list[],Account account_list[],int *violation_size,Violation violation_list[]){
     // main menu of CRUD
     while(1){
@@ -131,7 +131,7 @@ void main_menu_CRUD(int *member_size,Member member_list[],Account account_list[]
                 Menu_create(member_size,member_list,account_list);
                 break;
             case 2:
-                Menu_update();
+                Menu_update(*member_size,member_list,account_list);
                 break;
             case 3:
                 Menu_remove(member_size,member_list,account_list,violation_size,violation_list);
