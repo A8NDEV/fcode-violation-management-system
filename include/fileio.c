@@ -6,7 +6,7 @@
 #include <stdbool.h>
 #include "types.h"
 
-static int Count_records(const char path[],int record_size){
+static int Count_records(const char path[],size_t record_size){
     //function to count records in specific binary file
     FILE *file = fopen(path,"rb");
     if(file == NULL)    return 0;
@@ -16,12 +16,11 @@ static int Count_records(const char path[],int record_size){
         return 0;
     }
 
-    int file_size = ftell(file);
-    if(file_size < 0){
-        fclose(file);
-        return 0;
-    }
+    long file_size = ftell(file);
     fclose(file);
+
+    if(file_size < 0)   return 0;
+    if((size_t)file_size % record_size != 0)    return -1;
     return (int)file_size / record_size;
 }
 int Count_members_dat(){
@@ -34,36 +33,24 @@ int Count_violations_dat(){
     return Count_records("data/violations.dat",sizeof(Violation));
 }
 
-static int Read_dat(const char path[],const int n,void *list,int record_size){
-    if(n < 0)    return 0;
+static int Read_dat(const char path[],const int n,void *list,size_t record_size){
+    if(list == NULL)    return 0;
+
     FILE *file = fopen(path,"rb");
     if(file == NULL)    return 0;
-    size_t n_read = fread(list,record_size,n,file);
+    size_t n_read = fread(list,record_size,(size_t)n,file);
     fclose(file);
     return (int)n_read;
 }
-int Read_members_dat(const int size,Member member_list[]){
-    return Read_dat("data/members.dat",size,member_list,sizeof(Member));
+bool Read_members_dat(const int size,Member member_list[]){
+    if(size < 0)    return false;
+    return (Read_dat("data/members.dat",size,member_list,sizeof(Member)) == size);
 }
-int Read_accounts_dat(const int size,Account account_list[]){
-    return Read_dat("data/accounts.dat",size,account_list,sizeof(Account));
+bool Read_accounts_dat(const int size,Account account_list[]){
+    if(size < 0)    return false;
+    return (Read_dat("data/accounts.dat",size,account_list,sizeof(Account)) == size);
 }
-int Read_violations_dat(const int size,Violation violation_list[]){
-    return Read_dat("data/violations.dat",size,violation_list,sizeof(Violation));
-}
-
-static bool Append_dat(const char path[],const void *record,int record_size){
-    FILE *file = fopen(path,"ab");
-    if(file == NULL)    return false;
-    fwrite(record,record_size,1,file);
-    fclose(file);
-}
-bool Append_members_dat(const Member *record){
-    return Append_dat("data/members.dat",record,sizeof(Member));
-}
-bool Append_accounts_dat(const Account *record){
-    return Append_dat("data/accounts.dat",record,sizeof(Account));
-}
-bool Append_violations_dat(const Violation *record){
-    return Append_dat("data/violations.dat",record,sizeof(Violation));
+bool Read_violations_dat(const int size,Violation violation_list[]){
+    if(size < 0)    return false;
+    return (Read_dat("data/violations.dat",size,violation_list,sizeof(Violation)) == size);
 }
