@@ -62,8 +62,7 @@ void start(account *accountList,int *quantity) {
 }
 void login(account *accountList,int *quantity,int *isLogin, Menu *currentState, account *session) {
     char studentIdInput[MAX_ID_LEN], studentPasswordInput[MAX_PASS_LEN];
-    int failCount = 0;
-    while (1) {
+     while (1) {
         printf(ANSI_COLOR_CYAN ANSI_BOLD);
         printf("╔════════════════════════════════════════╗\n");
         printf("║             MENU ĐĂNG NHẬP             ║\n");
@@ -71,7 +70,7 @@ void login(account *accountList,int *quantity,int *isLogin, Menu *currentState, 
         printf(ANSI_COLOR_RESET "\n");
 
         printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ MÃ SINH VIÊN: " ANSI_COLOR_RESET); 
-        scanf(" %8[^\n]", studentIdInput); // THIẾU CẮT KHOẢNG TRẮNG ĐẦU ĐUÔI KHI INPUT    
+        scanf(" %7[^\n]", studentIdInput); // THIẾU CẮT KHOẢNG TRẮNG ĐẦU ĐUÔI KHI INPUT    
         
         int foundIndex = -1;
 
@@ -109,6 +108,14 @@ void login(account *accountList,int *quantity,int *isLogin, Menu *currentState, 
                 printf("CHECK SESSION lúc đăng nhập thành công\n");
                 printf("%s | %s | %d | %d\n",(*(session)).studentId, (*(session)).password , (*(session)).role , (*(session)).isLocked);
                 printf("\n");
+                
+                // persist reset failCount (đồng bộ file)
+                FILE *file_upd = fopen("data/accounts.dat", "rb+");
+                if (file_upd != NULL) {
+                    fseek(file_upd, (long)foundIndex * sizeof(account), SEEK_SET);
+                    fwrite(&accountList[foundIndex], sizeof(account), 1, file_upd);
+                    fclose(file_upd);
+                }
                 
             }
             else {
@@ -246,9 +253,7 @@ void changePassword(account *accountList,int role, int *quantity,account *sessio
                 printf("\n");
                 printf(ANSI_BRIGHT_RED "BẠN ĐÃ NHẬP SAI MẬT KHẨU\n");
                 printf("\n");
-        
-        
-    }
+            }
     
 }   
     
@@ -256,8 +261,7 @@ void changePassword(account *accountList,int role, int *quantity,account *sessio
         printf("\n");
         printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ NHẬP MÃ SINH VIÊN CẦN ĐỔI: " ANSI_COLOR_RESET); 
         char studentIDneedtochangePassword[MAX_ID_LEN];
-        scanf(" %[^\n]",studentIDneedtochangePassword);
-        char passwordChange[100];
+        scanf(" %7[^\n]",studentIDneedtochangePassword);
         for (int i = 0 ; i < *quantity ; i++) {
             if (strcmp(accountList[i].studentId,studentIDneedtochangePassword) == 0) {
                 found = 1;
