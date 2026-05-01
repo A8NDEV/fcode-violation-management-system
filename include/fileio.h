@@ -14,5 +14,8 @@ bool Read_members_dat(const int size,Member member_list[]);
 bool Read_accounts_dat(const int size,Account account_list[]);
 bool Read_violations_dat(const int size,Violation violation_list[]);
 
+bool Append_members_dat(const Member member);
+bool Append_accounts_dat(const Account account);
+bool Append_violations_dat(const Violation violation);
 
 #endif
