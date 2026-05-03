@@ -320,14 +320,8 @@ void changePassword(account *accountList, int role, int *quantity,
         strcpy(accountList[i].password, passwordChange);
         FILE *file = fopen("data/accounts.dat", "rb+");
         if (file != NULL) {
-          account tempAcc;
-          while (fread(&tempAcc, sizeof(account), 1, file) == 1) {
-            if (strcmp(tempAcc.studentId, studentIDneedtochangePassword) == 0) {
-              fseek(file, -sizeof(account), SEEK_CUR);
-              fwrite(&accountList[i], sizeof(account), 1, file);
-              break;
-            }
-          }
+          fseek(file, (long)i * sizeof(account), SEEK_SET);
+          fwrite(&accountList[i], sizeof(account), 1, file);
           fclose(file);
         }
         printf("\n");
