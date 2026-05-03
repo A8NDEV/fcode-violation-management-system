@@ -4,6 +4,8 @@
 #include "types.h"
 #include <stdbool.h>
 
+int is_number(char x);
+
 bool Validate_fullname(char fullname[]);
 bool Validate_email(char email[]);
 bool Validate_phone(char phone[]);
