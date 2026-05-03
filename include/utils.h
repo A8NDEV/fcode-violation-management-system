@@ -27,5 +27,4 @@ void Announcement_error_acction();
 //Find function group
 int Find_studentId(int member_size,Member member_list[],char studentId[]);
 
-
 #endif
