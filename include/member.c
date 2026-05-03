@@ -20,7 +20,6 @@ static int create_member(int *member_size,Member member_list[],Member new_member
 }
 static void Menu_create(int *member_size,Member member_list[],Account account_list[]){
     Member new_member = Init_Member();
-    Input_fullname(new_member.fullName);
     Input_studentId(new_member.studentId);
     if(Find_studentId(*member_size,member_list,new_member.studentId) != -1){
         printf("Da co member voi MSSV la %s.\nTao tai khoan that bai\n",new_member.studentId);
@@ -28,6 +27,7 @@ static void Menu_create(int *member_size,Member member_list[],Account account_li
         system("cls");
         return;
     }
+    Input_fullname(new_member.fullName);
     Input_email(new_member.email);
     Input_phone(new_member.phone);
     Input_team(&new_member.team);
@@ -88,6 +88,8 @@ static int Delete_violation(const char studentId[],int *violation_size,Violation
     return 1;
 }
 int Delete_member(const int index,char studentId[],int *member_size,Member member_list[],Account account_list[],int *violation_size,Violation violation_list[]){
+    if(Append_deleted_members_dat(member_list[index]) == 0) return 0;
+    if(Append_deleted_accounts_dat(account_list[index]) == 0)   return 0;
     if(Delete_member_account(index,member_size,member_list,account_list) == 0)  return 0;
     if(Delete_violation(studentId,violation_size,violation_list) == 0) return 0;
     return 1;
@@ -108,7 +110,7 @@ static void Menu_remove(int *member_size,Member member_list[],Account account_li
             system("cls");
             return;
         case 1:
-            if(Delete_member(idx,studentId,member_size,member_list,account_list,violation_size,violation_list) == false){
+            if(Delete_member(idx,studentId,member_size,member_list,account_list,violation_size,violation_list) == 0){
                 Announcement_error_acction();
             }
             else    Announcement_complete_action();
@@ -119,7 +121,19 @@ static void Menu_remove(int *member_size,Member member_list[],Account account_li
     }
 }
 
-static void print_memnu_update(){
+static void print_memnu_update(const int index,Member member_list[],Account account_list[]){
+    Member res = member_list[index];
+    printf("=============Thong tin hien tai cua member=============\n");
+    printf("+ Student ID : %s\n",res.studentId);
+    printf("+ Full name : %s\n",res.fullName);
+    printf("+ Email : %s\n",res.email);
+    printf("+ Phone number : %s\n",res.phone);
+    char tmp[4][8] = {"Academic","Planning","HR","Media"};
+    printf("+ Team : %s\n",tmp[res.team]);
+    char tmp1[3][14] = {"Member","Leader/Vice","Ban Chu Nhiem"};
+    printf("+ Role : %s\n",tmp1[res.role]);
+    printf("+ Password : %s\n",account_list[index].password);
+
     printf("===================Thong tin can sua===================\n");
     printf("[1] | full-name\n");
     printf("[2] | email\n");
@@ -140,9 +154,7 @@ static void Menu_update(const int member_size,Member member_list[],Account accou
     system("cls");
 
     while(1){
-        printf("======================================\n");
-        printf("MSSV cua member can sua thong tin: %s\n",studentId);
-        print_memnu_update();
+        print_memnu_update(idx,member_list,account_list);
 
         Member upd_member = member_list[idx];
         Account upd_account = account_list[idx];
@@ -180,11 +192,11 @@ static void Menu_update(const int member_size,Member member_list[],Account accou
                 return;
         }
 
-        if(user_choose <= 5 && Update_members_dat(idx,upd_member) == false){
+        if(user_choose <= 5 && Update_members_dat(idx,upd_member) == 0){
             Announcement_error_acction();
             return;
         }
-        if(user_choose > 5 && Update_accounts_dat(idx,upd_account) == false){
+        if(user_choose > 5 && Update_accounts_dat(idx,upd_account) == 0){
             Announcement_error_acction();
             return;
         }
@@ -193,6 +205,7 @@ static void Menu_update(const int member_size,Member member_list[],Account accou
         Announcement_complete_action();
     }
 }
+
 void test_print(){
     int n = Count_members_dat();
     Member member_list[n];
