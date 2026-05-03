@@ -114,8 +114,8 @@ void login(account *accountList, int *quantity, int *isLogin,
     printf(ANSI_BOLD ANSI_COLOR_YELLOW
            " ❯ MẬT KHẨU    : " ANSI_COLOR_RESET); // SẼ ADD CƠ CHẾ THAY MẬT KHẨU
                                                   // THÀNH *
-    scanf(" %49[^\n]",
-          studentPasswordInput); // THIẾU CẮT KHOẢNG TRẮNG ĐẦU ĐUÔI KHI INPUT
+    scanf(" %49[^\n]", studentPasswordInput); 
+    while (getchar() != '\n');
 
     if (strcmp(accountList[foundIndex].password, studentPasswordInput) ==
         0) { // k khóa thì check password ng dùng nhập vào
@@ -246,6 +246,7 @@ void changePassword(account *accountList, int role, int *quantity,
     printf("\n");
     printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ MẬT KHẨU CŨ : " ANSI_COLOR_RESET);
     scanf(" %49[^\n]", oldPassword);
+    while (getchar() != '\n');
     if (strcmp(oldPassword, session->password) == 0) {
       printf("\n");
       printf(ANSI_BRIGHT_GREEN "XÁC MINH MẬT KHẨU CŨ THÀNH CÔNG!\n");
@@ -253,6 +254,7 @@ void changePassword(account *accountList, int role, int *quantity,
       printf(ANSI_BOLD ANSI_COLOR_YELLOW
              " ❯ NHẬP MẬT KHẨU CẦN ĐỔI : " ANSI_COLOR_RESET); // bị trôi lệnh
       scanf(" %49[^\n]", passwordChange);
+      while (getchar() != '\n');
       printf("\n");
       printf(ANSI_BRIGHT_CYAN "ĐANG THỰC HIỆN ĐỔI..\n");
 
@@ -298,6 +300,7 @@ void changePassword(account *accountList, int role, int *quantity,
            " ❯ NHẬP MÃ SINH VIÊN CẦN ĐỔI: " ANSI_COLOR_RESET);
     char studentIDneedtochangePassword[MAX_ID_LEN];
     scanf(" %8[^\n]", studentIDneedtochangePassword);
+    while (getchar() != '\n');
     for (int i = 0; i < *quantity; i++) {
       if (strcmp(accountList[i].studentId, studentIDneedtochangePassword) ==
           0) {
@@ -311,6 +314,7 @@ void changePassword(account *accountList, int role, int *quantity,
                studentIDneedtochangePassword); // bị trôi lệnh
         char passwordChange[MAX_PASS_LEN];
         scanf(" %49[^\n]", passwordChange);
+        while (getchar() != '\n');
         printf("\n");
         printf(ANSI_BRIGHT_CYAN "ĐANG THỰC HIỆN ĐỔI..\n");
         strcpy(accountList[i].password, passwordChange);
