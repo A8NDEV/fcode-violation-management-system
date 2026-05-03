@@ -9,7 +9,7 @@ void menu(account *accountList,int *quantity,int *isLogin,account *session) {
                 start(accountList,quantity);
                 currentState = loginState;
                 break;
-            case loginState:
+            case loginState: 
                 if (*isLogin == 0) {
                     login(accountList,quantity,isLogin,&currentState,session);
                 }
@@ -26,9 +26,9 @@ void menu(account *accountList,int *quantity,int *isLogin,account *session) {
                 *isLogin = 0;
                 currentState = loginState;
                 break;
-            case changePasswordState:
+            case changePasswordState: 
                 changePassword(accountList, ((*(session)).role), quantity,session);
-                currentState = loginState;
+                currentState = logoutState; //doi mk xong thi log out luon
                 break;
             case exitState:
                 break;
@@ -61,7 +61,7 @@ void start(account *accountList,int *quantity) {
 
 }
 void login(account *accountList,int *quantity,int *isLogin, Menu *currentState, account *session) {
-    char studentIdInput[MAX_ID_LEN], studentPasswordInput[MAX_PASS_LEN];
+    char studentIdInput[100], studentPasswordInput[MAX_PASS_LEN];
      while (1) {
         printf(ANSI_COLOR_CYAN ANSI_BOLD);
         printf("╔════════════════════════════════════════╗\n");
@@ -70,29 +70,37 @@ void login(account *accountList,int *quantity,int *isLogin, Menu *currentState, 
         printf(ANSI_COLOR_RESET "\n");
 
         printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ MÃ SINH VIÊN: " ANSI_COLOR_RESET); 
-        scanf(" %7[^\n]", studentIdInput); // THIẾU CẮT KHOẢNG TRẮNG ĐẦU ĐUÔI KHI INPUT    
-        
-        int foundIndex = -1;
 
+
+        scanf(" %99[^\n]", studentIdInput);
+        while (getchar() != '\n');
+
+        if (strlen(studentIdInput) != 8) {
+            printf("\n" ANSI_COLOR_RED "MÃ SINH VIÊN PHẢI ĐÚNG 8 KÝ TỰ! (Độ dài bạn nhập: %lu)\n", strlen(studentIdInput));
+            continue; 
+        }
+
+        int foundIndex = -1;
         for (int i = 0 ; i < *quantity; i++) {
-            if (strcmp(accountList[i].studentId,studentIdInput) == 0) { // tìm thấy mssv cần login
+            if (strcmp(accountList[i].studentId, studentIdInput) == 0) {
                 foundIndex = i;
                 break;
             }
         }
+
         if (foundIndex == -1) {
-            printf("\n");
-            printf(ANSI_COLOR_RED "MÃ SINH VIÊN BẠN NHẬP KHÔNG HỢP LỆ\n");
+            printf("\n" ANSI_COLOR_RED "KHÔNG TÌM THẤY MÃ SINH VIÊN NÀY TRONG DANH SÁCH!\n");
+            continue;
         }
 
 
-        if (foundIndex != -1) {
+
             if (accountList[foundIndex].isLocked == 1) { // check xem mssv này có bị khóa khong
                 printf(ANSI_BRIGHT_RED "TÀI KHOẢN ĐANG BỊ KHÓA\n");
                 *currentState = loginState;
                 return;
             }
-            
+            // bug
             printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ MẬT KHẨU    : " ANSI_COLOR_RESET);  // SẼ ADD CƠ CHẾ THAY MẬT KHẨU THÀNH *
             scanf(" %49[^\n]", studentPasswordInput); // THIẾU CẮT KHOẢNG TRẮNG ĐẦU ĐUÔI KHI INPUT
             
@@ -120,7 +128,7 @@ void login(account *accountList,int *quantity,int *isLogin, Menu *currentState, 
             }
             else {
                 printf("\n");
-                printf(ANSI_BRIGHT_RED  "MẬT KHẨU KHÔNG ĐÚNG!\n");
+                printf(ANSI_BRIGHT_RED  "MẬT KHẨU KHÔNG ĐÚNG!\n"); //
                 (accountList[foundIndex].failCount)++; 
 
                 // Persist change to file immediately
@@ -151,7 +159,6 @@ void login(account *accountList,int *quantity,int *isLogin, Menu *currentState, 
                 }
             } 
         break;
-        }
     } 
 }
 void setting(int role, Menu *currentState) {
@@ -186,7 +193,7 @@ void setting(int role, Menu *currentState) {
         printf("║           MENU BAN CHỦ NHIỆM           ║\n");
         printf("╚════════════════════════════════════════╝\n");
         printf(ANSI_COLOR_RESET "\n");
-        printf(ANSI_BOLD ANSI_COLOR_GREEN " [1] " ANSI_COLOR_RESET "CHỨC NĂNG MEMBER\n");
+        printf(ANSI_BOLD ANSI_COLOR_GREEN " [1] " ANSI_COLOR_RESET "CHỨC NĂNG BAN CHỦ NHIỆM\n");
         printf(ANSI_BOLD ANSI_COLOR_GREEN " [2] " ANSI_COLOR_RESET "ĐỔI MẬT KHẨU CHO SINH VIÊN THEO MSSV\n");
         printf(ANSI_BOLD ANSI_COLOR_YELLOW " [3] " ANSI_COLOR_RESET "ĐĂNG XUẤT\n");
         printf("\n");
@@ -261,7 +268,7 @@ void changePassword(account *accountList,int role, int *quantity,account *sessio
         printf("\n");
         printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ NHẬP MÃ SINH VIÊN CẦN ĐỔI: " ANSI_COLOR_RESET); 
         char studentIDneedtochangePassword[MAX_ID_LEN];
-        scanf(" %7[^\n]",studentIDneedtochangePassword);
+        scanf(" %8[^\n]",studentIDneedtochangePassword);
         for (int i = 0 ; i < *quantity ; i++) {
             if (strcmp(accountList[i].studentId,studentIDneedtochangePassword) == 0) {
                 found = 1;
