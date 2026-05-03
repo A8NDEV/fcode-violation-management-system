@@ -73,6 +73,12 @@ bool Append_accounts_dat(const Account record){
 bool Append_violations_dat(const Violation record){
     return Append_dat("data/violations.dat",&record,sizeof(Violation));
 }
+bool Append_deleted_members_dat(const Member record){
+    return Append_dat("data/deleted_members.dat",&record,sizeof(Member));
+}
+bool Append_deleted_accounts_dat(const Account record){
+    return Append_dat("data/deleted_accounts.dat",&record,sizeof(Account));
+}
 
 static bool Update_dat(const char path[],const int idx,const void *record,size_t record_size){
     if(idx < 0 || record == NULL) return false;

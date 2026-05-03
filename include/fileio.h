@@ -17,6 +17,8 @@ bool Read_violations_dat(const int size,Violation violation_list[]);
 bool Append_members_dat(const Member member);
 bool Append_accounts_dat(const Account account);
 bool Append_violations_dat(const Violation violation);
+bool Append_deleted_members_dat(const Member record);
+bool Append_deleted_accounts_dat(const Account record);
 
 bool Update_members_dat(const int index,const Member record);
 bool Update_accounts_dat(const int index,const Account record);
