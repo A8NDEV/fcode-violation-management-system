@@ -109,8 +109,15 @@ void Input_team(int *input){
     while(!ok){
         if(wrong == false)  printf("Enter member's team: ");
         else    printf("Invalid input, try again: ");
-        scanf("%d",input);
+        char x;
+        scanf("%c",&x);
         clear_buffer();
+        if(is_number(x) == false){
+            ok = false;
+            wrong |= 1;
+            continue;
+        }
+        (*input) = (int)(x - '0');
         ok |= Validate_team(*input);
         wrong |= 1;
     }
@@ -121,8 +128,15 @@ void Input_role(int *input){
     while(!ok){
         if(wrong == false)  printf("Enter member's role: ");
         else    printf("Invalid input, try again: ");
-        scanf("%d",input);
+        char x;
+        scanf("%c",&x);
         clear_buffer();
+        if(is_number(x) == false){
+            ok = false;
+            wrong |= 1;
+            continue;
+        }
+        (*input) = (int)(x - '0');
         ok |= Validate_role(*input);
         wrong |= 1;
     }
@@ -153,7 +167,7 @@ int Find_studentId(int member_size,Member member_list[],char studentId[]){
     //WARNNING
     //have : return index
     //don't have : return -1
-    for(int i = 0;i <= member_size;++i){
+    for(int i = 0;i < member_size;++i){
         if(strcmp(member_list[i].studentId,studentId) == 0){
             return i;
         }
