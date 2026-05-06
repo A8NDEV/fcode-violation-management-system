@@ -2,8 +2,8 @@
 
 int main() {
 //--------------------------------------------------------
-    account accountList[MAX_ACCOUNT];
-    account session[1];
+    Account accountList[MAX_ACCOUNT];
+    Account session[1];
     int quantity = 0;
     int isLogin = 0;
 //--------------------------------------------------------

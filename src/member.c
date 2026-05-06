@@ -141,7 +141,7 @@ static void print_memnu_update(const int index,Member member_list[],Account acco
     printf("[4] | team\n");
     printf("[5] | role\n");
     printf("[6] | password\n");
-    printf("[7] | Reset trang thai Looked\n");
+    printf("[7] | Reset trang thai Locked\n");
     printf("[0] | Thoat\n");
 }
 static void Menu_update(const int member_size,Member member_list[],Account account_list[]){
@@ -185,7 +185,7 @@ static void Menu_update(const int member_size,Member member_list[],Account accou
                 Input_password(upd_account.password);
                 break;
             case 7:
-                upd_account.isLooked = upd_account.failCount = 0;
+                upd_account.isLocked = upd_account.failCount = 0;
                 break;
             default:
                 Announcement_unaivailable_option();

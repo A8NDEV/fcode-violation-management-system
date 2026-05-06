@@ -44,14 +44,7 @@
 #define ANSI_BRIGHT_WHITE   "\x1b[97m"
 
 
-struct account {
-    char studentId[MAX_ID_LEN];
-    char password[MAX_PASS_LEN];
-    int role;  
-    int isLocked; 
-    int failCount; 
-}; 
-typedef struct account account;
+#include "types.h"
 
 enum menuState { 
     startState,
@@ -63,10 +56,10 @@ enum menuState {
 typedef enum menuState Menu;
 
 
-void start(account *accountList, int *quantity);
-void login(account *accountList, int *quantity, int *isLogin, Menu *currentState, account *session);
+void start(Account *accountList, int *quantity);
+void login(Account *accountList, int *quantity, int *isLogin, Menu *currentState, Account *session);
 void setting(int role, Menu *currentState);
-void menu(account *accountList, int *quantity, int *isLogin, account *session);
-void changePassword(account *accountList,int role, int *quantity,account *session);
+void menu(Account *accountList, int *quantity, int *isLogin, Account *session);
+void changePassword(Account *accountList,int role, int *quantity,Account *session);
 
 #endif 

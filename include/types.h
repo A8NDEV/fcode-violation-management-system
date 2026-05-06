@@ -11,7 +11,7 @@ typedef struct Member{
 }Member;
 typedef struct Account{
     char studentId[SHORT_SIZE],password[LONG_SIZE];
-    int role,isLooked,failCount;
+    int role,isLocked,failCount;
 }Account;
 typedef struct Violation{
     char studentId[SHORT_SIZE],note[LONG_SIZE];

@@ -1,7 +1,7 @@
 #include "auth.h"
 //--------------------------------------------------------
 // flow chạy của chương trình login - auth!
-void menu(account *accountList, int *quantity, int *isLogin, account *session) {
+void menu(Account *accountList, int *quantity, int *isLogin, Account *session) {
   Menu currentState = startState;
   while (currentState != exitState) {
     switch (currentState) {
@@ -17,7 +17,7 @@ void menu(account *accountList, int *quantity, int *isLogin, account *session) {
       }
       break;
     case logoutState:
-      memset(session, 0, sizeof(account));
+      memset(session, 0, sizeof(Account));
       printf("CHECK SESSION khi đã logout\n");
       printf("%s | %s | %d | %d\n", (*(session)).studentId,
              (*(session)).password, (*(session)).role, (*(session)).isLocked);
@@ -46,7 +46,7 @@ void menu(account *accountList, int *quantity, int *isLogin, account *session) {
 
 //--------------------------------------------------------
 //--------------------------------------------------------
-void start(account *accountList, int *quantity) {
+void start(Account *accountList, int *quantity) {
   printf("-----------------------------\n");
   printf("ADMIN LOG!\n");
   printf("ĐANG KHỞI ĐỘNG CHƯƠNG TRÌNH AUTH.C\n");
@@ -57,7 +57,7 @@ void start(account *accountList, int *quantity) {
   }
 
   printf("ĐÃ TÌM THẤY ACCOUNTS.DAT VÀ ĐANG XỬ LÝ...\n");
-  while (fread(&accountList[*quantity], sizeof(account), 1, file) == 1) {
+  while (fread(&accountList[*quantity], sizeof(Account), 1, file) == 1) {
     printf("ĐỌC TỪ FILE THÀNH CÔNG 1 TÀI KHOẢN\n");
     (*quantity)++;
     if (*quantity >= MAX_ACCOUNT)
@@ -67,8 +67,8 @@ void start(account *accountList, int *quantity) {
   printf("TÌM THẤY TỔNG CỘNG: %d TÀI KHOẢN\n", *quantity);
   printf("-----------------------------\n");
 }
-void login(account *accountList, int *quantity, int *isLogin,
-           Menu *currentState, account *session) {
+void login(Account *accountList, int *quantity, int *isLogin,
+           Menu *currentState, Account *session) {
   char studentIdInput[100], studentPasswordInput[MAX_PASS_LEN];
   while (1) {
     printf(ANSI_COLOR_CYAN ANSI_BOLD);
@@ -134,8 +134,8 @@ void login(account *accountList, int *quantity, int *isLogin,
       // persist reset failCount (đồng bộ file)
       FILE *file_upd = fopen("data/accounts.dat", "rb+");
       if (file_upd != NULL) {
-        fseek(file_upd, (long)foundIndex * sizeof(account), SEEK_SET);
-        fwrite(&accountList[foundIndex], sizeof(account), 1, file_upd);
+        fseek(file_upd, (long)foundIndex * sizeof(Account), SEEK_SET);
+        fwrite(&accountList[foundIndex], sizeof(Account), 1, file_upd);
         fclose(file_upd);
       }
 
@@ -147,8 +147,8 @@ void login(account *accountList, int *quantity, int *isLogin,
       // Persist change to file immediately
       FILE *file_upd = fopen("data/accounts.dat", "rb+");
       if (file_upd != NULL) {
-        fseek(file_upd, (long)foundIndex * sizeof(account), SEEK_SET);
-        fwrite(&accountList[foundIndex], sizeof(account), 1, file_upd);
+        fseek(file_upd, (long)foundIndex * sizeof(Account), SEEK_SET);
+        fwrite(&accountList[foundIndex], sizeof(Account), 1, file_upd);
         fclose(file_upd);
       }
 
@@ -158,8 +158,8 @@ void login(account *accountList, int *quantity, int *isLogin,
         // Persist lock to file
         FILE *file_lock = fopen("data/accounts.dat", "rb+");
         if (file_lock != NULL) {
-          fseek(file_lock, (long)foundIndex * sizeof(account), SEEK_SET);
-          fwrite(&accountList[foundIndex], sizeof(account), 1, file_lock);
+          fseek(file_lock, (long)foundIndex * sizeof(Account), SEEK_SET);
+          fwrite(&accountList[foundIndex], sizeof(Account), 1, file_lock);
           fclose(file_lock);
         }
 
@@ -237,8 +237,8 @@ void setting(int role, Menu *currentState) {
     }
   }
 }
-void changePassword(account *accountList, int role, int *quantity,
-                    account *session) {
+void changePassword(Account *accountList, int role, int *quantity,
+                    Account *session) {
   int found = 0;
   int foundIndex = -1; // <-- initialize to -1
   if (role == 0) {
@@ -258,7 +258,7 @@ void changePassword(account *accountList, int role, int *quantity,
       printf("\n");
       printf(ANSI_BRIGHT_CYAN "ĐANG THỰC HIỆN ĐỔI..\n");
 
-      // dùng loop tìm account session trong accountList vị trí thứ mấy sau đó
+      // dùng loop tìm Account session trong accountList vị trí thứ mấy sau đó
       // sẽ đổi mk ở accountList[vi tri tìm thấy] và ghi vào file => đồng bộ
       // trạng thái
       for (int i = 0; i < *quantity; i++) {
@@ -273,8 +273,8 @@ void changePassword(account *accountList, int role, int *quantity,
         // Persist by seeking directly to record offset
         FILE *file = fopen("data/accounts.dat", "rb+");
         if (file != NULL) {
-          fseek(file, (long)foundIndex * sizeof(account), SEEK_SET);
-          fwrite(&accountList[foundIndex], sizeof(account), 1, file);
+          fseek(file, (long)foundIndex * sizeof(Account), SEEK_SET);
+          fwrite(&accountList[foundIndex], sizeof(Account), 1, file);
           fclose(file);
         }
         printf("\n");
@@ -320,8 +320,8 @@ void changePassword(account *accountList, int role, int *quantity,
         strcpy(accountList[i].password, passwordChange);
         FILE *file = fopen("data/accounts.dat", "rb+");
         if (file != NULL) {
-          fseek(file, (long)i * sizeof(account), SEEK_SET);
-          fwrite(&accountList[i], sizeof(account), 1, file);
+          fseek(file, (long)i * sizeof(Account), SEEK_SET);
+          fwrite(&accountList[i], sizeof(Account), 1, file);
           fclose(file);
         }
         printf("\n");
