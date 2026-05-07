@@ -1,5 +1,5 @@
 #include "include/auth.h"
-
+#include <windows.h>
 int main() {
 //--------------------------------------------------------
     account accountList[MAX_ACCOUNT];
@@ -7,6 +7,8 @@ int main() {
     int quantity = 0;
     int isLogin = 0;
 //--------------------------------------------------------
+    SetConsoleOutputCP(65001);
+    SetConsoleCP(65001);
     menu(accountList,&quantity,&isLogin,session);
 //--------------------------------------------------------
     return 0;
