@@ -132,12 +132,7 @@ void login(account *accountList, int *quantity, int *isLogin,
       printf("\n");
 
       // persist reset failCount (đồng bộ file)
-      FILE *file_upd = fopen("data/accounts.dat", "rb+");
-      if (file_upd != NULL) {
-        fseek(file_upd, (long)foundIndex * sizeof(account), SEEK_SET);
-        fwrite(&accountList[foundIndex], sizeof(account), 1, file_upd);
-        fclose(file_upd);
-      }
+      saveAccount(foundIndex, &accountList[foundIndex]);
 
     } else {
       printf("\n");
@@ -154,12 +149,7 @@ void login(account *accountList, int *quantity, int *isLogin,
       }
 
       // Persist changes to file
-      FILE *file_upd = fopen("data/accounts.dat", "rb+");
-      if (file_upd != NULL) {
-        fseek(file_upd, (long)foundIndex * sizeof(account), SEEK_SET);
-        fwrite(&accountList[foundIndex], sizeof(account), 1, file_upd);
-        fclose(file_upd);
-      }
+      saveAccount(foundIndex, &accountList[foundIndex]);
 
       if (accountList[foundIndex].failCount >= 3) {
         return;
@@ -263,12 +253,7 @@ void changePassword(account *accountList, int role, int *quantity,
         strcpy(session->password, passwordChange);
         strcpy(accountList[foundIndex].password, passwordChange);
         // Persist by seeking directly to record offset
-        FILE *file = fopen("data/accounts.dat", "rb+");
-        if (file != NULL) {
-          fseek(file, (long)foundIndex * sizeof(account), SEEK_SET);
-          fwrite(&accountList[foundIndex], sizeof(account), 1, file);
-          fclose(file);
-        }
+        saveAccount(foundIndex, &accountList[foundIndex]);
         printf("\n");
         printf(ANSI_BRIGHT_GREEN "ĐỔI MẬT KHẨU THÀNH CÔNG!\n");
         printf("\n");
@@ -310,12 +295,7 @@ void changePassword(account *accountList, int role, int *quantity,
         printf("\n");
         printf(ANSI_BRIGHT_CYAN "ĐANG THỰC HIỆN ĐỔI..\n");
         strcpy(accountList[i].password, passwordChange);
-        FILE *file = fopen("data/accounts.dat", "rb+");
-        if (file != NULL) {
-          fseek(file, (long)i * sizeof(account), SEEK_SET);
-          fwrite(&accountList[i], sizeof(account), 1, file);
-          fclose(file);
-        }
+        saveAccount(i, &accountList[i]);
         printf("\n");
         printf(ANSI_BRIGHT_GREEN "ĐỔI MẬT KHẨU THÀNH CÔNG CHO %s\n",
                studentIDneedtochangePassword);
@@ -330,4 +310,17 @@ void changePassword(account *accountList, int role, int *quantity,
       printf("\n");
     }
   }
+}
+
+void saveAccount(int index, account *acc) {
+  FILE *file = fopen("data/accounts.dat", "rb+");
+  if (file == NULL) {
+    printf(ANSI_BRIGHT_RED "LỖI: Không thể mở file để cập nhật dữ liệu!\n" ANSI_COLOR_RESET);
+    return;
+  }
+  fseek(file, (long)index * sizeof(account), SEEK_SET);
+  if (fwrite(acc, sizeof(account), 1, file) != 1) {
+    printf(ANSI_BRIGHT_RED "LỖI: Ghi dữ liệu thất bại!\n" ANSI_COLOR_RESET);
+  }
+  fclose(file);
 }

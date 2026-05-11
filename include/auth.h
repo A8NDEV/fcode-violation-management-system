@@ -14,9 +14,6 @@
 
 
 /// BẢNG MÀU
-#define CLEAR_SCREEN       "\e[1;1H\e[2J"
-#define ANSI_COLOR_CYAN    "\x1b[36m"
-#define ANSI_COLOR_YELLOW  "\x1b[33m"
 #define ANSI_COLOR_RESET   "\x1b[0m"
 #define ANSI_BOLD          "\x1b[1m"
 // ==========================================
@@ -68,5 +65,6 @@ void login(account *accountList, int *quantity, int *isLogin, Menu *currentState
 void setting(int role, Menu *currentState);
 void menu(account *accountList, int *quantity, int *isLogin, account *session);
 void changePassword(account *accountList,int role, int *quantity,account *session);
+void saveAccount(int index, account *acc);
 
 #endif 
