@@ -126,10 +126,10 @@ static void print_memnu_update(const int index, Member member_list[], Account ac
     printf("+ Full name : %s\n", res.fullName);
     printf("+ Email : %s\n", res.email);
     printf("+ Phone number : %s\n", res.phone);
-    char tmp[4][8] = {"Academic", "Planning", "HR", "Media"};
-    printf("+ Team : %s\n", tmp[res.team]);
-    char tmp1[3][14] = {"Member", "Leader/Vice", "Ban Chu Nhiem"};
-    printf("+ Role : %s\n", tmp1[res.role]);
+    const char *teams[] = {"Academic", "Planning", "HR", "Media"};
+    printf("+ Team : %s\n", teams[res.team]);
+    const char  *roles[] = {"Member", "Leader/Vice", "Ban Chu Nhiem"};
+    printf("+ Role : %s\n", roles[res.role]);
     printf("+ Password : %s\n", account_list[index].password);
     printf("===================Thong tin can sua===================\n");
     printf("[1] | full-name\n");

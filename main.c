@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <windows.h>
 #include "include/auth.h"
 #include "include/fileio.h"
 #include "include/utils.h"
@@ -23,6 +24,7 @@ int main() {
     violationCount = Count_violations_dat();
     if (violationCount > 0) Read_violations_dat(violationCount, violationList);
 
+    system("chcp 65001 > nul");
     Account session;
     int isLogin = 0;
     int choice;
@@ -44,7 +46,7 @@ int main() {
             } else if (choice == 0) {
                 break;
             }
-        } else if (session.role == 1) {
+        } else if (session.role == 2) {
             /* BCN menu tu quan ly vong lap noi bo, tra ve 0 khi logout */
             isLogin = show_bcn_menu(&session, memberList, &memberCount,
                                     accountList, violationList, &violationCount);
