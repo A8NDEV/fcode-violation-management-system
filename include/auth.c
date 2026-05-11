@@ -28,10 +28,14 @@ void menu(account *accountList, int *quantity, int *isLogin, account *session) {
       break;
     case changePasswordState:
       if (session->role == 0) {
-        changePassword(accountList, session->role, quantity, session);
-        printf(ANSI_BOLD ANSI_COLOR_YELLOW
-               "\n[SECURITY] PASSWORD CHANGED. PLEASE LOGIN AGAIN!\n" ANSI_COLOR_RESET);
-        currentState = logoutState;
+        if (changePassword(accountList, session->role, quantity, session)) {
+          printf(ANSI_BOLD ANSI_COLOR_YELLOW
+                 "\n[SECURITY] PASSWORD CHANGED. PLEASE LOGIN "
+                 "AGAIN!\n" ANSI_COLOR_RESET);
+          currentState = logoutState;
+        } else {
+          currentState = loginState; // Stay logged in if failed
+        }
       } else {
         changePassword(accountList, session->role, quantity, session);
         currentState = loginState; // Management Board stays logged in
@@ -96,21 +100,19 @@ void login(account *accountList, int *quantity, int *isLogin,
     }
 
     if (foundIndex == -1) {
-      printf("\n" ANSI_COLOR_RED
-             "STUDENT ID NOT FOUND IN LIST!\n");
+      printf("\n" ANSI_COLOR_RED "STUDENT ID NOT FOUND IN LIST!\n");
       continue;
     }
 
-    if (accountList[foundIndex].isLocked ==
-        1) { // check if account is locked
+    if (accountList[foundIndex].isLocked == 1) { // check if account is locked
       printf(ANSI_BRIGHT_RED "ACCOUNT IS CURRENTLY LOCKED\n");
       *currentState = loginState;
       return;
     }
     // bug
     printf(ANSI_BOLD ANSI_COLOR_YELLOW
-           " ❯ PASSWORD    : " ANSI_COLOR_RESET); // WILL ADD PASSWORD MASKING (*)
-                                                  // THÀNH *
+           " ❯ PASSWORD    : " ANSI_COLOR_RESET); // WILL ADD PASSWORD MASKING
+                                                  // (*) THÀNH *
     inputString(studentPasswordInput, MAX_PASS_LEN);
 
     if (strcmp(accountList[foundIndex].password, studentPasswordInput) ==
@@ -170,8 +172,7 @@ void setting(int role, Menu *currentState) {
     printf("\n");
     printf(ANSI_COLOR_CYAN ANSI_BOLD
            "------------------------------------------\n" ANSI_COLOR_RESET);
-    printf(ANSI_BOLD ANSI_COLOR_YELLOW
-           " ❯ SELECT FUNCTION: " ANSI_COLOR_RESET);
+    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ SELECT FUNCTION: " ANSI_COLOR_RESET);
     if (scanf("%d", &choice) != 1) {
       choice = 0; // Assign invalid value if input is not a number
     }
@@ -199,8 +200,7 @@ void setting(int role, Menu *currentState) {
     printf("\n");
     printf(ANSI_COLOR_CYAN ANSI_BOLD
            "------------------------------------------\n" ANSI_COLOR_RESET);
-    printf(ANSI_BOLD ANSI_COLOR_YELLOW
-           " ❯ SELECT FUNCTION: " ANSI_COLOR_RESET);
+    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ SELECT FUNCTION: " ANSI_COLOR_RESET);
     if (scanf("%d", &choice) != 1) {
       choice = 0;
     }
@@ -215,7 +215,7 @@ void setting(int role, Menu *currentState) {
     }
   }
 }
-void changePassword(account *accountList, int role, int *quantity,
+int changePassword(account *accountList, int role, int *quantity,
                     account *session) {
   int found = 0;
   int foundIndex = -1; // <-- initialize to -1
@@ -234,7 +234,7 @@ void changePassword(account *accountList, int role, int *quantity,
       printf("\n");
       printf(ANSI_BRIGHT_CYAN "UPDATING PASSWORD...\n");
 
-      // Loop to find session account in accountList, then update 
+      // Loop to find session account in accountList, then update
       // password and sync with file
       for (int i = 0; i < *quantity; i++) {
         if (strcmp(accountList[i].studentId, session->studentId) == 0) {
@@ -250,9 +250,11 @@ void changePassword(account *accountList, int role, int *quantity,
         printf("\n");
         printf(ANSI_BRIGHT_GREEN "PASSWORD CHANGED SUCCESSFULLY!\n");
         printf("\n");
+        return 1;
       } else {
         // not found
         printf(ANSI_BRIGHT_RED "ACCOUNT NOT FOUND IN SYSTEM\n");
+        return 0;
       }
     }
 
@@ -260,6 +262,7 @@ void changePassword(account *accountList, int role, int *quantity,
       printf("\n");
       printf(ANSI_BRIGHT_RED "INCORRECT PASSWORD ENTERED\n");
       printf("\n");
+      return 0;
     }
 
   }
@@ -291,22 +294,24 @@ void changePassword(account *accountList, int role, int *quantity,
         printf(ANSI_BRIGHT_GREEN "PASSWORD CHANGED SUCCESSFULLY FOR %s\n",
                studentIDneedtochangePassword);
         printf("\n");
-        break;
+        return 1;
       }
     }
     if (found == 0) {
       printf("\n");
-      printf(ANSI_BRIGHT_RED
-             "STUDENT ID NOT FOUND IN SYSTEM\n");
+      printf(ANSI_BRIGHT_RED "STUDENT ID NOT FOUND IN SYSTEM\n");
       printf("\n");
+      return 0;
     }
   }
+  return 0;
 }
 
 void saveAccount(int index, account *acc) {
   FILE *file = fopen("data/accounts.dat", "rb+");
   if (file == NULL) {
-    printf(ANSI_BRIGHT_RED "ERROR: Unable to open file for update!\n" ANSI_COLOR_RESET);
+    printf(ANSI_BRIGHT_RED
+           "ERROR: Unable to open file for update!\n" ANSI_COLOR_RESET);
     return;
   }
   fseek(file, (long)index * sizeof(account), SEEK_SET);
