@@ -13,6 +13,6 @@ int main() {
 //--------------------------------------------------------
     return 0;
 }
-/*gcc main.c include/auth.c -o fcode_program
+/*gcc main.c include/fileio.c include/validate.c  include/types.c include/member.c include/utils.c -Iinclude -o main.exe
 ./fcode_program
 */
