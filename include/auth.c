@@ -1,6 +1,6 @@
 #include "auth.h"
 //--------------------------------------------------------
-// flow chạy của chương trình login - auth!
+// Auth - Login program flow!
 void menu(account *accountList, int *quantity, int *isLogin, account *session) {
   Menu currentState = startState;
   while (currentState != exitState) {
@@ -18,10 +18,10 @@ void menu(account *accountList, int *quantity, int *isLogin, account *session) {
       break;
     case logoutState:
       memset(session, 0, sizeof(account));
-      printf("CHECK SESSION khi đã logout\n");
+      printf("CHECK SESSION after logout\n");
       printf("%s | %s | %d | %d\n", (*(session)).studentId,
              (*(session)).password, (*(session)).role, (*(session)).isLocked);
-      printf(ANSI_BRIGHT_CYAN "ĐÃ ĐĂNG XUẤT TÀI KHOẢN!\n");
+      printf(ANSI_BRIGHT_CYAN "LOGGED OUT SUCCESSFULLY!\n");
       printf("\n");
       *isLogin = 0;
       currentState = loginState;
@@ -30,12 +30,11 @@ void menu(account *accountList, int *quantity, int *isLogin, account *session) {
       if (session->role == 0) {
         changePassword(accountList, session->role, quantity, session);
         printf(ANSI_BOLD ANSI_COLOR_YELLOW
-               "\n[BẢO MẬT] MẬT KHẨU ĐÃ THAY ĐỔI. VUI LÒNG ĐĂNG NHẬP "
-               "LẠI!\n" ANSI_COLOR_RESET);
+               "\n[SECURITY] PASSWORD CHANGED. PLEASE LOGIN AGAIN!\n" ANSI_COLOR_RESET);
         currentState = logoutState;
       } else {
         changePassword(accountList, session->role, quantity, session);
-        currentState = loginState; // BCN giữ trạng thái đăng nhập
+        currentState = loginState; // Management Board stays logged in
       }
       break;
     case exitState:
@@ -49,22 +48,22 @@ void menu(account *accountList, int *quantity, int *isLogin, account *session) {
 void start(account *accountList, int *quantity) {
   printf("-----------------------------\n");
   printf("ADMIN LOG!\n");
-  printf("ĐANG KHỞI ĐỘNG CHƯƠNG TRÌNH AUTH.C\n");
+  printf("INITIALIZING AUTH.C...\n");
   FILE *file = fopen("data/accounts.dat", "rb+");
   if (file == NULL) {
-    printf("LỖI! KHÔNG TÌM THẤY ACCOUNTS.DAT.\n");
+    printf("ERROR! ACCOUNTS.DAT NOT FOUND.\n");
     exit(1);
   }
 
-  printf("ĐÃ TÌM THẤY ACCOUNTS.DAT VÀ ĐANG XỬ LÝ...\n");
+  printf("ACCOUNTS.DAT FOUND. PROCESSING...\n");
   while (fread(&accountList[*quantity], sizeof(account), 1, file) == 1) {
-    printf("ĐỌC TỪ FILE THÀNH CÔNG 1 TÀI KHOẢN\n");
+    printf("SUCCESSFULLY READ 1 ACCOUNT FROM FILE\n");
     (*quantity)++;
     if (*quantity >= MAX_ACCOUNT)
       break;
   }
   fclose(file);
-  printf("TÌM THẤY TỔNG CỘNG: %d TÀI KHOẢN\n", *quantity);
+  printf("FOUND TOTAL: %d ACCOUNTS\n", *quantity);
   printf("-----------------------------\n");
 }
 void login(account *accountList, int *quantity, int *isLogin,
@@ -73,17 +72,17 @@ void login(account *accountList, int *quantity, int *isLogin,
   while (1) {
     printf(ANSI_COLOR_CYAN ANSI_BOLD);
     printf("╔════════════════════════════════════════╗\n");
-    printf("║             MENU ĐĂNG NHẬP             ║\n");
+    printf("║             LOGIN MENU                 ║\n");
     printf("╚════════════════════════════════════════╝\n");
     printf(ANSI_COLOR_RESET "\n");
 
-    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ MÃ SINH VIÊN: " ANSI_COLOR_RESET);
+    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ STUDENT ID : " ANSI_COLOR_RESET);
 
     inputString(studentIdInput, 100);
 
     if (strlen(studentIdInput) != 8) {
       printf("\n" ANSI_COLOR_RED
-             "MÃ SINH VIÊN PHẢI ĐÚNG 8 KÝ TỰ! (Độ dài bạn nhập: %lu)\n",
+             "STUDENT ID MUST BE EXACTLY 8 CHARACTERS! (Current length: %lu)\n",
              strlen(studentIdInput));
       continue;
     }
@@ -98,49 +97,49 @@ void login(account *accountList, int *quantity, int *isLogin,
 
     if (foundIndex == -1) {
       printf("\n" ANSI_COLOR_RED
-             "KHÔNG TÌM THẤY MÃ SINH VIÊN NÀY TRONG DANH SÁCH!\n");
+             "STUDENT ID NOT FOUND IN LIST!\n");
       continue;
     }
 
     if (accountList[foundIndex].isLocked ==
-        1) { // check xem mssv này có bị khóa khong
-      printf(ANSI_BRIGHT_RED "TÀI KHOẢN ĐANG BỊ KHÓA\n");
+        1) { // check if account is locked
+      printf(ANSI_BRIGHT_RED "ACCOUNT IS CURRENTLY LOCKED\n");
       *currentState = loginState;
       return;
     }
     // bug
     printf(ANSI_BOLD ANSI_COLOR_YELLOW
-           " ❯ MẬT KHẨU    : " ANSI_COLOR_RESET); // SẼ ADD CƠ CHẾ THAY MẬT KHẨU
+           " ❯ PASSWORD    : " ANSI_COLOR_RESET); // WILL ADD PASSWORD MASKING (*)
                                                   // THÀNH *
     inputString(studentPasswordInput, MAX_PASS_LEN);
 
     if (strcmp(accountList[foundIndex].password, studentPasswordInput) ==
-        0) { // k khóa thì check password ng dùng nhập vào
+        0) { // password match check
       printf("\n");
-      printf(ANSI_BRIGHT_GREEN "ĐÃ ĐĂNG NHẬP THÀNH CÔNG!\n");
+      printf(ANSI_BRIGHT_GREEN "LOGIN SUCCESSFUL!\n");
       *isLogin = 1;
       accountList[foundIndex].failCount = 0;
-      *session = accountList[foundIndex]; // lấy session
-      ///// kiểm tra lấy session ok chưa!
+      *session = accountList[foundIndex]; // get session
+      ///// check if session initialized correctly!
       printf("\n");
-      printf("CHECK SESSION lúc đăng nhập thành công\n");
+      printf("CHECK SESSION upon successful login\n");
       printf("%s | %s | %d | %d\n", (*(session)).studentId,
              (*(session)).password, (*(session)).role, (*(session)).isLocked);
       printf("\n");
 
-      // persist reset failCount (đồng bộ file)
+      // persist reset failCount (file sync)
       saveAccount(foundIndex, &accountList[foundIndex]);
 
     } else {
       printf("\n");
-      printf(ANSI_BRIGHT_RED "MẬT KHẨU KHÔNG ĐÚNG!\n");
+      printf(ANSI_BRIGHT_RED "INCORRECT PASSWORD!\n");
       (accountList[foundIndex].failCount)++;
 
       if (accountList[foundIndex].failCount >= 3) {
         accountList[foundIndex].isLocked = 1;
         printf("\n");
-        printf(ANSI_BRIGHT_RED "TÀI KHOẢN ĐÃ BỊ KHÓA DO NHẬP SAI MẬT KHẨU 3 LẦN!\n");
-        printf(ANSI_BRIGHT_BLUE "QUAY LẠI MÀN HÌNH ĐĂNG NHẬP...\n");
+        printf(ANSI_BRIGHT_RED "ACCOUNT LOCKED DUE TO 3 FAILED ATTEMPTS!\n");
+        printf(ANSI_BRIGHT_BLUE "RETURNING TO LOGIN SCREEN...\n");
         printf("\n");
         *currentState = loginState;
       }
@@ -160,26 +159,26 @@ void setting(int role, Menu *currentState) {
     int choice;
     printf(ANSI_COLOR_CYAN ANSI_BOLD);
     printf("╔════════════════════════════════════════╗\n");
-    printf("║             MENU MEMBER                ║\n");
+    printf("║             MEMBER MENU                ║\n");
     printf("╚════════════════════════════════════════╝\n");
     printf(ANSI_COLOR_RESET "\n");
     printf(ANSI_BOLD ANSI_COLOR_GREEN " [1] " ANSI_COLOR_RESET
-                                      "CHỨC NĂNG MEMBER\n");
+                                      "MEMBER FUNCTIONS\n");
     printf(ANSI_BOLD ANSI_COLOR_GREEN " [2] " ANSI_COLOR_RESET
-                                      "ĐỔI MẬT KHẨU\n");
-    printf(ANSI_BOLD ANSI_COLOR_YELLOW " [3] " ANSI_COLOR_RESET "ĐĂNG XUẤT\n");
+                                      "CHANGE PASSWORD\n");
+    printf(ANSI_BOLD ANSI_COLOR_YELLOW " [3] " ANSI_COLOR_RESET "LOGOUT\n");
     printf("\n");
     printf(ANSI_COLOR_CYAN ANSI_BOLD
            "------------------------------------------\n" ANSI_COLOR_RESET);
     printf(ANSI_BOLD ANSI_COLOR_YELLOW
-           " ❯ HÃY CHỌN CHỨC NĂNG: " ANSI_COLOR_RESET);
+           " ❯ SELECT FUNCTION: " ANSI_COLOR_RESET);
     if (scanf("%d", &choice) != 1) {
-      choice = 0; // Gán giá trị không hợp lệ nếu nhập chữ
+      choice = 0; // Assign invalid value if input is not a number
     }
     while (getchar() != '\n')
-      ; // Xóa bộ đệm để tránh treo chương trình
+      ; // Clear buffer to prevent hanging
     if (choice == 1) {
-      /// chưa có import
+      /// not implemented
     } else if (choice == 2) {
       *currentState = changePasswordState;
     } else if (choice == 3) {
@@ -189,26 +188,26 @@ void setting(int role, Menu *currentState) {
     int choice;
     printf(ANSI_COLOR_CYAN ANSI_BOLD);
     printf("╔════════════════════════════════════════╗\n");
-    printf("║           MENU BAN CHỦ NHIỆM           ║\n");
+    printf("║         MANAGEMENT BOARD MENU          ║\n");
     printf("╚════════════════════════════════════════╝\n");
     printf(ANSI_COLOR_RESET "\n");
     printf(ANSI_BOLD ANSI_COLOR_GREEN " [1] " ANSI_COLOR_RESET
-                                      "CHỨC NĂNG BAN CHỦ NHIỆM\n");
+                                      "MANAGEMENT FUNCTIONS\n");
     printf(ANSI_BOLD ANSI_COLOR_GREEN " [2] " ANSI_COLOR_RESET
-                                      "ĐỔI MẬT KHẨU CHO SINH VIÊN THEO MSSV\n");
-    printf(ANSI_BOLD ANSI_COLOR_YELLOW " [3] " ANSI_COLOR_RESET "ĐĂNG XUẤT\n");
+                                      "CHANGE PASSWORD FOR STUDENT BY ID\n");
+    printf(ANSI_BOLD ANSI_COLOR_YELLOW " [3] " ANSI_COLOR_RESET "LOGOUT\n");
     printf("\n");
     printf(ANSI_COLOR_CYAN ANSI_BOLD
            "------------------------------------------\n" ANSI_COLOR_RESET);
     printf(ANSI_BOLD ANSI_COLOR_YELLOW
-           " ❯ HÃY CHỌN CHỨC NĂNG: " ANSI_COLOR_RESET);
+           " ❯ SELECT FUNCTION: " ANSI_COLOR_RESET);
     if (scanf("%d", &choice) != 1) {
       choice = 0;
     }
     while (getchar() != '\n')
       ;
     if (choice == 1) {
-      // chưa có import
+      // not implemented
     } else if (choice == 2) {
       *currentState = changePasswordState;
     } else if (choice == 3) {
@@ -223,21 +222,20 @@ void changePassword(account *accountList, int role, int *quantity,
   if (role == 0) {
     char passwordChange[MAX_PASS_LEN], oldPassword[MAX_PASS_LEN];
     printf("\n");
-    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ MẬT KHẨU CŨ : " ANSI_COLOR_RESET);
+    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ OLD PASSWORD : " ANSI_COLOR_RESET);
     inputString(oldPassword, MAX_PASS_LEN);
     if (strcmp(oldPassword, session->password) == 0) {
       printf("\n");
-      printf(ANSI_BRIGHT_GREEN "XÁC MINH MẬT KHẨU CŨ THÀNH CÔNG!\n");
+      printf(ANSI_BRIGHT_GREEN "OLD PASSWORD VERIFIED SUCCESSFULLY!\n");
       printf("\n");
       printf(ANSI_BOLD ANSI_COLOR_YELLOW
-             " ❯ NHẬP MẬT KHẨU CẦN ĐỔI : " ANSI_COLOR_RESET); // bị trôi lệnh
+             " ❯ ENTER NEW PASSWORD : " ANSI_COLOR_RESET);
       inputString(passwordChange, MAX_PASS_LEN);
       printf("\n");
-      printf(ANSI_BRIGHT_CYAN "ĐANG THỰC HIỆN ĐỔI..\n");
+      printf(ANSI_BRIGHT_CYAN "UPDATING PASSWORD...\n");
 
-      // dùng loop tìm account session trong accountList vị trí thứ mấy sau đó
-      // sẽ đổi mk ở accountList[vi tri tìm thấy] và ghi vào file => đồng bộ
-      // trạng thái
+      // Loop to find session account in accountList, then update 
+      // password and sync with file
       for (int i = 0; i < *quantity; i++) {
         if (strcmp(accountList[i].studentId, session->studentId) == 0) {
           foundIndex = i;
@@ -250,17 +248,17 @@ void changePassword(account *accountList, int role, int *quantity,
         // Persist by seeking directly to record offset
         saveAccount(foundIndex, &accountList[foundIndex]);
         printf("\n");
-        printf(ANSI_BRIGHT_GREEN "ĐỔI MẬT KHẨU THÀNH CÔNG!\n");
+        printf(ANSI_BRIGHT_GREEN "PASSWORD CHANGED SUCCESSFULLY!\n");
         printf("\n");
       } else {
         // not found
-        printf(ANSI_BRIGHT_RED "KHÔNG TÌM THẤY TÀI KHOẢN TRONG HỆ THỐNG\n");
+        printf(ANSI_BRIGHT_RED "ACCOUNT NOT FOUND IN SYSTEM\n");
       }
     }
 
     else {
       printf("\n");
-      printf(ANSI_BRIGHT_RED "BẠN ĐÃ NHẬP SAI MẬT KHẨU\n");
+      printf(ANSI_BRIGHT_RED "INCORRECT PASSWORD ENTERED\n");
       printf("\n");
     }
 
@@ -269,7 +267,7 @@ void changePassword(account *accountList, int role, int *quantity,
   else {
     printf("\n");
     printf(ANSI_BOLD ANSI_COLOR_YELLOW
-           " ❯ NHẬP MÃ SINH VIÊN CẦN ĐỔI: " ANSI_COLOR_RESET);
+           " ❯ ENTER STUDENT ID TO CHANGE PASSWORD: " ANSI_COLOR_RESET);
     char studentIDneedtochangePassword[MAX_ID_LEN];
     inputString(studentIDneedtochangePassword, MAX_ID_LEN);
     for (int i = 0; i < *quantity; i++) {
@@ -277,20 +275,20 @@ void changePassword(account *accountList, int role, int *quantity,
           0) {
         found = 1;
         printf("\n");
-        printf(ANSI_BRIGHT_GREEN "ĐÃ XÁC THỰC MÃ SINH VIÊN CẦN ĐỔI!: %s\n",
+        printf(ANSI_BRIGHT_GREEN "STUDENT ID VERIFIED!: %s\n",
                studentIDneedtochangePassword);
         printf("\n");
         printf(ANSI_BOLD ANSI_COLOR_YELLOW
-               " ❯ NHẬP MẬT KHẨU CẦN ĐỔI CHO SINH VIÊN %s: ",
-               studentIDneedtochangePassword); // bị trôi lệnh
+               " ❯ ENTER NEW PASSWORD FOR STUDENT %s: ",
+               studentIDneedtochangePassword);
         char passwordChange[MAX_PASS_LEN];
         inputString(passwordChange, MAX_PASS_LEN);
         printf("\n");
-        printf(ANSI_BRIGHT_CYAN "ĐANG THỰC HIỆN ĐỔI..\n");
+        printf(ANSI_BRIGHT_CYAN "UPDATING PASSWORD...\n");
         strcpy(accountList[i].password, passwordChange);
         saveAccount(i, &accountList[i]);
         printf("\n");
-        printf(ANSI_BRIGHT_GREEN "ĐỔI MẬT KHẨU THÀNH CÔNG CHO %s\n",
+        printf(ANSI_BRIGHT_GREEN "PASSWORD CHANGED SUCCESSFULLY FOR %s\n",
                studentIDneedtochangePassword);
         printf("\n");
         break;
@@ -299,7 +297,7 @@ void changePassword(account *accountList, int role, int *quantity,
     if (found == 0) {
       printf("\n");
       printf(ANSI_BRIGHT_RED
-             "KHÔNG TÌM THẤY MÃ SINH VIÊN CẦN ĐỔI TRONG HỆ THỐNG\n");
+             "STUDENT ID NOT FOUND IN SYSTEM\n");
       printf("\n");
     }
   }
@@ -308,12 +306,12 @@ void changePassword(account *accountList, int role, int *quantity,
 void saveAccount(int index, account *acc) {
   FILE *file = fopen("data/accounts.dat", "rb+");
   if (file == NULL) {
-    printf(ANSI_BRIGHT_RED "LỖI: Không thể mở file để cập nhật dữ liệu!\n" ANSI_COLOR_RESET);
+    printf(ANSI_BRIGHT_RED "ERROR: Unable to open file for update!\n" ANSI_COLOR_RESET);
     return;
   }
   fseek(file, (long)index * sizeof(account), SEEK_SET);
   if (fwrite(acc, sizeof(account), 1, file) != 1) {
-    printf(ANSI_BRIGHT_RED "LỖI: Ghi dữ liệu thất bại!\n" ANSI_COLOR_RESET);
+    printf(ANSI_BRIGHT_RED "ERROR: Data write failed!\n" ANSI_COLOR_RESET);
   }
   fclose(file);
 }

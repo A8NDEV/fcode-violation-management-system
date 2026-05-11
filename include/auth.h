@@ -13,25 +13,23 @@
 
 
 
-/// BẢNG MÀU
+/// COLOR PALETTE
 #define ANSI_COLOR_RESET   "\x1b[0m"
 #define ANSI_BOLD          "\x1b[1m"
-// ==========================================
-// 3. Màu chữ cơ bản (Regular Foreground)
+// 3. Regular Foreground Colors
 // ==========================================
 #define ANSI_COLOR_BLACK    "\x1b[30m"
 #define ANSI_COLOR_RED      "\x1b[31m"
 #define ANSI_COLOR_GREEN    "\x1b[32m"
 #define ANSI_COLOR_YELLOW   "\x1b[33m"
 #define ANSI_COLOR_BLUE     "\x1b[34m"
-#define ANSI_COLOR_MAGENTA  "\x1b[35m"  // Tím hồng
-#define ANSI_COLOR_CYAN     "\x1b[36m"  // Xanh lam nhạt
+#define ANSI_COLOR_MAGENTA  "\x1b[35m"  // Pink Magenta
+#define ANSI_COLOR_CYAN     "\x1b[36m"  // Light Cyan
 #define ANSI_COLOR_WHITE    "\x1b[37m"
 
+// 4. Bright Foreground Colors
 // ==========================================
-// 4. Màu chữ sáng/đậm (Bright Foreground)
-// ==========================================
-#define ANSI_BRIGHT_BLACK   "\x1b[90m"  // Xám đen
+#define ANSI_BRIGHT_BLACK   "\x1b[90m"  // Dark Gray
 #define ANSI_BRIGHT_RED     "\x1b[91m"
 #define ANSI_BRIGHT_GREEN   "\x1b[92m"
 #define ANSI_BRIGHT_YELLOW  "\x1b[93m"
