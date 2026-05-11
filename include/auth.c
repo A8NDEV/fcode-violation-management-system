@@ -79,9 +79,7 @@ void login(account *accountList, int *quantity, int *isLogin,
 
     printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ MÃ SINH VIÊN: " ANSI_COLOR_RESET);
 
-    scanf(" %99[^\n]", studentIdInput);
-    while (getchar() != '\n')
-      ;
+    inputString(studentIdInput, 100);
 
     if (strlen(studentIdInput) != 8) {
       printf("\n" ANSI_COLOR_RED
@@ -114,8 +112,7 @@ void login(account *accountList, int *quantity, int *isLogin,
     printf(ANSI_BOLD ANSI_COLOR_YELLOW
            " ❯ MẬT KHẨU    : " ANSI_COLOR_RESET); // SẼ ADD CƠ CHẾ THAY MẬT KHẨU
                                                   // THÀNH *
-    scanf(" %49[^\n]", studentPasswordInput); 
-    while (getchar() != '\n');
+    inputString(studentPasswordInput, MAX_PASS_LEN);
 
     if (strcmp(accountList[foundIndex].password, studentPasswordInput) ==
         0) { // k khóa thì check password ng dùng nhập vào
@@ -124,7 +121,7 @@ void login(account *accountList, int *quantity, int *isLogin,
       *isLogin = 1;
       accountList[foundIndex].failCount = 0;
       *session = accountList[foundIndex]; // lấy session
-      ///// kỉm tra lấy session ok chưa!
+      ///// kiểm tra lấy session ok chưa!
       printf("\n");
       printf("CHECK SESSION lúc đăng nhập thành công\n");
       printf("%s | %s | %d | %d\n", (*(session)).studentId,
@@ -227,16 +224,14 @@ void changePassword(account *accountList, int role, int *quantity,
     char passwordChange[MAX_PASS_LEN], oldPassword[MAX_PASS_LEN];
     printf("\n");
     printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ MẬT KHẨU CŨ : " ANSI_COLOR_RESET);
-    scanf(" %49[^\n]", oldPassword);
-    while (getchar() != '\n');
+    inputString(oldPassword, MAX_PASS_LEN);
     if (strcmp(oldPassword, session->password) == 0) {
       printf("\n");
       printf(ANSI_BRIGHT_GREEN "XÁC MINH MẬT KHẨU CŨ THÀNH CÔNG!\n");
       printf("\n");
       printf(ANSI_BOLD ANSI_COLOR_YELLOW
              " ❯ NHẬP MẬT KHẨU CẦN ĐỔI : " ANSI_COLOR_RESET); // bị trôi lệnh
-      scanf(" %49[^\n]", passwordChange);
-      while (getchar() != '\n');
+      inputString(passwordChange, MAX_PASS_LEN);
       printf("\n");
       printf(ANSI_BRIGHT_CYAN "ĐANG THỰC HIỆN ĐỔI..\n");
 
@@ -276,8 +271,7 @@ void changePassword(account *accountList, int role, int *quantity,
     printf(ANSI_BOLD ANSI_COLOR_YELLOW
            " ❯ NHẬP MÃ SINH VIÊN CẦN ĐỔI: " ANSI_COLOR_RESET);
     char studentIDneedtochangePassword[MAX_ID_LEN];
-    scanf(" %8[^\n]", studentIDneedtochangePassword);
-    while (getchar() != '\n');
+    inputString(studentIDneedtochangePassword, MAX_ID_LEN);
     for (int i = 0; i < *quantity; i++) {
       if (strcmp(accountList[i].studentId, studentIDneedtochangePassword) ==
           0) {
@@ -290,8 +284,7 @@ void changePassword(account *accountList, int role, int *quantity,
                " ❯ NHẬP MẬT KHẨU CẦN ĐỔI CHO SINH VIÊN %s: ",
                studentIDneedtochangePassword); // bị trôi lệnh
         char passwordChange[MAX_PASS_LEN];
-        scanf(" %49[^\n]", passwordChange);
-        while (getchar() != '\n');
+        inputString(passwordChange, MAX_PASS_LEN);
         printf("\n");
         printf(ANSI_BRIGHT_CYAN "ĐANG THỰC HIỆN ĐỔI..\n");
         strcpy(accountList[i].password, passwordChange);
@@ -323,4 +316,18 @@ void saveAccount(int index, account *acc) {
     printf(ANSI_BRIGHT_RED "LỖI: Ghi dữ liệu thất bại!\n" ANSI_COLOR_RESET);
   }
   fclose(file);
+}
+
+void inputString(char *buffer, int size) {
+  if (fgets(buffer, size, stdin) != NULL) {
+    size_t len = strlen(buffer);
+    if (len > 0 && buffer[len - 1] == '\n') {
+      buffer[len - 1] = '\0';
+    } else {
+      // Buffer was too small, clear the rest of the line
+      int c;
+      while ((c = getchar()) != '\n' && c != EOF)
+        ;
+    }
+  }
 }

@@ -66,5 +66,6 @@ void setting(int role, Menu *currentState);
 void menu(account *accountList, int *quantity, int *isLogin, account *session);
 void changePassword(account *accountList,int role, int *quantity,account *session);
 void saveAccount(int index, account *acc);
+void inputString(char *buffer, int size);
 
 #endif 
