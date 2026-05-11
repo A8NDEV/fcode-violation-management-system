@@ -16,7 +16,7 @@ Account Init_Account(){
     Account res;
     strcpy(res.studentId,"");
     strcpy(res.password,"");
-    res.role = res.isLooked = res.failCount = 0;
+    res.role = res.isLocked = res.failCount = 0;
     return res;
 }
 Violation Init_Violation(){
