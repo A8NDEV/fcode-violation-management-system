@@ -141,10 +141,19 @@ void login(account *accountList, int *quantity, int *isLogin,
 
     } else {
       printf("\n");
-      printf(ANSI_BRIGHT_RED "MẬT KHẨU KHÔNG ĐÚNG!\n"); //
+      printf(ANSI_BRIGHT_RED "MẬT KHẨU KHÔNG ĐÚNG!\n");
       (accountList[foundIndex].failCount)++;
 
-      // Persist change to file immediately
+      if (accountList[foundIndex].failCount >= 3) {
+        accountList[foundIndex].isLocked = 1;
+        printf("\n");
+        printf(ANSI_BRIGHT_RED "TÀI KHOẢN ĐÃ BỊ KHÓA DO NHẬP SAI MẬT KHẨU 3 LẦN!\n");
+        printf(ANSI_BRIGHT_BLUE "QUAY LẠI MÀN HÌNH ĐĂNG NHẬP...\n");
+        printf("\n");
+        *currentState = loginState;
+      }
+
+      // Persist changes to file
       FILE *file_upd = fopen("data/accounts.dat", "rb+");
       if (file_upd != NULL) {
         fseek(file_upd, (long)foundIndex * sizeof(account), SEEK_SET);
@@ -153,23 +162,6 @@ void login(account *accountList, int *quantity, int *isLogin,
       }
 
       if (accountList[foundIndex].failCount >= 3) {
-        accountList[foundIndex].isLocked = 1;
-
-        // Persist lock to file
-        FILE *file_lock = fopen("data/accounts.dat", "rb+");
-        if (file_lock != NULL) {
-          fseek(file_lock, (long)foundIndex * sizeof(account), SEEK_SET);
-          fwrite(&accountList[foundIndex], sizeof(account), 1, file_lock);
-          fclose(file_lock);
-        }
-
-        printf("\n");
-        printf(ANSI_BRIGHT_RED
-               "TÀI KHOẢN ĐÃ BỊ KHÓA DO NHẬP SAI MẬT KHẨU 3 LẦN!\n");
-        printf(ANSI_BRIGHT_BLUE
-               "ĐANG THOÁT KHỎI CHƯƠNG TRÌNH DO NHẬP SAI 3 LẦN!\n");
-        printf("\n");
-        *currentState = exitState;
         return;
       }
     }
