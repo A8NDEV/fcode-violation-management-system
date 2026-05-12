@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <termios.h>
 
 
 #define MAX_ID_LEN 9
@@ -65,5 +67,6 @@ void menu(account *accountList, int *quantity, int *isLogin, account *session);
 int changePassword(account *accountList,int role, int *quantity,account *session);
 void saveAccount(int index, account *acc);
 void inputString(char *buffer, int size);
+void inputPassword(char *password, int maxSize);
 
 #endif 

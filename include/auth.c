@@ -113,7 +113,7 @@ void login(account *accountList, int *quantity, int *isLogin,
     printf(ANSI_BOLD ANSI_COLOR_YELLOW
            " ❯ PASSWORD    : " ANSI_COLOR_RESET); // WILL ADD PASSWORD MASKING
                                                   // (*) THÀNH *
-    inputString(studentPasswordInput, MAX_PASS_LEN);
+    inputPassword(studentPasswordInput, MAX_PASS_LEN);
 
     if (strcmp(accountList[foundIndex].password, studentPasswordInput) ==
         0) { // password match check
@@ -223,14 +223,14 @@ int changePassword(account *accountList, int role, int *quantity,
     char passwordChange[MAX_PASS_LEN], oldPassword[MAX_PASS_LEN];
     printf("\n");
     printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ OLD PASSWORD : " ANSI_COLOR_RESET);
-    inputString(oldPassword, MAX_PASS_LEN);
+    inputPassword(oldPassword, MAX_PASS_LEN);
     if (strcmp(oldPassword, session->password) == 0) {
       printf("\n");
       printf(ANSI_BRIGHT_GREEN "OLD PASSWORD VERIFIED SUCCESSFULLY!\n");
       printf("\n");
       printf(ANSI_BOLD ANSI_COLOR_YELLOW
              " ❯ ENTER NEW PASSWORD : " ANSI_COLOR_RESET);
-      inputString(passwordChange, MAX_PASS_LEN);
+      inputPassword(passwordChange, MAX_PASS_LEN);
       printf("\n");
       printf(ANSI_BRIGHT_CYAN "UPDATING PASSWORD...\n");
 
@@ -285,7 +285,7 @@ int changePassword(account *accountList, int role, int *quantity,
                " ❯ ENTER NEW PASSWORD FOR STUDENT %s: ",
                studentIDneedtochangePassword);
         char passwordChange[MAX_PASS_LEN];
-        inputString(passwordChange, MAX_PASS_LEN);
+        inputPassword(passwordChange, MAX_PASS_LEN);
         printf("\n");
         printf(ANSI_BRIGHT_CYAN "UPDATING PASSWORD...\n");
         strcpy(accountList[i].password, passwordChange);
@@ -333,4 +333,48 @@ void inputString(char *buffer, int size) {
         ;
     }
   }
+}
+
+void inputPassword(char *password, int maxSize) {
+  struct termios oldt, newt;
+  int i = 0;
+  char c;
+
+  // 1. Save current terminal settings
+  tcgetattr(STDIN_FILENO, &oldt);
+  newt = oldt;
+
+  // 2. Disable echo and canonical mode
+  newt.c_lflag &= ~(ECHO | ICANON);
+
+  // 3. Apply new settings
+  tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+
+  while (i < maxSize - 1) {
+    c = getchar();
+
+    // Check for Enter key
+    if (c == '\n' || c == '\r') {
+      password[i] = '\0';
+      break;
+    }
+    // Handle Backspace (ASCII 127 on Mac, 8 on others)
+    else if (c == 127 || c == 8) {
+      if (i > 0) {
+        i--;
+        printf("\b \b");
+        fflush(stdout);
+      }
+    }
+    // Capture other printable characters
+    else if (c >= 32 && c <= 126) {
+      password[i++] = c;
+      printf("*");
+      fflush(stdout);
+    }
+  }
+
+  // 4. Restore original settings
+  tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+  printf("\n");
 }
