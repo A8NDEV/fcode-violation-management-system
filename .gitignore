@@ -12,3 +12,5 @@ Makefile.win
 *.win
 
 *.dat
+docs
+data

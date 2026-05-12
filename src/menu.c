@@ -2,6 +2,7 @@
 #include "auth.h"
 #include "member.h"
 #include "utils.h"
+#include "violation.h"
 #include <stdio.h>
 
 int show_bcn_menu(Account *session, Member memberList[], int *memberCount, Account accountList[], Violation violationList[], int *violationCount) {
@@ -33,8 +34,14 @@ int show_bcn_menu(Account *session, Member memberList[], int *memberCount, Accou
             Menu_remove(memberCount, memberList, accountList, violationCount, violationList);
             break;
         case 4:
+            Menu_record_violation(memberCount, memberList, violationCount, violationList);
+            break;
         case 5:
+            Menu_mark_paid(memberCount, memberList, violationCount, violationList);
+            break;
         case 6:
+            Menu_view_all_violations(*memberCount, memberList, *violationCount, violationList);
+            break;
         case 7:
         case 8:
             break;

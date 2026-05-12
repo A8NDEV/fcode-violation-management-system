@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-void login(Account *accountList, int *quantity, int *isLogin, void *notUsed, Account *session) {
+void login(Account *accountList, int *quantity, int *isLogin, Menu *currentState, Account *session) {
     char studentIdInput[100], studentPasswordInput[MAX_PASS_LEN];
     printf(ANSI_COLOR_CYAN ANSI_BOLD);
     printf("╔════════════════════════════════════════╗\n");
