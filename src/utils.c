@@ -26,17 +26,17 @@ void clear_buffer(void){
 }
 
 void Announcement_unaivailable_option(){
-    printf("Lua chon ko ton tai!");
+    printf("Option is not available!");
     Sleep(3000);
     system("cls");
 }
 void Announcement_wrong_format(){
-    printf("Dinh dang khong hop le!");
+    printf("Invalid format!");
     Sleep(3000);
     system("cls");
 }
 void Announcement_uaivailable_member(){
-    printf("Member khong ton tai.");
+    printf("Member does not exist.");
     Sleep(3000);
     system("cls");
 }
@@ -48,13 +48,13 @@ void Announcement_complete_action(){
 }
 void Announcement_error_acction(){
     system("cls");
-    printf("Action Error!\n");
+    printf("Action failed!\n");
     Sleep(2000);
     system("cls");
 }
 
 void Input_user_choose(int *input){
-    printf("Your choose: ");
+    printf("Your choice: ");
     scanf("%d",input);
     clear_buffer();
 }
@@ -124,7 +124,7 @@ void Input_team(int *input){
 }
 void Input_role(int *input){
     bool ok = false,wrong = false;
-    printf("[0] | Member\n[1] | Leader/Vice\n[2] | Ban Chu Nhiem\n");
+    printf("[0] | Member\n[1] | Leader/Vice\n[2] | BCN\n");
     while(!ok){
         if(wrong == false)  printf("Enter member's role: ");
         else    printf("Invalid input, try again: ");
