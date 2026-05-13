@@ -47,6 +47,8 @@ void menu(account *accountList, int *quantity, int *isLogin, account *session) {
   }
 }
 
+void login(Account *accountList, int *quantity, int *isLogin, Menu *currentState, Account *session) {
+    char studentIdInput[100], studentPasswordInput[MAX_PASS_LEN];
 //--------------------------------------------------------
 //--------------------------------------------------------
 void start(account *accountList, int *quantity) {

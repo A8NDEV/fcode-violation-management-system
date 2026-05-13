@@ -72,6 +72,8 @@ static int Delete_member_account(const int index, int *member_size, Member membe
     return 1;
 }
 
+
+
 static int Delete_violation(const char studentId[], int *violation_size, Violation violation_list[]) {
     for (int i = 0; i < (*violation_size); ++i) {
         if (strcmp(studentId, violation_list[i].studentId) == 0) {
