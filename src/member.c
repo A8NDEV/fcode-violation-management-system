@@ -199,3 +199,18 @@ void Menu_update(const int member_size, Member member_list[], Account account_li
         Announcement_complete_action();
     }
 }
+void Print_Deleted_Members(const int member_size, Member member_list[]) {
+    printf("=============Danh sach member da bi xoa=============\n");
+    for (int i = 0; i < member_size; ++i) {
+        printf("+ Student ID : %s\n", member_list[i].studentId);
+        printf("+ Full name : %s\n", member_list[i].fullName);
+        printf("+ Email : %s\n", member_list[i].email);
+        printf("+ Phone number : %s\n", member_list[i].phone);
+        const char *teams[] = {"Academic", "Planning", "HR", "Media"};
+        printf("+ Team : %s\n", teams[member_list[i].team]);
+        const char  *roles[] = {"Member", "Leader/Vice", "BCN"};
+        printf("+ Role : %s\n", roles[member_list[i].role]);
+        printf("===================================================\n");
+    }
+    printf("===================================================\n");
+}
