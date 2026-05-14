@@ -1,4 +1,10 @@
 #include "auth.h"
+#ifdef _WIN32
+#include <conio.h>
+#else
+#include <termios.h>
+#endif
+
 //--------------------------------------------------------
 // Auth - Login program flow!
 void menu(account *accountList, int *quantity, int *isLogin, account *session) {
@@ -47,10 +53,8 @@ void menu(account *accountList, int *quantity, int *isLogin, account *session) {
   }
 }
 
-void login(Account *accountList, int *quantity, int *isLogin, Menu *currentState, Account *session) {
-    char studentIdInput[100], studentPasswordInput[MAX_PASS_LEN];
-//--------------------------------------------------------
-//--------------------------------------------------------
+
+
 void start(account *accountList, int *quantity) {
   printf("-----------------------------\n");
   printf("ADMIN LOG!\n");
@@ -88,8 +92,8 @@ void login(account *accountList, int *quantity, int *isLogin,
 
     if (strlen(studentIdInput) != 8) {
       printf("\n" ANSI_COLOR_RED
-             "STUDENT ID MUST BE EXACTLY 8 CHARACTERS! (Current length: %lu)\n",
-             strlen(studentIdInput));
+             "STUDENT ID MUST BE EXACTLY 8 CHARACTERS! (Current length: %d)\n",
+             (int)strlen(studentIdInput));
       continue;
     }
 
@@ -338,45 +342,36 @@ void inputString(char *buffer, int size) {
 }
 
 void inputPassword(char *password, int maxSize) {
-  struct termios oldt, newt;
-  int i = 0;
-  char c;
+    int i = 0;
+    char c;
 
-  // 1. Save current terminal settings
-  tcgetattr(STDIN_FILENO, &oldt);
-  newt = oldt;
+    while (i < maxSize - 1) {
+#ifdef _WIN32
+        c = _getch();
+#else
+        // Simplified fallback for non-Windows if needed
+        c = getchar(); 
+#endif
 
-  // 2. Disable echo and canonical mode
-  newt.c_lflag &= ~(ECHO | ICANON);
-
-  // 3. Apply new settings
-  tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-
-  while (i < maxSize - 1) {
-    c = getchar();
-
-    // Check for Enter key
-    if (c == '\n' || c == '\r') {
-      password[i] = '\0';
-      break;
+        // Check for Enter key
+        if (c == '\n' || c == '\r') {
+            password[i] = '\0';
+            break;
+        }
+        // Handle Backspace
+        else if (c == 127 || c == 8) {
+            if (i > 0) {
+                i--;
+                printf("\b \b");
+                fflush(stdout);
+            }
+        }
+        // Capture other printable characters
+        else if (c >= 32 && c <= 126) {
+            password[i++] = c;
+            printf("*");
+            fflush(stdout);
+        }
     }
-    // Handle Backspace (ASCII 127 on Mac, 8 on others)
-    else if (c == 127 || c == 8) {
-      if (i > 0) {
-        i--;
-        printf("\b \b");
-        fflush(stdout);
-      }
-    }
-    // Capture other printable characters
-    else if (c >= 32 && c <= 126) {
-      password[i++] = c;
-      printf("*");
-      fflush(stdout);
-    }
-  }
-
-  // 4. Restore original settings
-  tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-  printf("\n");
+    printf("\n");
 }

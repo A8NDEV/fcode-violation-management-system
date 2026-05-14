@@ -10,8 +10,11 @@ typedef struct Member{
     double totalFine;
 }Member;
 typedef struct Account{
-    char studentId[SHORT_SIZE],password[LONG_SIZE];
-    int role,isLocked,failCount;
+    char studentId[SHORT_SIZE];
+    char password[LONG_SIZE];
+    int role;
+    int isLocked;
+    int failCount;
 }Account;
 typedef struct Violation{
     char studentId[SHORT_SIZE],note[LONG_SIZE];

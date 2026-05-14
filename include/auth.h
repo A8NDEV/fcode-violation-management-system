@@ -1,17 +1,14 @@
 #ifndef AUTH_H
 #define AUTH_H
-
+#define MAX_ID_LEN 9
+#define MAX_PASS_LEN 50
+#define MAX_ACCOUNT 1000
 
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <termios.h>
 
-
-#define MAX_ID_LEN 9
-#define MAX_PASS_LEN 50
-#define MAX_ACCOUNT 1000
 
 
 
@@ -39,16 +36,9 @@
 #define ANSI_BRIGHT_MAGENTA "\x1b[95m"
 #define ANSI_BRIGHT_CYAN    "\x1b[96m"
 #define ANSI_BRIGHT_WHITE   "\x1b[97m"
+#include "types.h"
 
-
-struct account {
-    char studentId[MAX_ID_LEN];
-    char password[MAX_PASS_LEN];
-    int role;  
-    int isLocked; 
-    int failCount; 
-}; 
-typedef struct account account;
+typedef Account account;
 
 enum menuState { 
     startState,

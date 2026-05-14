@@ -433,3 +433,63 @@ void Menu_view_all_violations(int memberCount, Member memberList[],
     getchar();
     system("cls");
 }
+
+/* -------------------------------------------------------
+ * BCN: Thong ke vi pham theo ban (Team)
+ * ------------------------------------------------------- */
+void view_Statistics_By_Team(Member memberList[], int memberCount,
+                             Violation violationList[], int violationCount) {
+    printf(ANSI_COLOR_CYAN ANSI_BOLD
+           "\n╔══════════════════════════════════╗\n"
+           "║     THONG KE VI PHAM THEO BAN    ║\n"
+           "╚══════════════════════════════════╝\n"
+           ANSI_COLOR_RESET);
+
+    double totalFineTeam[4] = {0, 0, 0, 0};
+    int totalViolationsTeam[4] = {0, 0, 0, 0};
+    int membersInTeam[4] = {0, 0, 0, 0};
+
+    /* Dem so thanh vien moi ban */
+    for (int i = 0; i < memberCount; i++) {
+        if (memberList[i].team >= 0 && memberList[i].team < 4) {
+            membersInTeam[memberList[i].team]++;
+        }
+    }
+
+    /* Tinh tong tien va so vi pham moi ban */
+    for (int i = 0; i < violationCount; i++) {
+        int mIdx = Find_studentId(memberCount, memberList, violationList[i].studentId);
+        if (mIdx != -1) {
+            int team = memberList[mIdx].team;
+            if (team >= 0 && team < 4) {
+                totalViolationsTeam[team]++;
+                totalFineTeam[team] += violationList[i].fine;
+            }
+        }
+    }
+
+    /* In ket qua */
+    printf(ANSI_BOLD "%-12s | %-12s | %-12s | %-15s\n",
+           "Ten Ban", "TV Co Loi", "Tong Vi Pham", "Tong Tien Phat");
+    printf("%-12s | %-12s | %-12s | %-15s\n" ANSI_COLOR_RESET,
+           "------------", "------------", "------------", "---------------");
+
+    double grandTotalFine = 0;
+    int grandTotalViolations = 0;
+
+    for (int i = 0; i < 4; i++) {
+        printf("%-12s | %-12d | %-12d | %-15.0f VND\n",
+               TEAM_LABELS[i], membersInTeam[i], totalViolationsTeam[i], totalFineTeam[i]);
+        grandTotalFine += totalFineTeam[i];
+        grandTotalViolations += totalViolationsTeam[i];
+    }
+
+    printf(ANSI_COLOR_YELLOW "------------------------------------------------------------\n");
+    printf("%-12s | %-12s | %-12d | %-15.0f VND\n",
+           "TONG CONG", "", grandTotalViolations, grandTotalFine);
+    printf(ANSI_COLOR_RESET);
+
+    printf("\nNhan Enter de quay lai...");
+    getchar();
+    system("cls");
+}

@@ -43,6 +43,8 @@ int show_bcn_menu(Account *session, Member memberList[], int *memberCount, Accou
             Menu_view_all_violations(*memberCount, memberList, *violationCount, violationList);
             break;
         case 7:
+            view_Statistics_By_Team(memberList, *memberCount, violationList, *violationCount);
+            break;
         case 8:
             break;
         case 9:
