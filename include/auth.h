@@ -2,6 +2,7 @@
 #define AUTH_H
 #define MAX_ID_LEN 9
 #define MAX_PASS_LEN 50
+#define MIN_PASS_LEN 9
 #define MAX_ACCOUNT 1000
 
 #include <stdio.h>

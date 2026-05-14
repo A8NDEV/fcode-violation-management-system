@@ -4,7 +4,7 @@
 #include "types.h"
 #include <string.h>
 #include <stdbool.h>
-
+#include "auth.h"
 static int is_alpha(char x){
     //check variable x is character ?
     if((int)x < 65)  return 0;
@@ -208,7 +208,7 @@ bool Validate_password(char pass[]){
     - It is not made up of only one repeated character
     */
     int n = strlen(pass);
-    if(n < 8 || 40 < n) return false;
+    if(n < MIN_PASS_LEN || MAX_PASS_LEN < n) return false;
 
     bool ok[5] = {0,0,0,0,0};
     for(int i = 0;i < n;++i){
