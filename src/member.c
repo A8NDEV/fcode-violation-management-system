@@ -3,6 +3,7 @@
 #include "utils.h"
 #include "validate.h"
 #include "fileio.h"
+#include "auth.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -20,7 +21,7 @@ void Menu_create(int *member_size, Member member_list[], Account account_list[])
     Member new_member = Init_Member();
     Input_studentId(new_member.studentId);
     if (Find_studentId(*member_size, member_list, new_member.studentId) != -1) {
-        printf("Da co member voi MSSV la %s.\nTao tai khoan that bai\n", new_member.studentId);
+        printf(ANSI_COLOR_RED "Member with Student ID %s already exists.\nAccount creation failed\n" ANSI_COLOR_RESET, new_member.studentId);
         Sleep(3000);
         system("cls");
         return;
@@ -45,10 +46,10 @@ static int Find_and_validate_studentId(const int member_size, Member member_list
     Input_studentId(studentId);
     int idx = Find_studentId(member_size, member_list, studentId);
     while (idx == -1) {
-        printf("Khong ton tai member voi MSSV %s\n", studentId);
+        printf(ANSI_COLOR_RED "Member with Student ID %s does not exist\n" ANSI_COLOR_RESET, studentId);
         int user_choose = -1;
-        printf("[0] | back to memnu\n");
-        printf("[1] | try again\n");
+        printf(ANSI_BOLD ANSI_COLOR_YELLOW " [0] " ANSI_COLOR_RESET "Back to menu\n");
+        printf(ANSI_BOLD ANSI_COLOR_GREEN " [1] " ANSI_COLOR_RESET "Try again\n");
         Input_user_choose(&user_choose);
         if (user_choose == 0) {
             system("cls");
@@ -100,10 +101,10 @@ void Menu_remove(int *member_size, Member member_list[], Account account_list[],
     char studentId[SHORT_SIZE];
     int idx = Find_and_validate_studentId(*member_size, member_list, studentId);
     if (idx == -1) return;
-    printf("WARNING: This action will delete the member, account, and related violations.\n");
+    printf(ANSI_COLOR_RED ANSI_BOLD "WARNING: This action will delete the member, account, and related violations.\n" ANSI_COLOR_RESET);
     printf("Do you want to continue?\n");
-    printf("[0] | No, cancel\n");
-    printf("[1] | Yes, delete\n");
+    printf(ANSI_BOLD ANSI_COLOR_YELLOW " [0] " ANSI_COLOR_RESET "No, cancel\n");
+    printf(ANSI_BOLD ANSI_COLOR_GREEN " [1] " ANSI_COLOR_RESET "Yes, delete\n");
     int user_choose = 0;
     Input_user_choose(&user_choose);
     switch (user_choose) {
@@ -123,30 +124,45 @@ void Menu_remove(int *member_size, Member member_list[], Account account_list[],
 
 static void print_memnu_update(const int index, Member member_list[], Account account_list[]) {
     Member res = member_list[index];
-    printf("=============Thong tin hien tai cua member=============\n");
-    printf("+ Student ID : %s\n", res.studentId);
-    printf("+ Full name : %s\n", res.fullName);
-    printf("+ Email : %s\n", res.email);
-    printf("+ Phone number : %s\n", res.phone);
+    printf(ANSI_COLOR_CYAN ANSI_BOLD);
+    printf("╔════════════════════════════════════════╗\n");
+    printf("║      CURRENT MEMBER INFORMATION        ║\n");
+    printf("╚════════════════════════════════════════╝\n");
+    printf(ANSI_COLOR_RESET "\n");
+    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Student ID   : " ANSI_COLOR_RESET "%s\n", res.studentId);
+    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Full name    : " ANSI_COLOR_RESET "%s\n", res.fullName);
+    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Email        : " ANSI_COLOR_RESET "%s\n", res.email);
+    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Phone number : " ANSI_COLOR_RESET "%s\n", res.phone);
     const char *teams[] = {"Academic", "Planning", "HR", "Media"};
-    printf("+ Team : %s\n", teams[res.team]);
+    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Team         : " ANSI_COLOR_RESET "%s\n", teams[res.team]);
     const char  *roles[] = {"Member", "Leader/Vice", "Ban Chu Nhiem"};
-    printf("+ Role : %s\n", roles[res.role]);
-    printf("+ Password : %s\n", account_list[index].password);
-    printf("===================Thong tin can sua===================\n");
-    printf("[1] | full-name\n");
-    printf("[2] | email\n");
-    printf("[3] | phone number\n");
-    printf("[4] | team\n");
-    printf("[5] | role\n");
-    printf("[6] | password\n");
-    printf("[7] | Reset trang thai Locked\n");
-    printf("[0] | Thoat\n");
+    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Role         : " ANSI_COLOR_RESET "%s\n", roles[res.role]);
+    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Password     : " ANSI_COLOR_RESET "%s\n", account_list[index].password);
+    printf("\n");
+    printf(ANSI_COLOR_CYAN ANSI_BOLD);
+    printf("╔════════════════════════════════════════╗\n");
+    printf("║      INFORMATION TO BE UPDATED         ║\n");
+    printf("╚════════════════════════════════════════╝\n");
+    printf(ANSI_COLOR_RESET "\n");
+    printf(ANSI_BOLD ANSI_COLOR_GREEN " [1] " ANSI_COLOR_RESET "Full name\n");
+    printf(ANSI_BOLD ANSI_COLOR_GREEN " [2] " ANSI_COLOR_RESET "Email\n");
+    printf(ANSI_BOLD ANSI_COLOR_GREEN " [3] " ANSI_COLOR_RESET "Phone number\n");
+    printf(ANSI_BOLD ANSI_COLOR_GREEN " [4] " ANSI_COLOR_RESET "Team\n");
+    printf(ANSI_BOLD ANSI_COLOR_GREEN " [5] " ANSI_COLOR_RESET "Role\n");
+    printf(ANSI_BOLD ANSI_COLOR_GREEN " [6] " ANSI_COLOR_RESET "Password\n");
+    printf(ANSI_BOLD ANSI_COLOR_GREEN " [7] " ANSI_COLOR_RESET "Reset Locked status\n");
+    printf(ANSI_BOLD ANSI_COLOR_YELLOW " [0] " ANSI_COLOR_RESET "Exit\n");
+    printf("\n");
+    printf(ANSI_COLOR_CYAN ANSI_BOLD "------------------------------------------\n" ANSI_COLOR_RESET);
 }
 
 void Menu_update(const int member_size, Member member_list[], Account account_list[]) {
-    printf("======================================\n");
-    printf("MSSV cua member can sua thong tin.\n");
+    printf(ANSI_COLOR_CYAN ANSI_BOLD);
+    printf("╔════════════════════════════════════════╗\n");
+    printf("║             UPDATE MEMBER              ║\n");
+    printf("╚════════════════════════════════════════╝\n");
+    printf(ANSI_COLOR_RESET "\n");
+    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Enter Student ID of member to update:\n" ANSI_COLOR_RESET);
     char studentId[SHORT_SIZE];
     int idx = Find_and_validate_studentId(member_size, member_list, studentId);
     if (idx == -1) return;
@@ -197,5 +213,23 @@ void Menu_update(const int member_size, Member member_list[], Account account_li
         member_list[idx] = upd_member;
         account_list[idx] = upd_account;
         Announcement_complete_action();
+    }
+}
+void Print_Deleted_Members(const int member_size, Member member_list[]) {
+    printf(ANSI_COLOR_CYAN ANSI_BOLD);
+    printf("╔════════════════════════════════════════╗\n");
+    printf("║          DELETED MEMBERS LIST          ║\n");
+    printf("╚════════════════════════════════════════╝\n");
+    printf(ANSI_COLOR_RESET "\n");
+    for (int i = 0; i < member_size; ++i) {
+        printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Student ID   : " ANSI_COLOR_RESET "%s\n", member_list[i].studentId);
+        printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Full name    : " ANSI_COLOR_RESET "%s\n", member_list[i].fullName);
+        printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Email        : " ANSI_COLOR_RESET "%s\n", member_list[i].email);
+        printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Phone number : " ANSI_COLOR_RESET "%s\n", member_list[i].phone);
+        const char *teams[] = {"Academic", "Planning", "HR", "Media"};
+        printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Team         : " ANSI_COLOR_RESET "%s\n", teams[member_list[i].team]);
+        const char  *roles[] = {"Member", "Leader/Vice", "Management Board"};
+        printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Role         : " ANSI_COLOR_RESET "%s\n", roles[member_list[i].role]);
+        printf(ANSI_COLOR_CYAN ANSI_BOLD "------------------------------------------\n" ANSI_COLOR_RESET);
     }
 }
