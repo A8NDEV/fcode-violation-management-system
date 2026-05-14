@@ -32,6 +32,9 @@ int Count_accounts_dat(){
 int Count_violations_dat(){
     return Count_records("data/violations.dat",sizeof(Violation));
 }
+int Count_deleted_members_dat(){
+    return Count_records("data/deleted_members.dat",sizeof(Member));
+}
 
 static int Read_dat(const char path[],const int n,void *list,size_t record_size){
     if(list == NULL)    return 0;
@@ -53,6 +56,10 @@ bool Read_accounts_dat(const int size,Account account_list[]){
 bool Read_violations_dat(const int size,Violation violation_list[]){
     if(size < 0)    return false;
     return (Read_dat("data/violations.dat",size,violation_list,sizeof(Violation)) == size);
+}
+bool Read_deleted_members_dat(const int size,Member member_list[]){
+    if(size < 0)    return false;
+    return (Read_dat("data/deleted_members.dat",size,member_list,sizeof(Member)) == size);
 }
 
 static bool Append_dat(const char path[],const void *record,size_t record_size){

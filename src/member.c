@@ -233,3 +233,23 @@ void Print_Deleted_Members(const int member_size, Member member_list[]) {
         printf(ANSI_COLOR_CYAN ANSI_BOLD "------------------------------------------\n" ANSI_COLOR_RESET);
     }
 }
+
+void Menu_view_deleted_members(void) {
+    int deleted_member_count = Count_deleted_members_dat();
+    if (deleted_member_count < 0) {
+        Announcement_error_acction();
+        return;
+    }
+    if (deleted_member_count == 0) {
+        printf("No deleted members found.\n");
+        return;
+    }
+
+    Member deleted_member_list[MAX_ACCOUNT];
+    if (Read_deleted_members_dat(deleted_member_count, deleted_member_list) == false) {
+        Announcement_error_acction();
+        return;
+    }
+
+    Print_Deleted_Members(deleted_member_count, deleted_member_list);
+}

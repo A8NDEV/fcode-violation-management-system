@@ -18,8 +18,9 @@ int show_bcn_menu(Account *session, Member memberList[], int *memberCount, Accou
         printf("5. Mark fine as paid\n");
         printf("6. View all violations\n");
         printf("7. Statistics by team\n");
-        printf("8. Export report\n");
-        printf("9. Change password\n");
+        printf("8. View deleted members\n");
+        printf("9. Export report\n");
+        printf("10. Change password\n");
         printf("0. Logout\n");
         printf("====================================\n");
         Input_user_choose(&choice);
@@ -46,8 +47,11 @@ int show_bcn_menu(Account *session, Member memberList[], int *memberCount, Accou
             view_Statistics_By_Team(memberList, *memberCount, violationList, *violationCount);
             break;
         case 8:
+            Menu_view_deleted_members();
             break;
         case 9:
+            break;
+        case 10:
             changePassword(accountList, session->role, memberCount, session);
             break;
         case 0:
