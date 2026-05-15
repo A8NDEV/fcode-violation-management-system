@@ -76,19 +76,6 @@ int show_member_menu(Account *session, Member memberList[], int memberCount, Acc
     while (1) {
 
 
-        printf("\n======================================\n");
-        printf("           MEMBER MENU                \n");
-        printf("======================================\n");
-        printf("1. View profile\n");
-        printf("2. View violation history\n");
-        printf("3. View total debt\n");
-        printf("4. View club member list\n");
-        printf("5. Change password\n");
-        printf("0. Logout\n");
-        printf("======================================\n");
-        Input_user_choose(&choice);
-
-
         printf(ANSI_COLOR_CYAN ANSI_BOLD);
         printf("╔════════════════════════════════════════╗\n");
         printf("║              MEMBER MENU               ║\n");
