@@ -222,7 +222,7 @@ void setting(int role, Menu *currentState) {
   }
 }
 int changePassword(account *accountList, int role, int *quantity,
-                    account *session) {
+                   account *session) {
   int found = 0;
   int foundIndex = -1; // <-- initialize to -1
   if (role == 0) {

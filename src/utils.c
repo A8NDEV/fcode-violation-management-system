@@ -7,6 +7,7 @@
 #include <stdbool.h>
 #include "types.h"
 #include "validate.h"
+#include "auth.h"
 
 void Stdin_string(char str[],int siz){
     if(fgets(str,siz,stdin) == NULL){
@@ -105,7 +106,10 @@ void Input_phone(char phone_num[]){
 void Input_team(int *input){
     bool ok = false;
     bool wrong = false;
-    printf("[0] | Academic\n[1] | Planning\n[2] | HR\n[3] | Media\n");
+    printf(ANSI_BOLD ANSI_COLOR_GREEN " [0] " ANSI_COLOR_RESET "Academic\n");
+    printf(ANSI_BOLD ANSI_COLOR_GREEN " [1] " ANSI_COLOR_RESET "Planning\n");
+    printf(ANSI_BOLD ANSI_COLOR_GREEN " [2] " ANSI_COLOR_RESET "HR\n");
+    printf(ANSI_BOLD ANSI_COLOR_GREEN " [3] " ANSI_COLOR_RESET "Media\n");
     while(!ok){
         if(wrong == false)  printf("Enter member's team: ");
         else    printf("Invalid input, try again: ");
@@ -124,7 +128,9 @@ void Input_team(int *input){
 }
 void Input_role(int *input){
     bool ok = false,wrong = false;
-    printf("[0] | Member\n[1] | Leader/Vice\n[2] | Ban Chu Nhiem\n");
+    printf(ANSI_BOLD ANSI_COLOR_GREEN " [0] " ANSI_COLOR_RESET "Member\n");
+    printf(ANSI_BOLD ANSI_COLOR_GREEN " [1] " ANSI_COLOR_RESET "Leader/Vice\n");
+    printf(ANSI_BOLD ANSI_COLOR_GREEN " [2] " ANSI_COLOR_RESET "Ban Chu Nhiem\n");
     while(!ok){
         if(wrong == false)  printf("Enter member's role: ");
         else    printf("Invalid input, try again: ");

@@ -13,17 +13,17 @@ int show_bcn_menu(Account *session, Member memberList[], int *memberCount, Accou
         printf("║          BCN MANAGEMENT MENU           ║\n");
         printf("╚════════════════════════════════════════╝\n");
         printf(ANSI_COLOR_RESET "\n");
-        printf(ANSI_BOLD ANSI_COLOR_GREEN "[1]  " ANSI_COLOR_RESET "ADD MEMBER\n");
-        printf(ANSI_BOLD ANSI_COLOR_GREEN "[2]  " ANSI_COLOR_RESET "UPDATE MEMBER INFO\n");
-        printf(ANSI_BOLD ANSI_COLOR_GREEN "[3]  " ANSI_COLOR_RESET "REMOVE MEMBER\n");
-        printf(ANSI_BOLD ANSI_COLOR_GREEN "[4]  " ANSI_COLOR_RESET "RECORD VIOLATION\n");
-        printf(ANSI_BOLD ANSI_COLOR_GREEN "[5]  " ANSI_COLOR_RESET "MARK FINE AS PAID\n");
-        printf(ANSI_BOLD ANSI_COLOR_GREEN "[6]  " ANSI_COLOR_RESET "VIEW ALL VIOLATIONS\n");
-        printf(ANSI_BOLD ANSI_COLOR_GREEN "[7]  " ANSI_COLOR_RESET "STATISTICS BY TEAM\n");
-        printf(ANSI_BOLD ANSI_COLOR_GREEN "[8]  " ANSI_COLOR_RESET "VIEW DELETED MEMBERS\n");
-        printf(ANSI_BOLD ANSI_COLOR_GREEN "[9]  " ANSI_COLOR_RESET "EXPORT REPORT\n");
+        printf(ANSI_BOLD ANSI_COLOR_GREEN " [1] " ANSI_COLOR_RESET "ADD MEMBER\n");
+        printf(ANSI_BOLD ANSI_COLOR_GREEN " [2] " ANSI_COLOR_RESET "UPDATE MEMBER INFO\n");
+        printf(ANSI_BOLD ANSI_COLOR_GREEN " [3] " ANSI_COLOR_RESET "REMOVE MEMBER\n");
+        printf(ANSI_BOLD ANSI_COLOR_GREEN " [4] " ANSI_COLOR_RESET "RECORD VIOLATION\n");
+        printf(ANSI_BOLD ANSI_COLOR_GREEN " [5] " ANSI_COLOR_RESET "MARK FINE AS PAID\n");
+        printf(ANSI_BOLD ANSI_COLOR_GREEN " [6] " ANSI_COLOR_RESET "VIEW ALL VIOLATIONS\n");
+        printf(ANSI_BOLD ANSI_COLOR_GREEN " [7] " ANSI_COLOR_RESET "STATISTICS BY TEAM\n");
+        printf(ANSI_BOLD ANSI_COLOR_GREEN " [8] " ANSI_COLOR_RESET "VIEW DELETED MEMBERS\n");
+        printf(ANSI_BOLD ANSI_COLOR_GREEN " [9] " ANSI_COLOR_RESET "EXPORT REPORT\n");
         printf(ANSI_BOLD ANSI_COLOR_GREEN "[10] " ANSI_COLOR_RESET "CHANGE PASSWORD\n");
-        printf(ANSI_BOLD ANSI_COLOR_YELLOW " [0]  " ANSI_COLOR_RESET "LOGOUT\n");
+        printf(ANSI_BOLD ANSI_COLOR_YELLOW " [0] " ANSI_COLOR_RESET "LOGOUT\n");
         printf("\n");
         printf(ANSI_COLOR_CYAN ANSI_BOLD
                "------------------------------------------\n" ANSI_COLOR_RESET);
