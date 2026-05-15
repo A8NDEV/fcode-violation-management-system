@@ -27,17 +27,17 @@ void clear_buffer(void){
 }
 
 void Announcement_unaivailable_option(){
-    printf("Lua chon ko ton tai!");
+    printf("Option does not exist!");
     Sleep(3000);
     system("cls");
 }
 void Announcement_wrong_format(){
-    printf("Dinh dang khong hop le!");
+    printf("Invalid format!");
     Sleep(3000);
     system("cls");
 }
 void Announcement_uaivailable_member(){
-    printf("Member khong ton tai.");
+    printf("Member does not exist.");
     Sleep(3000);
     system("cls");
 }
@@ -130,7 +130,7 @@ void Input_role(int *input){
     bool ok = false,wrong = false;
     printf(ANSI_BOLD ANSI_COLOR_GREEN " [0] " ANSI_COLOR_RESET "Member\n");
     printf(ANSI_BOLD ANSI_COLOR_GREEN " [1] " ANSI_COLOR_RESET "Leader/Vice\n");
-    printf(ANSI_BOLD ANSI_COLOR_GREEN " [2] " ANSI_COLOR_RESET "Ban Chu Nhiem\n");
+    printf(ANSI_BOLD ANSI_COLOR_GREEN " [2] " ANSI_COLOR_RESET "BCN\n");
     while(!ok){
         if(wrong == false)  printf("Enter member's role: ");
         else    printf("Invalid input, try again: ");
