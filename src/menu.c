@@ -60,6 +60,7 @@ int show_bcn_menu(Account *session, Member memberList[], int *memberCount, Accou
 int show_member_menu(Account *session, Member memberList[], int memberCount, Account accountList[], int accountCount, Violation violationList[], int violationCount) {
     int choice;
     while (1) {
+
         printf("\n======================================\n");
         printf("           MEMBER MENU                \n");
         printf("======================================\n");
@@ -71,6 +72,28 @@ int show_member_menu(Account *session, Member memberList[], int memberCount, Acc
         printf("0. Logout\n");
         printf("======================================\n");
         Input_user_choose(&choice);
+
+        printf(ANSI_COLOR_CYAN ANSI_BOLD);
+        printf("╔════════════════════════════════════════╗\n");
+        printf("║              MEMBER MENU               ║\n");
+        printf("╚════════════════════════════════════════╝\n");
+        printf(ANSI_COLOR_RESET "\n");
+        printf(ANSI_BOLD ANSI_COLOR_GREEN " [1] " ANSI_COLOR_RESET "VIEW PROFILE\n");
+        printf(ANSI_BOLD ANSI_COLOR_GREEN " [2] " ANSI_COLOR_RESET "VIEW VIOLATION HISTORY\n");
+        printf(ANSI_BOLD ANSI_COLOR_GREEN " [3] " ANSI_COLOR_RESET "VIEW TOTAL DEBT\n");
+        printf(ANSI_BOLD ANSI_COLOR_GREEN " [4] " ANSI_COLOR_RESET "VIEW CLUB MEMBER LIST\n");
+        printf(ANSI_BOLD ANSI_COLOR_GREEN " [5] " ANSI_COLOR_RESET "CHANGE PASSWORD\n");
+        printf(ANSI_BOLD ANSI_COLOR_GREEN " [6] " ANSI_COLOR_RESET "VIEW MEMBER SORTED LIST BY NUMBER OF VIOLATIONS\n");
+        printf(ANSI_BOLD ANSI_COLOR_YELLOW " [0] " ANSI_COLOR_RESET "LOGOUT\n");
+        printf("\n");
+        printf(ANSI_COLOR_CYAN ANSI_BOLD
+               "------------------------------------------\n" ANSI_COLOR_RESET);
+        printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ SELECT FUNCTION: " ANSI_COLOR_RESET);
+        if (scanf("%d", &choice) != 1) {
+            choice = -1;
+        }
+        clear_buffer();
+
         switch (choice) {
         case 1: {
             int idx = Find_studentId(memberCount, memberList, session->studentId);
@@ -105,6 +128,22 @@ int show_member_menu(Account *session, Member memberList[], int memberCount, Acc
         }
         case 5:
             changePassword(accountList, session->role, &accountCount, session);
+            break;
+        case 6:
+            printf("ENTER YOUR CHOICE\n");
+            printf(ANSI_BOLD ANSI_COLOR_GREEN "[1]" ANSI_COLOR_RESET " ASCENDING\n");
+            printf(ANSI_BOLD ANSI_COLOR_GREEN "[2]" ANSI_COLOR_RESET " DESCENDING\n");
+            int choice;
+            if (scanf("%d",&choice) == 1) {
+                if (choice == 1) {
+                    sort_CLB_Violations(memberList,memberCount,1);
+
+                } else if (choice == 2 ) {
+                    sort_CLB_Violations(memberList,memberCount,0);
+                } else {
+                    Announcement_unaivailable_option();
+                }
+            }
             break;
         case 0:
             printf("Logged out successfully.\n");
