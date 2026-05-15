@@ -254,39 +254,48 @@ void Menu_view_deleted_members(void) {
     Print_Deleted_Members(deleted_member_count, deleted_member_list);
 }
 void view_Profile (Member currentuser) {
-    printf("\n--- PROFILE ---\n");
-    printf("Student ID : %s\n", currentuser.studentId);
-    printf("Full Name  : %s\n", currentuser.fullName);
-    printf("Email      : %s\n", currentuser.email);
-    printf("Phone      : %s\n", currentuser.phone);
+    printf(ANSI_COLOR_CYAN ANSI_BOLD);
+    printf("╔════════════════════════════════════════╗\n");
+    printf("║                PROFILE                 ║\n");
+    printf("╚════════════════════════════════════════╝\n");
+    printf(ANSI_COLOR_RESET "\n");
+    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Student ID   : " ANSI_COLOR_RESET "%s\n", currentuser.studentId);
+    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Full Name    : " ANSI_COLOR_RESET "%s\n", currentuser.fullName);
+    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Email        : " ANSI_COLOR_RESET "%s\n", currentuser.email);
+    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Phone        : " ANSI_COLOR_RESET "%s\n", currentuser.phone);
     char *teams[] = {"Academic", "Planning", "HR", "Media"};
-    char *roles[] = {"Member", "Leader/Vice", "Ban Chu Nhiem"};
-    printf("Team       : %s\n", teams[currentuser.team]);
-    printf("Role       : %s\n", roles[currentuser.role]);
+    char *roles[] = {"Member", "Leader/Vice", "Management Board"};
+    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Team         : " ANSI_COLOR_RESET "%s\n", teams[currentuser.team]);
+    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Role         : " ANSI_COLOR_RESET "%s\n", roles[currentuser.role]);
 }
 void view_CLB_Profile (Member member[], int size_memberlist) {
-    printf("\n===============HO SO DANH SACH THANH VIEN CLB===============\n");
+    printf(ANSI_COLOR_CYAN ANSI_BOLD);
+    printf("╔════════════════════════════════════════╗\n");
+    printf("║            CLUB MEMBERS LIST           ║\n");
+    printf("╚════════════════════════════════════════╝\n");
+    printf(ANSI_COLOR_RESET "\n");
     for (int i = 0; i < size_memberlist; i++) {
-        printf("\nHO VA TEN         :   %s\n",member[i].fullName);
+        printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Full Name    : " ANSI_COLOR_RESET "%s\n", member[i].fullName);
         if (member[i].team == 0) {
-            printf("BAN           :   ACADEMIC\n");
+            printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Team         : " ANSI_COLOR_RESET "ACADEMIC\n");
         } else if ( member[i].team == 1) {
-            printf("BAN           :   PLANNING\n");
+            printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Team         : " ANSI_COLOR_RESET "PLANNING\n");
         } else if (member[i].team == 2) {
-            printf("BAN           :   HR\n");
+            printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Team         : " ANSI_COLOR_RESET "HR\n");
         } else if (member[i].team == 3 ) {
-            printf("BAN           :   MEDIA\n");
+            printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Team         : " ANSI_COLOR_RESET "MEDIA\n");
         } else {
-            printf("\nKHONG XAC DINH BAN THUOC VE\n");
+            printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Team         : " ANSI_COLOR_RESET "UNKNOWN TEAM\n");
         }
         if (member[i].role == 0) {
-            printf("CHUC VU       :   MEMBER\n");
+            printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Role         : " ANSI_COLOR_RESET "MEMBER\n");
         } else if ( member[i].role == 1) {
-            printf("CHUC VU       :   LEADER/VICE\n");
+            printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Role         : " ANSI_COLOR_RESET "LEADER/VICE\n");
         } else if ( member[i].role == 2) {
-            printf("CHUC VU       :   BAN CHU NHIEM\n");
+            printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Role         : " ANSI_COLOR_RESET "MANAGEMENT BOARD\n");
         } else {
-            printf("KHONG XAC DINH CHUC VU\n");
+            printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Role         : " ANSI_COLOR_RESET "UNKNOWN ROLE\n");
         }
+        printf(ANSI_COLOR_CYAN ANSI_BOLD "------------------------------------------\n" ANSI_COLOR_RESET);
     }
 }

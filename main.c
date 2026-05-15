@@ -6,6 +6,7 @@
 #include "include/fileio.h"
 #include "include/utils.h"
 #include "include/menu.h"
+#include <windows.h>
 
 int main() {
     Account   accountList[MAX_ACCOUNT];
@@ -60,6 +61,6 @@ int main() {
                                        violationList, violationCount);
         }
     }
-
+    system("cls");
     return 0;
 }
