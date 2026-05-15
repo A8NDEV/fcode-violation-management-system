@@ -9,10 +9,12 @@
 int Count_members_dat();
 int Count_accounts_dat();
 int Count_violations_dat();
+int Count_deleted_members_dat();
 
 bool Read_members_dat(const int size,Member member_list[]);
 bool Read_accounts_dat(const int size,Account account_list[]);
 bool Read_violations_dat(const int size,Violation violation_list[]);
+bool Read_deleted_members_dat(const int size,Member member_list[]);
 
 bool Append_members_dat(const Member member);
 bool Append_accounts_dat(const Account account);

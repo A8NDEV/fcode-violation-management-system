@@ -50,12 +50,12 @@ static double Get_fine_by_reason(int reason) {
 /* In tieu de bang vi pham */
 static void Print_violation_table_header(void) {
     printf(ANSI_COLOR_CYAN ANSI_BOLD);
-    printf("\n%-4s %-12s %-25s %-10s %-20s %-12s %-12s %-10s\n",
-           "STT", "MSSV", "Ho va ten", "Ban", "Ly do",
-           "Ngay", "Tien phat", "Trang thai");
-    printf("%-4s %-12s %-25s %-10s %-20s %-12s %-12s %-10s\n",
-           "---", "----", "---------", "---", "-----",
-           "----", "---------", "----------");
+    printf("\n%-4s %-12s %-25s %-10s %-30s %-12s %-12s %-10s\n",
+           "NO", "STUDENT ID", "FULL NAME", "TEAM", "REASON",
+           "DATE", "FINE", "STATUS");
+    printf("%-4s %-12s %-25s %-10s %-30s %-12s %-12s %-10s\n",
+           "---", "----------", "---------", "----", "------",
+           "----", "----", "------");
     printf(ANSI_COLOR_RESET);
 }
 
@@ -69,7 +69,7 @@ static void Print_violation_row(int stt, const Violation *v,
     const char *paidColor = (v->isPaid == 1)
         ? ANSI_BRIGHT_GREEN : ANSI_BRIGHT_RED;
 
-    printf("%-4d %-12s %-25s %-10s %-20s %-12s %-12.0f %s%-10s%s\n",
+    printf("%-4d %-12s %-25s %-10s %-30s %-12s %-12.0f %s%-10s%s\n",
            stt,
            v->studentId,
            fullName,
@@ -90,17 +90,17 @@ void check_to_Paid(Violation violation[], int total_Violations,
     int found = 0;
 
     printf(ANSI_COLOR_CYAN ANSI_BOLD);
-    printf("\n%-20s | %-12s | %-12s\n",
-           "Ly do vi pham", "Tien phat", "Trang thai");
-    printf("%-20s | %-12s | %-12s\n",
-           "--------------------", "----------", "----------");
+    printf("\n%-30s | %-12s | %-12s\n",
+           "VIOLATION REASON", "FINE", "STATUS");
+    printf("%-30s | %-12s | %-12s\n",
+           "------------------------------", "----------", "----------");
     printf(ANSI_COLOR_RESET);
 
     for (int i = 0; i < total_Violations; i++) {
         if (strcmp(violation[i].studentId, logged_In_StudentID) == 0
             && violation[i].isPaid == 0) {
             found = 1;
-            printf("%-20s | %-12.0f | %-12s\n",
+            printf("%-30s | %-12.0f | %-12s\n",
                    REASON_LABELS[violation[i].reason],
                    violation[i].fine,
                    PAID_LABELS[0]);
@@ -109,10 +109,10 @@ void check_to_Paid(Violation violation[], int total_Violations,
     }
 
     if (!found) {
-        printf(ANSI_BRIGHT_GREEN "Ban khong co khoan no nao.\n" ANSI_COLOR_RESET);
+        printf(ANSI_BRIGHT_GREEN "YOU HAVE NO OUTSTANDING FINES.\n" ANSI_COLOR_RESET);
         return;
     }
-    printf(ANSI_BRIGHT_YELLOW "\nTONG TIEN CON NO: %.0f VND\n" ANSI_COLOR_RESET,
+    printf(ANSI_BRIGHT_YELLOW "\nTOTAL AMOUNT DUE: %.0f VND\n" ANSI_COLOR_RESET,
            sum_fine);
 }
 
@@ -121,11 +121,14 @@ void view_Own_Violations(Violation violations[], int total_Violations,
     int found = 0;
 
     printf(ANSI_COLOR_CYAN ANSI_BOLD);
-    printf("\n--- LICH SU VI PHAM (%s) ---\n", logged_In_StudentID);
-    printf("%-20s | %-12s | %-12s | %-10s\n",
-           "Ly do", "Ngay vi pham", "Tien phat", "Trang thai");
-    printf("%-20s | %-12s | %-12s | %-10s\n",
-           "--------------------", "------------", "----------", "----------");
+    printf("╔════════════════════════════════════════╗\n");
+    printf("║           VIOLATION HISTORY            ║\n");
+    printf("╚════════════════════════════════════════╝\n");
+    printf("\n" ANSI_BOLD ANSI_COLOR_YELLOW " ❯ STUDENT ID : " ANSI_COLOR_RESET "%s\n", logged_In_StudentID);
+    printf("\n%-30s | %-12s | %-12s | %-10s\n",
+           "REASON", "DATE", "FINE", "STATUS");
+    printf("%-30s | %-12s | %-12s | %-10s\n",
+           "------------------------------", "------------", "----------", "----------");
     printf(ANSI_COLOR_RESET);
 
     for (int i = 0; i < total_Violations; i++) {
@@ -140,7 +143,7 @@ void view_Own_Violations(Violation violations[], int total_Violations,
         const char *paidColor = (violations[i].isPaid == 1)
             ? ANSI_BRIGHT_GREEN : ANSI_BRIGHT_RED;
 
-        printf("%-20s | %-12s | %-12.0f | %s%-10s%s\n",
+        printf("%-30s | %-12s | %-12.0f | %s%-10s%s\n",
                REASON_LABELS[violations[i].reason],
                timeStr,
                violations[i].fine,
@@ -148,7 +151,7 @@ void view_Own_Violations(Violation violations[], int total_Violations,
     }
 
     if (!found)
-        printf("Ban khong co vi pham nao.\n");
+        printf("YOU HAVE NO VIOLATIONS.\n");
 }
 
 /* -------------------------------------------------------
@@ -158,18 +161,18 @@ void view_Own_Violations(Violation violations[], int total_Violations,
 void Menu_record_violation(int *memberCount, Member memberList[],
                            int *violationCount, Violation violationList[]) {
     /* Buoc 1: Chon thanh vien */
-    printf(ANSI_COLOR_CYAN ANSI_BOLD
-           "\n╔══════════════════════════════╗\n"
-           "║      GHI NHAN VI PHAM       ║\n"
-           "╚══════════════════════════════╝\n"
-           ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_CYAN ANSI_BOLD);
+    printf("╔════════════════════════════════════════╗\n");
+    printf("║            RECORD VIOLATION            ║\n");
+    printf("╚════════════════════════════════════════╝\n");
+    printf(ANSI_COLOR_RESET "\n");
 
     char studentId[SHORT_SIZE];
     Input_studentId(studentId);
 
     int memberIdx = Find_studentId(*memberCount, memberList, studentId);
     if (memberIdx == -1) {
-        printf(ANSI_BRIGHT_RED "Khong tim thay thanh vien voi MSSV %s!\n"
+        printf(ANSI_BRIGHT_RED "MEMBER NOT FOUND WITH STUDENT ID %s!\n"
                ANSI_COLOR_RESET, studentId);
         Sleep(2000);
         system("cls");
@@ -177,15 +180,17 @@ void Menu_record_violation(int *memberCount, Member memberList[],
     }
 
     Member *m = &memberList[memberIdx];
-    printf(ANSI_BRIGHT_GREEN ">> Thanh vien: %s (%s)\n" ANSI_COLOR_RESET,
+    printf(ANSI_BRIGHT_GREEN ">> Member: %s (%s)\n" ANSI_COLOR_RESET,
            m->fullName, TEAM_LABELS[m->team]);
 
     /* Buoc 2: Chon ly do vi pham */
-    printf("\n" ANSI_BOLD "Chon ly do vi pham:\n" ANSI_COLOR_RESET);
-    printf("  [0] Khong mac ao CLB    (+%.0f VND)\n", FINE_NO_SHIRT);
-    printf("  [1] Vang hop            (+%.0f VND)\n", FINE_ABSENT);
-    printf("  [2] Khong tham gia HĐ  (+%.0f VND)\n", FINE_NO_ACTIVITY);
-    printf("  [3] Bao luc             (+%.0f VND)\n", FINE_VIOLENCE);
+    printf("\n" ANSI_BOLD "Select violation reason:\n" ANSI_COLOR_RESET);
+    printf(ANSI_BOLD ANSI_COLOR_GREEN " [0] " ANSI_COLOR_RESET "Khong mac ao CLB                  (+%.0f VND)\n", FINE_NO_SHIRT);
+    printf(ANSI_BOLD ANSI_COLOR_GREEN " [1] " ANSI_COLOR_RESET "Vang hop            (+%.0f VND)\n", FINE_ABSENT);
+    printf(ANSI_BOLD ANSI_COLOR_GREEN " [2] " ANSI_COLOR_RESET "Khong tham gia hoat dong        (+%.0f VND)\n", FINE_NO_ACTIVITY);
+    printf(ANSI_BOLD ANSI_COLOR_GREEN " [3] " ANSI_COLOR_RESET "Bao luc                       (+%.0f VND)\n", FINE_VIOLENCE);
+    printf("\n");
+    printf(ANSI_COLOR_CYAN ANSI_BOLD "------------------------------------------\n" ANSI_COLOR_RESET);
 
     int reason;
     Input_violation_reason(&reason);
@@ -193,17 +198,19 @@ void Menu_record_violation(int *memberCount, Member memberList[],
     /* Buoc 3: Xu ly truong hop bao luc */
     if (reason == 3) {
         printf(ANSI_BRIGHT_RED ANSI_BOLD
-               "\n!!! CANH BAO: VI PHAM BAO LUC !!!\n"
-               "Thanh vien nay co the bi Out CLB.\n"
-               "BCN can xu ly thu cong qua chuc nang Xoa thanh vien.\n"
+               "\n!!! WARNING: VIOLENCE VIOLATION !!!\n"
+               "This member may be kicked out of the Club.\n"
+               "BCN must handle this manually via Delete Member.\n"
                ANSI_COLOR_RESET);
-        printf("Ban co muon tiep tuc ghi nhan vi pham nay?\n");
-        printf("  [0] Huy bo\n");
-        printf("  [1] Xac nhan ghi nhan\n");
+        printf("Do you want to continue recording this violation?\n");
+        printf(ANSI_BOLD ANSI_COLOR_YELLOW " [0] " ANSI_COLOR_RESET "Cancel\n");
+        printf(ANSI_BOLD ANSI_COLOR_GREEN " [1] " ANSI_COLOR_RESET "Confirm Record\n");
+        printf("\n");
+        printf(ANSI_COLOR_CYAN ANSI_BOLD "------------------------------------------\n" ANSI_COLOR_RESET);
         int confirm = -1;
         Input_user_choose(&confirm);
         if (confirm != 1) {
-            printf("Da huy ghi nhan.\n");
+            printf("Recording cancelled.\n");
             Sleep(1500);
             system("cls");
             return;
@@ -240,7 +247,7 @@ void Menu_record_violation(int *memberCount, Member memberList[],
     (*violationCount)++;
 
     printf(ANSI_BRIGHT_GREEN
-           "\nGhi nhan thanh cong! Muc phat: %.0f VND\n"
+           "\nRecorded successfully! Fine amount: %.0f VND\n"
            ANSI_COLOR_RESET, newV.fine);
     Sleep(2000);
     system("cls");
@@ -252,11 +259,11 @@ void Menu_record_violation(int *memberCount, Member memberList[],
 
 void Menu_mark_paid(int *memberCount, Member memberList[],
                     int *violationCount, Violation violationList[]) {
-    printf(ANSI_COLOR_CYAN ANSI_BOLD
-           "\n╔══════════════════════════════╗\n"
-           "║     DANH DAU DA THU TIEN    ║\n"
-           "╚══════════════════════════════╝\n"
-           ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_CYAN ANSI_BOLD);
+    printf("╔════════════════════════════════════════╗\n");
+    printf("║             MARK AS PAID               ║\n");
+    printf("╚════════════════════════════════════════╝\n");
+    printf(ANSI_COLOR_RESET "\n");
 
     /* Buoc 1: Chon thanh vien */
     char studentId[SHORT_SIZE];
@@ -264,7 +271,7 @@ void Menu_mark_paid(int *memberCount, Member memberList[],
 
     int memberIdx = Find_studentId(*memberCount, memberList, studentId);
     if (memberIdx == -1) {
-        printf(ANSI_BRIGHT_RED "Khong tim thay thanh vien voi MSSV %s!\n"
+        printf(ANSI_BRIGHT_RED "MEMBER NOT FOUND WITH STUDENT ID %s!\n"
                ANSI_COLOR_RESET, studentId);
         Sleep(2000);
         system("cls");
@@ -288,7 +295,7 @@ void Menu_mark_paid(int *memberCount, Member memberList[],
         /* Buoc 3: Kiem tra co vi pham chua thu khong */
         if (unpaidCount == 0) {
             printf(ANSI_BRIGHT_GREEN
-                   "\nKhong con vi pham chua thu cho thanh vien %s.\n"
+                   "\nNO UNPAID VIOLATIONS FOR MEMBER %s.\n"
                    ANSI_COLOR_RESET, m->fullName);
             Sleep(2000);
             system("cls");
@@ -296,25 +303,27 @@ void Menu_mark_paid(int *memberCount, Member memberList[],
         }
 
         /* Buoc 4: Hien thi danh sach vi pham chua thu */
-        printf(ANSI_BOLD "\nDanh sach vi pham chua thu cua %s:\n"
+        printf(ANSI_BOLD "\nUnpaid violations for %s:\n"
                ANSI_COLOR_RESET, m->fullName);
-        printf(ANSI_COLOR_CYAN "%-4s %-20s %-12s %-12s\n",
-               "STT", "Ly do", "Ngay", "Tien phat");
-        printf("%-4s %-20s %-12s %-12s\n" ANSI_COLOR_RESET,
-               "---", "--------------------", "----------", "----------");
+        printf(ANSI_COLOR_CYAN "%-4s %-30s %-12s %-12s\n",
+               "NO", "REASON", "DATE", "FINE");
+        printf("%-4s %-30s %-12s %-12s\n" ANSI_COLOR_RESET,
+               "---", "------------------------------", "----------", "----------");
 
         for (int i = 0; i < unpaidCount; i++) {
             Violation *v = &violationList[unpaidIdx[i]];
             char timeStr[13];
             struct tm *ti = localtime(&v->violationTime);
             strftime(timeStr, sizeof(timeStr), "%d/%m/%Y", ti);
-            printf("%-4d %-20s %-12s %-12.0f\n",
+            printf("%-4d %-30s %-12s %-12.0f\n",
                    i + 1,
                    REASON_LABELS[v->reason],
                    timeStr,
                    v->fine);
         }
-        printf("[0] Thoat\n");
+        printf(ANSI_BOLD ANSI_COLOR_YELLOW " [0] " ANSI_COLOR_RESET "Exit\n");
+        printf("\n");
+        printf(ANSI_COLOR_CYAN ANSI_BOLD "------------------------------------------\n" ANSI_COLOR_RESET);
 
         /* Buoc 5: Chon vi pham can danh dau */
         int choice;
@@ -350,7 +359,7 @@ void Menu_mark_paid(int *memberCount, Member memberList[],
         }
 
         printf(ANSI_BRIGHT_GREEN
-               "Da danh dau vi pham \"%s\" la DA THU!\n"
+               "Marked violation \"%s\" as PAID!\n"
                ANSI_COLOR_RESET, REASON_LABELS[target->reason]);
         Sleep(1500);
         system("cls");
@@ -363,18 +372,20 @@ void Menu_mark_paid(int *memberCount, Member memberList[],
 
 void Menu_view_all_violations(int memberCount, Member memberList[],
                               int violationCount, Violation violationList[]) {
-    printf(ANSI_COLOR_CYAN ANSI_BOLD
-           "\n╔══════════════════════════════════╗\n"
-           "║   DANH SACH VI PHAM TOAN CLB   ║\n"
-           "╚══════════════════════════════════╝\n"
-           ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_CYAN ANSI_BOLD);
+    printf("╔════════════════════════════════════════╗\n");
+    printf("║        ALL CLUB VIOLATIONS LIST        ║\n");
+    printf("╚════════════════════════════════════════╝\n");
+    printf(ANSI_COLOR_RESET "\n");
 
     /* Buoc 1: Chon bo loc */
-    printf(ANSI_BOLD "Chon kieu loc:\n" ANSI_COLOR_RESET);
-    printf("  [0] Tat ca (khong loc)\n");
-    printf("  [1] Loc theo ban (team)\n");
-    printf("  [2] Loc theo ly do vi pham\n");
-    printf("  [3] Loc theo trang thai thu tien\n");
+    printf(ANSI_BOLD "Select filter type:\n" ANSI_COLOR_RESET);
+    printf(ANSI_BOLD ANSI_COLOR_GREEN " [0] " ANSI_COLOR_RESET "All (No filter)\n");
+    printf(ANSI_BOLD ANSI_COLOR_GREEN " [1] " ANSI_COLOR_RESET "Filter by Team\n");
+    printf(ANSI_BOLD ANSI_COLOR_GREEN " [2] " ANSI_COLOR_RESET "Filter by Violation Reason\n");
+    printf(ANSI_BOLD ANSI_COLOR_GREEN " [3] " ANSI_COLOR_RESET "Filter by Payment Status\n");
+    printf("\n");
+    printf(ANSI_COLOR_CYAN ANSI_BOLD "------------------------------------------\n" ANSI_COLOR_RESET);
 
     int filterBy;
     Input_user_choose(&filterBy);
@@ -386,10 +397,10 @@ void Menu_view_all_violations(int memberCount, Member memberList[],
     if (filterBy == 1) {
         Input_team(&filterTeam);
     } else if (filterBy == 2) {
-        printf("Chon ly do: [0] Khong mac ao  [1] Vang hop  [2] Khong HD  [3] Bao luc\n");
+        printf("Select reason: [0] Khong mac ao  [1] Vang hop  [2] Khong HD  [3] Bao luc\n");
         Input_violation_reason(&filterReason);
     } else if (filterBy == 3) {
-        printf("Chon trang thai: [0] Chua thu  [1] Da thu\n");
+        printf("Select status: [0] Unpaid  [1] Paid\n");
         int paid = -1;
         Input_user_choose(&paid);
         if (paid == 0 || paid == 1)
@@ -424,12 +435,74 @@ void Menu_view_all_violations(int memberCount, Member memberList[],
 
     /* Buoc 3: In tong ket */
     printf(ANSI_BRIGHT_YELLOW
-           "\nTong so vi pham hien thi: %d\n"
+           "\nTotal displayed violations: %d\n"
            ANSI_COLOR_RESET, displayCount);
     if (displayCount == 0)
-        printf("Khong co vi pham nao thoa dieu kien.\n");
+        printf("No violations match the conditions.\n");
 
-    printf("\nNhan Enter de quay lai...");
+    printf("\nPress Enter to return...");
+    getchar();
+    system("cls");
+}
+
+/* -------------------------------------------------------
+ * BCN: Thong ke vi pham theo ban (Team)
+ * ------------------------------------------------------- */
+void view_Statistics_By_Team(Member memberList[], int memberCount,
+                             Violation violationList[], int violationCount) {
+    printf(ANSI_COLOR_CYAN ANSI_BOLD);
+    printf("╔════════════════════════════════════════╗\n");
+    printf("║       VIOLATION STATISTICS BY TEAM     ║\n");
+    printf("╚════════════════════════════════════════╝\n");
+    printf(ANSI_COLOR_RESET "\n");
+
+    double totalFineTeam[4] = {0, 0, 0, 0};
+    int totalViolationsTeam[4] = {0, 0, 0, 0};
+    int membersInTeam[4] = {0, 0, 0, 0};
+
+    /* Dem so thanh vien moi ban */
+    for (int i = 0; i < memberCount; i++) {
+        if (memberList[i].team >= 0 && memberList[i].team < 4) {
+            membersInTeam[memberList[i].team]++;
+        }
+    }
+
+    /* Tinh tong tien va so vi pham moi ban */
+    for (int i = 0; i < violationCount; i++) {
+        int mIdx = Find_studentId(memberCount, memberList, violationList[i].studentId);
+        if (mIdx != -1) {
+            int team = memberList[mIdx].team;
+            if (team >= 0 && team < 4) {
+                totalViolationsTeam[team]++;
+                totalFineTeam[team] += violationList[i].fine;
+            }
+        }
+    }
+
+    /* In ket qua */
+    printf(ANSI_BOLD "%-12s | %-12s | %-12s | %-15s\n",
+           "TEAM NAME", "MEMS WITH", "TOTAL", "TOTAL FINE");
+    printf("%-12s | %-12s | %-12s | %-15s\n",
+           "", "VIOLATIONS", "VIOLATIONS", "");
+    printf("%-12s | %-12s | %-12s | %-15s\n" ANSI_COLOR_RESET,
+           "------------", "------------", "------------", "---------------");
+
+    double grandTotalFine = 0;
+    int grandTotalViolations = 0;
+
+    for (int i = 0; i < 4; i++) {
+        printf("%-12s | %-12d | %-12d | %-15.0f VND\n",
+               TEAM_LABELS[i], membersInTeam[i], totalViolationsTeam[i], totalFineTeam[i]);
+        grandTotalFine += totalFineTeam[i];
+        grandTotalViolations += totalViolationsTeam[i];
+    }
+
+    printf(ANSI_COLOR_YELLOW "------------------------------------------------------------\n");
+    printf("%-12s | %-12s | %-12d | %-15.0f VND\n",
+           "GRAND TOTAL", "", grandTotalViolations, grandTotalFine);
+    printf(ANSI_COLOR_RESET);
+
+    printf("\nPress Enter to return...");
     getchar();
     system("cls");
 }

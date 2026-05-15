@@ -31,4 +31,8 @@ void Menu_mark_paid(int *memberCount, Member memberList[],
 void Menu_view_all_violations(int memberCount, Member memberList[],
                               int violationCount, Violation violationList[]);
 
+/* Thong ke vi pham theo ban (Team) */
+void view_Statistics_By_Team(Member memberList[], int memberCount,
+                             Violation violationList[], int violationCount);
+
 #endif

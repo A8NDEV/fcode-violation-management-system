@@ -6,6 +6,7 @@
 #include "include/fileio.h"
 #include "include/utils.h"
 #include "include/menu.h"
+#include <windows.h>
 
 int main() {
     Account   accountList[MAX_ACCOUNT];
@@ -32,12 +33,15 @@ int main() {
     /* Vong lap chinh: chi quan ly trang thai dang nhap / thoat */
     while (1) {
         if (!isLogin) {
-            printf("\n====================================\n");
-            printf("    F-CODE VIOLATION MANAGEMENT     \n");
-            printf("====================================\n");
-            printf("1. Login\n");
-            printf("0. Exit\n");
-            printf("====================================\n");
+            printf(ANSI_COLOR_CYAN ANSI_BOLD);
+            printf("╔════════════════════════════════════════╗\n");
+            printf("║      F-CODE VIOLATION MANAGEMENT       ║\n");
+            printf("╚════════════════════════════════════════╝\n");
+            printf(ANSI_COLOR_RESET "\n");
+            printf(ANSI_BOLD ANSI_COLOR_GREEN " [1] " ANSI_COLOR_RESET "Login\n");
+            printf(ANSI_BOLD ANSI_COLOR_YELLOW " [0] " ANSI_COLOR_RESET "Exit\n");
+            printf("\n");
+            printf(ANSI_COLOR_CYAN ANSI_BOLD "------------------------------------------\n" ANSI_COLOR_RESET);
 
             Input_user_choose(&choice);
 
@@ -56,7 +60,7 @@ int main() {
                                        accountList, accountCount,
                                        violationList, violationCount);
         }
+        system("cls");
     }
-
     return 0;
 }
