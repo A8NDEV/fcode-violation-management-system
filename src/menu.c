@@ -100,20 +100,15 @@ int show_member_menu(Account *session, Member memberList[], int memberCount, Acc
                 printf("Member not found!\n");
                 break;
             }
-            Member *m = &memberList[idx];
-            printf("\n--- PROFILE ---\n");
-            printf("Student ID : %s\n", m->studentId);
-            printf("Full Name  : %s\n", m->fullName);
-            printf("Email      : %s\n", m->email);
-            printf("Phone      : %s\n", m->phone);
-            char *teams[] = {"Academic", "Planning", "HR", "Media"};
-            char *roles[] = {"Member", "Leader/Vice", "Ban Chu Nhiem"};
-            printf("Team       : %s\n", teams[m->team]);
-            printf("Role       : %s\n", roles[m->role]);
+            Member m = memberList[idx];
+            view_Profile(m);
             break;
         }
         case 2:
+            view_Own_Violations(violationList,violationCount,session->studentId);
+            break;
         case 3:
+            check_to_Paid(violationList,violationCount,session->studentId);
             break;
         case 4: {
             char *teams[] = {"Academic", "Planning", "HR", "Media"};

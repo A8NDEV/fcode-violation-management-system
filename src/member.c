@@ -250,6 +250,43 @@ void Menu_view_deleted_members(void) {
         Announcement_error_acction();
         return;
     }
-
+    system("cls");
     Print_Deleted_Members(deleted_member_count, deleted_member_list);
+}
+void view_Profile (Member currentuser) {
+    printf("\n--- PROFILE ---\n");
+    printf("Student ID : %s\n", currentuser.studentId);
+    printf("Full Name  : %s\n", currentuser.fullName);
+    printf("Email      : %s\n", currentuser.email);
+    printf("Phone      : %s\n", currentuser.phone);
+    char *teams[] = {"Academic", "Planning", "HR", "Media"};
+    char *roles[] = {"Member", "Leader/Vice", "Ban Chu Nhiem"};
+    printf("Team       : %s\n", teams[currentuser.team]);
+    printf("Role       : %s\n", roles[currentuser.role]);
+}
+void view_CLB_Profile (Member member[], int size_memberlist) {
+    printf("\n===============HO SO DANH SACH THANH VIEN CLB===============\n");
+    for (int i = 0; i < size_memberlist; i++) {
+        printf("\nHO VA TEN         :   %s\n",member[i].fullName);
+        if (member[i].team == 0) {
+            printf("BAN           :   ACADEMIC\n");
+        } else if ( member[i].team == 1) {
+            printf("BAN           :   PLANNING\n");
+        } else if (member[i].team == 2) {
+            printf("BAN           :   HR\n");
+        } else if (member[i].team == 3 ) {
+            printf("BAN           :   MEDIA\n");
+        } else {
+            printf("\nKHONG XAC DINH BAN THUOC VE\n");
+        }
+        if (member[i].role == 0) {
+            printf("CHUC VU       :   MEMBER\n");
+        } else if ( member[i].role == 1) {
+            printf("CHUC VU       :   LEADER/VICE\n");
+        } else if ( member[i].role == 2) {
+            printf("CHUC VU       :   BAN CHU NHIEM\n");
+        } else {
+            printf("KHONG XAC DINH CHUC VU\n");
+        }
+    }
 }
