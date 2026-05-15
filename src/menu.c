@@ -3,6 +3,7 @@
 #include "member.h"
 #include "utils.h"
 #include "violation.h"
+
 #include <stdio.h>
 
 int show_bcn_menu(Account *session, Member memberList[], int *memberCount, Account accountList[], Violation violationList[], int *violationCount) {
@@ -74,6 +75,8 @@ int show_bcn_menu(Account *session, Member memberList[], int *memberCount, Accou
 int show_member_menu(Account *session, Member memberList[], int memberCount, Account accountList[], int accountCount, Violation violationList[], int violationCount) {
     int choice;
     while (1) {
+
+
         printf(ANSI_COLOR_CYAN ANSI_BOLD);
         printf("╔════════════════════════════════════════╗\n");
         printf("║              MEMBER MENU               ║\n");
@@ -84,6 +87,7 @@ int show_member_menu(Account *session, Member memberList[], int memberCount, Acc
         printf(ANSI_BOLD ANSI_COLOR_GREEN " [3] " ANSI_COLOR_RESET "VIEW TOTAL DEBT\n");
         printf(ANSI_BOLD ANSI_COLOR_GREEN " [4] " ANSI_COLOR_RESET "VIEW CLUB MEMBER LIST\n");
         printf(ANSI_BOLD ANSI_COLOR_GREEN " [5] " ANSI_COLOR_RESET "CHANGE PASSWORD\n");
+        printf(ANSI_BOLD ANSI_COLOR_GREEN " [6] " ANSI_COLOR_RESET "VIEW MEMBER SORTED LIST BY NUMBER OF VIOLATIONS\n");
         printf(ANSI_BOLD ANSI_COLOR_YELLOW " [0] " ANSI_COLOR_RESET "LOGOUT\n");
         printf("\n");
         printf(ANSI_COLOR_CYAN ANSI_BOLD
@@ -93,6 +97,10 @@ int show_member_menu(Account *session, Member memberList[], int memberCount, Acc
             choice = -1;
         }
         clear_buffer();
+
+
+
+
         switch (choice) {
         case 1: {
             int idx = Find_studentId(memberCount, memberList, session->studentId);
@@ -111,17 +119,27 @@ int show_member_menu(Account *session, Member memberList[], int memberCount, Acc
             check_to_Paid(violationList,violationCount,session->studentId);
             break;
         case 4: {
-            char *teams[] = {"Academic", "Planning", "HR", "Media"};
-            char *roles[] = {"Member", "Leader/Vice", "BCN"};
-            printf("\n%-12s %-25s %-10s %-14s\n", "StudentID", "Full Name", "Team", "Role");
-            printf("%-12s %-25s %-10s %-14s\n", "---------", "---------", "----", "----");
-            for (int i = 0; i < memberCount; i++) {
-                printf("%-12s %-25s %-10s %-14s\n", memberList[i].studentId, memberList[i].fullName, teams[memberList[i].team], roles[memberList[i].role]);
-            }
+            view_CLB_Profile(memberList,memberCount);
             break;
         }
         case 5:
             changePassword(accountList, session->role, &accountCount, session);
+            break;
+        case 6:
+            printf("ENTER YOUR CHOICE\n");
+            printf(ANSI_BOLD ANSI_COLOR_GREEN "[1]" ANSI_COLOR_RESET " ASCENDING\n");
+            printf(ANSI_BOLD ANSI_COLOR_GREEN "[2]" ANSI_COLOR_RESET " DESCENDING\n");
+            int choice;
+            if (scanf("%d",&choice) == 1) {
+                if (choice == 1) {
+                    sort_CLB_Violations(memberList,memberCount,1);
+
+                } else if (choice == 2 ) {
+                    sort_CLB_Violations(memberList,memberCount,0);
+                } else {
+                    Announcement_unaivailable_option();
+                }
+            }
             break;
         case 0:
             printf(ANSI_BRIGHT_CYAN "LOGGED OUT SUCCESSFULLY!\n" ANSI_COLOR_RESET);
