@@ -37,47 +37,19 @@ void sort_CLB_Violations(Member member[], int size, int isAscending) {
     
     
     if (isAscending == 1) {
-        printf(ANSI_BRIGHT_YELLOW ANSI_BOLD);
+        printf(ANSI_COLOR_CYAN ANSI_BOLD);
         printf("╔═══════════════════════════════════════════════════════════╗\n");
         printf("║    LIST OF VIOLATIONS (FROM LEAST TO MOST VIOLATIONS)     ║\n");
         printf("╚═══════════════════════════════════════════════════════════╝\n");
         printf(ANSI_COLOR_RESET "\n");
     } else {
-        printf(ANSI_BRIGHT_YELLOW ANSI_BOLD);
+        printf(ANSI_COLOR_CYAN ANSI_BOLD);
         printf("╔═══════════════════════════════════════════════════════════╗\n");
         printf("║    LIST OF VIOLATIONS (FROM MOST TO LEAST VIOLATIONS)     ║\n");
         printf("╚═══════════════════════════════════════════════════════════╝\n");
         printf(ANSI_COLOR_RESET "\n");
     }
     
-    printf(ANSI_BRIGHT_BLUE "┌────┬──────────────┬───────────────────────────┬────────────┬──────────────────┬─────────────────┐\n" ANSI_COLOR_RESET);
-    printf(ANSI_BRIGHT_BLUE "│" ANSI_BRIGHT_MAGENTA ANSI_BOLD " %-2s " ANSI_BRIGHT_BLUE "│" ANSI_BRIGHT_MAGENTA ANSI_BOLD " %-12s " ANSI_BRIGHT_BLUE "│" ANSI_BRIGHT_MAGENTA ANSI_BOLD " %-25s " ANSI_BRIGHT_BLUE "│" ANSI_BRIGHT_MAGENTA ANSI_BOLD " %-10s " ANSI_BRIGHT_BLUE "│" ANSI_BRIGHT_MAGENTA ANSI_BOLD " %-16s " ANSI_BRIGHT_BLUE "│" ANSI_BRIGHT_MAGENTA ANSI_BOLD " %-15s " ANSI_BRIGHT_BLUE "│\n" ANSI_COLOR_RESET,
-           "NO", "STUDENT ID", "FULL NAME", "TEAM", "ROLE", "TOTAL FINE");
-    printf(ANSI_BRIGHT_BLUE "├────┼──────────────┼───────────────────────────┼────────────┼──────────────────┼─────────────────┤\n" ANSI_COLOR_RESET);
-
-    const char *teams[] = {"Academic", "Planning", "HR", "Media"};
-    const char *roles[] = {"Member", "Leader/Vice", "Ban Chu Nhiem"};
-
-    for (int i = 0; i < size; i++) {
-        int teamIdx = (hehe[i].team >= 0 && hehe[i].team <= 3) ? hehe[i].team : 0;
-        int roleIdx = (hehe[i].role >= 0 && hehe[i].role <= 2) ? hehe[i].role : 0;
-        
-        printf(ANSI_BRIGHT_BLUE "│" ANSI_COLOR_RESET " %-2d " ANSI_BRIGHT_BLUE "│" ANSI_COLOR_RESET " %-12s " ANSI_BRIGHT_BLUE "│" ANSI_COLOR_RESET " %-25s " ANSI_BRIGHT_BLUE "│" ANSI_COLOR_RESET " %-10s " ANSI_BRIGHT_BLUE "│" ANSI_COLOR_RESET " %-16s " ANSI_BRIGHT_BLUE "│" ANSI_COLOR_RESET " %-15.0f " ANSI_BRIGHT_BLUE "│\n" ANSI_COLOR_RESET,
-               i + 1,
-               hehe[i].studentId,
-               hehe[i].fullName,
-               teams[teamIdx],
-               roles[roleIdx],
-               hehe[i].totalFine);
-               
-        if (i < size - 1) {
-            printf(ANSI_BRIGHT_BLUE "├────┼──────────────┼───────────────────────────┼────────────┼──────────────────┼─────────────────┤\n" ANSI_COLOR_RESET);
-        } else {
-            printf(ANSI_BRIGHT_BLUE "└────┴──────────────┴───────────────────────────┴────────────┴──────────────────┴─────────────────┘\n" ANSI_COLOR_RESET);
-        }
-    } 
     
-    if (size == 0) {
-        printf(ANSI_BRIGHT_BLUE "└────┴──────────────┴───────────────────────────┴────────────┴──────────────────┴─────────────────┘\n" ANSI_COLOR_RESET);
-    }
+    view_CLB_Profile(member, size); 
 }
