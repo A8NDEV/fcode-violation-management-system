@@ -29,6 +29,7 @@ int main() {
     Account session;
     int isLogin = 0;
     int choice;
+    print_logo();
 
     /* Vong lap chinh: chi quan ly trang thai dang nhap / thoat */
     while (1) {

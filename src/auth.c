@@ -114,7 +114,7 @@ void login(account *accountList, int *quantity, int *isLogin,
 
     if (accountList[foundIndex].isLocked == 1) { // check if account is locked
       printf(ANSI_BRIGHT_RED "ACCOUNT IS CURRENTLY LOCKED\n");
-      *currentState = loginState;
+      if (currentState != NULL) *currentState = loginState;
       return;
     }
     // bug
@@ -151,7 +151,7 @@ void login(account *accountList, int *quantity, int *isLogin,
         printf(ANSI_BRIGHT_RED "ACCOUNT LOCKED DUE TO 3 FAILED ATTEMPTS!\n");
         printf(ANSI_BRIGHT_BLUE "RETURNING TO LOGIN SCREEN...\n");
         printf("\n");
-        *currentState = loginState;
+        if (currentState != NULL) *currentState = loginState;
       }
 
       // Persist changes to file

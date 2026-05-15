@@ -3,6 +3,7 @@
 
 #include "types.h"
 
+void print_logo(void);
 void clear_buffer(void);
 void Stdin_string(char str[],int siz);
 

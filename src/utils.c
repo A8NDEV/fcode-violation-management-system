@@ -9,6 +9,19 @@
 #include "validate.h"
 #include "auth.h"
 
+void print_logo(void) {
+    printf("\n");
+    printf(ANSI_COLOR_GREEN ANSI_BOLD);
+    printf("  ███████╗      ██████╗ ██████╗ ██████╗ ███████╗    \n");
+    printf("  ██╔════╝     ██╔════╝██╔═══██╗██╔══██╗██╔════╝    \n");
+    printf("  █████╗  ████╗██║     ██║   ██║██║  ██║█████╗      \n");
+    printf("  ██╔══╝  ╚═══╝██║     ██║   ██║██║  ██║██╔══╝      \n");
+    printf("  ██║          ╚██████╗╚██████╔╝██████╔╝███████╗    \n");
+    printf("  ╚═╝           ╚═════╝ ╚═════╝ ╚═════╝ ╚══════╝    \n");
+    printf(ANSI_COLOR_YELLOW "                C O D E  T H E  D R E A M          \n" ANSI_COLOR_RESET);
+    printf("\n");
+}
+
 void Stdin_string(char str[],int siz){
     if(fgets(str,siz,stdin) == NULL){
         str[0] = '\0';
