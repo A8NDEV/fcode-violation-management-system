@@ -60,7 +60,7 @@ int main() {
                                        accountList, accountCount,
                                        violationList, violationCount);
         }
+        system("cls");
     }
-    system("cls");
     return 0;
 }
