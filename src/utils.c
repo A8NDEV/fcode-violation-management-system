@@ -55,7 +55,7 @@ void Announcement_error_acction(){
 }
 
 void Input_user_choose(int *input){
-    printf("Your choose: ");
+    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Your choice   : " ANSI_COLOR_RESET);
     scanf("%d",input);
     clear_buffer();
 }
@@ -63,8 +63,8 @@ void Input_fullname(char fullname[]){
     bool ok = false;
     bool wrong = false;
     while(!ok){
-        if(wrong == false)  printf("Enter Full-name: ");
-        else    printf("Invalid input, try again: ");
+        if(wrong == false)  printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Full name    : " ANSI_COLOR_RESET);
+        else    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Invalid full name, try again: " ANSI_COLOR_RESET);
         Stdin_string(fullname,LONG_SIZE);
         ok = (ok || Validate_fullname(fullname));
         wrong |= 1;
@@ -74,8 +74,8 @@ void Input_email(char email[]){
     bool ok = false;
     bool wrong = false;
     while(!ok){
-        if(wrong == false)   printf("Enter email: ");
-        else    printf("Invalid input, try again: ");
+        if(wrong == false)   printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Email        : " ANSI_COLOR_RESET);
+        else    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Invalid email, try again: " ANSI_COLOR_RESET);
         Stdin_string(email,LONG_SIZE);
         ok = (ok || Validate_email(email));
         wrong |= 1;
@@ -85,8 +85,8 @@ void Input_studentId(char studentId[]){
     bool ok = false;
     bool wrong = false;
     while(!ok){
-        if(wrong == false)   printf("Enter Student ID: ");
-        else    printf("Invalid input, try again: ");
+        if(wrong == false)   printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Student ID   : " ANSI_COLOR_RESET);
+        else    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Invalid Student ID, try again: " ANSI_COLOR_RESET);
         Stdin_string(studentId,SHORT_SIZE);
         ok = (ok || Validate_studentId(studentId));
         wrong |= 1;
@@ -96,8 +96,8 @@ void Input_phone(char phone_num[]){
     bool ok = false;
     bool wrong = false;
     while(!ok){
-        if(wrong == false)  printf("Enter phone number: ");
-        else    printf("Invalid input, try again: ");
+        if(wrong == false)  printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Phone number : " ANSI_COLOR_RESET);
+        else    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Invalid phone number, try again: " ANSI_COLOR_RESET);
         Stdin_string(phone_num,SHORT_SIZE);
         ok |= Validate_phone(phone_num);
         wrong |= 1;
@@ -111,8 +111,8 @@ void Input_team(int *input){
     printf(ANSI_BOLD ANSI_COLOR_GREEN " [2] " ANSI_COLOR_RESET "HR\n");
     printf(ANSI_BOLD ANSI_COLOR_GREEN " [3] " ANSI_COLOR_RESET "Media\n");
     while(!ok){
-        if(wrong == false)  printf("Enter member's team: ");
-        else    printf("Invalid input, try again: ");
+        if(wrong == false)  printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Team         : " ANSI_COLOR_RESET);
+        else    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Invalid team, try again: " ANSI_COLOR_RESET);
         char x;
         scanf("%c",&x);
         clear_buffer();
@@ -132,8 +132,8 @@ void Input_role(int *input){
     printf(ANSI_BOLD ANSI_COLOR_GREEN " [1] " ANSI_COLOR_RESET "Leader/Vice\n");
     printf(ANSI_BOLD ANSI_COLOR_GREEN " [2] " ANSI_COLOR_RESET "BCN\n");
     while(!ok){
-        if(wrong == false)  printf("Enter member's role: ");
-        else    printf("Invalid input, try again: ");
+        if(wrong == false)  printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Role         : " ANSI_COLOR_RESET);
+        else    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Invalid role, try again: " ANSI_COLOR_RESET);
         char x;
         scanf("%c",&x);
         clear_buffer();
@@ -150,8 +150,8 @@ void Input_role(int *input){
 void Input_violation_reason(int *input){
     bool ok = false,wrong = false;
     while(!ok){
-        if(wrong == false)  printf("Enter reason of violation: ");
-        else    printf("Invalid input, try again: ");
+        if(wrong == false)  printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Violation    : " ANSI_COLOR_RESET);
+        else    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Invalid reason, try again: " ANSI_COLOR_RESET);
         scanf("%d",input);
         clear_buffer();
         ok |= Validate_violation_reason(*input);
@@ -161,8 +161,8 @@ void Input_violation_reason(int *input){
 void Input_password(char pass[]){
     bool ok = false,wrong = false;
     while(!ok){
-        if(wrong == false)  printf("Enter password: ");
-        else    printf("Invalid input, try again: ");
+        if(wrong == false)  printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Password     : " ANSI_COLOR_RESET);
+        else    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Invalid password, try again: " ANSI_COLOR_RESET);
         Stdin_string(pass,LONG_SIZE);
         ok |= Validate_password(pass);
         wrong |= 1;
