@@ -37,18 +37,6 @@ void sort_CLB_Violations(Member member[], int size, int isAscending) {
     
     
     if (isAscending == 1) {
-<<<<<<< Updated upstream
-        printf(ANSI_COLOR_CYAN ANSI_BOLD);
-        printf("╔════════════════════════════════════════════════════╗\n");
-        printf("║    DANH SACH TANG DAN (Tu it den nhieu vi pham)    ║\n");
-        printf("╚════════════════════════════════════════════════════╝\n");
-        printf(ANSI_COLOR_RESET "\n");
-    } else {
-        printf(ANSI_COLOR_CYAN ANSI_BOLD);
-        printf("╔════════════════════════════════════════════════════╗\n");
-        printf("║    DANH SACH GIAM DAN (Tu nhieu ve it vi pham)     ║\n");
-        printf("╚════════════════════════════════════════════════════╝\n");
-=======
         printf(ANSI_BRIGHT_YELLOW ANSI_BOLD);
         printf("╔═══════════════════════════════════════════════════════════╗\n");
         printf("║    LIST OF VIOLATIONS (FROM LEAST TO MOST VIOLATIONS)     ║\n");
@@ -59,7 +47,6 @@ void sort_CLB_Violations(Member member[], int size, int isAscending) {
         printf("╔═══════════════════════════════════════════════════════════╗\n");
         printf("║    LIST OF VIOLATIONS (FROM MOST TO LEAST VIOLATIONS)     ║\n");
         printf("╚═══════════════════════════════════════════════════════════╝\n");
->>>>>>> Stashed changes
         printf(ANSI_COLOR_RESET "\n");
     }
     
@@ -90,11 +77,7 @@ void sort_CLB_Violations(Member member[], int size, int isAscending) {
         }
     } 
     
-<<<<<<< Updated upstream
-    view_CLB_Profile(hehe, size); 
-=======
     if (size == 0) {
         printf(ANSI_BRIGHT_BLUE "└────┴──────────────┴───────────────────────────┴────────────┴──────────────────┴─────────────────┘\n" ANSI_COLOR_RESET);
     }
->>>>>>> Stashed changes
 }
