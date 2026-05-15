@@ -1,4 +1,5 @@
 #include "auth.h"
+#include "validate.h"
 #ifdef _WIN32
 #include <conio.h>
 #else
@@ -234,12 +235,31 @@ int changePassword(account *accountList, int role, int *quantity,
       printf("\n");
       printf(ANSI_BRIGHT_GREEN "OLD PASSWORD VERIFIED SUCCESSFULLY!\n");
       printf("\n");
-      printf(ANSI_BOLD ANSI_COLOR_YELLOW
-             " ❯ ENTER NEW PASSWORD : " ANSI_COLOR_RESET);
-      inputPassword(passwordChange, MAX_PASS_LEN);
-      printf("\n");
-      printf(ANSI_BRIGHT_CYAN "UPDATING PASSWORD...\n");
+      while(1){
+        char passwordComfirm[MAX_PASS_LEN];
+        printf(ANSI_BOLD ANSI_COLOR_YELLOW
+               " ❯ ENTER NEW PASSWORD : " ANSI_COLOR_RESET);
+        inputPassword(passwordChange, MAX_PASS_LEN);
+        
+        if(Validate_password(passwordChange) == 0){
+          printf(ANSI_BOLD ANSI_COLOR_RED
+                " ❯ INVALD FORMAT, TRY AGAIN!\n" ANSI_COLOR_RESET);
+          continue;
+        }
 
+        printf(ANSI_BOLD ANSI_COLOR_YELLOW
+               " ❯ COMFIRM NEW PASSWORD: " ANSI_COLOR_RESET);
+        inputPassword(passwordComfirm,MAX_PASS_LEN);
+        if(strcmp(passwordChange,passwordComfirm) == 0){
+          break;
+        }
+        else{
+          printf(ANSI_BOLD ANSI_COLOR_RED
+                " ❯ NOT MATCH, TRY AGAIN!\n" ANSI_COLOR_RESET);
+        }
+      }
+      printf("\n");
+      
       // Loop to find session account in accountList, then update
       // password and sync with file
       for (int i = 0; i < *quantity; i++) {
@@ -248,6 +268,7 @@ int changePassword(account *accountList, int role, int *quantity,
           break;
         }
       }
+      printf(ANSI_BRIGHT_CYAN "UPDATING PASSWORD...\n");
       if (foundIndex != -1) {
         strcpy(session->password, passwordChange);
         strcpy(accountList[foundIndex].password, passwordChange);
