@@ -276,26 +276,10 @@ void view_CLB_Profile (Member member[], int size_memberlist) {
     printf(ANSI_COLOR_RESET "\n");
     for (int i = 0; i < size_memberlist; i++) {
         printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Full Name    : " ANSI_COLOR_RESET "%s\n", member[i].fullName);
-        if (member[i].team == 0) {
-            printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Team         : " ANSI_COLOR_RESET "ACADEMIC\n");
-        } else if ( member[i].team == 1) {
-            printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Team         : " ANSI_COLOR_RESET "PLANNING\n");
-        } else if (member[i].team == 2) {
-            printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Team         : " ANSI_COLOR_RESET "HR\n");
-        } else if (member[i].team == 3 ) {
-            printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Team         : " ANSI_COLOR_RESET "MEDIA\n");
-        } else {
-            printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Team         : " ANSI_COLOR_RESET "UNKNOWN TEAM\n");
-        }
-        if (member[i].role == 0) {
-            printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Role         : " ANSI_COLOR_RESET "MEMBER\n");
-        } else if ( member[i].role == 1) {
-            printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Role         : " ANSI_COLOR_RESET "LEADER/VICE\n");
-        } else if ( member[i].role == 2) {
-            printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Role         : " ANSI_COLOR_RESET "MANAGEMENT BOARD\n");
-        } else {
-            printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Role         : " ANSI_COLOR_RESET "UNKNOWN ROLE\n");
-        }
+        const char *teams[] = {"Academic", "Planning", "HR", "Media"};
+        printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Team         : " ANSI_COLOR_RESET "%s\n",teams[member[i].team]);
+        const char  *roles[] = {"Member", "Leader/Vice", "Ban Chu Nhiem"};
+        printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Role         : " ANSI_COLOR_RESET "%s\n",roles[member[i].role]);
         printf(ANSI_COLOR_CYAN ANSI_BOLD "------------------------------------------\n" ANSI_COLOR_RESET);
     }
 }

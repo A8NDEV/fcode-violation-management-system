@@ -111,13 +111,7 @@ int show_member_menu(Account *session, Member memberList[], int memberCount, Acc
             check_to_Paid(violationList,violationCount,session->studentId);
             break;
         case 4: {
-            char *teams[] = {"Academic", "Planning", "HR", "Media"};
-            char *roles[] = {"Member", "Leader/Vice", "BCN"};
-            printf("\n%-12s %-25s %-10s %-14s\n", "StudentID", "Full Name", "Team", "Role");
-            printf("%-12s %-25s %-10s %-14s\n", "---------", "---------", "----", "----");
-            for (int i = 0; i < memberCount; i++) {
-                printf("%-12s %-25s %-10s %-14s\n", memberList[i].studentId, memberList[i].fullName, teams[memberList[i].team], roles[memberList[i].role]);
-            }
+            view_CLB_Profile(memberList,memberCount);
             break;
         }
         case 5:
