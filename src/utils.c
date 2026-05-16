@@ -213,3 +213,42 @@ int Find_studentId(int member_size,Member member_list[],char studentId[]){
     }
     return -1;
 }
+
+void Rainbow_Loading(const char *taskName) {
+    const char *colors[] = {
+        ANSI_BRIGHT_RED,
+        ANSI_BRIGHT_YELLOW,
+        ANSI_BRIGHT_GREEN,
+        ANSI_BRIGHT_CYAN,
+        ANSI_BRIGHT_BLUE,
+        ANSI_BRIGHT_MAGENTA,
+        ANSI_BRIGHT_WHITE
+    };
+    const char *spinners[] = {"\xe2\xa0\x8b", "\xe2\xa0\x99", "\xe2\xa0\xb9", "\xe2\xa0\xb8", "\xe2\xa0\xbc", "\xe2\xa0\xb4", "\xe2\xa0\xa6", "\xe2\xa0\xa7", "\xe2\xa0\x87", "\xe2\xa0\x8f"};
+    int total_blocks = 35;
+    printf("\n");
+    for (int i = 1; i <= 100; i++) {
+        int completed_blocks = (i * total_blocks) / 100;
+        const char *spinner = spinners[i % 10];
+
+        printf("\r" ANSI_BRIGHT_YELLOW " %s " ANSI_COLOR_CYAN "%-20s " ANSI_BRIGHT_BLACK "[" ANSI_COLOR_RESET, spinner, taskName);
+
+        for (int b = 0; b < total_blocks; b++) {
+            if (b < completed_blocks) {
+                const char *blockColor = colors[(b + i / 2) % 7];
+                printf("%s\xe2\xa0\xbf", blockColor);
+            } else {
+                printf(ANSI_BRIGHT_BLACK "\xe2\xa0\x80");
+            }
+        }
+        printf(ANSI_BRIGHT_BLACK "] " ANSI_BRIGHT_WHITE "%3d%%" ANSI_COLOR_RESET, i);
+        fflush(stdout);
+        Sleep(15);
+    }
+    printf("\r" ANSI_BRIGHT_GREEN " \xe2\x9c\x94 " ANSI_COLOR_CYAN "%-20s " ANSI_BRIGHT_BLACK "[", taskName);
+    for (int b = 0; b < total_blocks; b++) {
+        printf("%s\xe2\xa0\xbf", colors[b % 7]);
+    }
+    printf(ANSI_BRIGHT_BLACK "] " ANSI_BRIGHT_WHITE "100%%" ANSI_BRIGHT_GREEN " (Complete!)\n\n" ANSI_COLOR_RESET);
+    Sleep(300);
+}

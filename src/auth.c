@@ -1,5 +1,6 @@
 #include "auth.h"
 #include "validate.h"
+#include "utils.h"
 #include "windows.h"
 #ifdef _WIN32
 #include <conio.h>
@@ -124,6 +125,8 @@ void login(account *accountList, int *quantity, int *isLogin,
     if (strcmp(accountList[foundIndex].password, studentPasswordInput) ==
         0) { // password match check
       printf("\n");
+      Rainbow_Loading("Verifying Account");
+      system("cls");
       printf(ANSI_BRIGHT_GREEN "LOGIN SUCCESSFUL!\n");
       *isLogin = 1;
       accountList[foundIndex].failCount = 0;

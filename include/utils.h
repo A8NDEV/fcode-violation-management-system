@@ -28,4 +28,6 @@ void Announcement_error_acction();
 //Find function group
 int Find_studentId(int member_size,Member member_list[],char studentId[]);
 
+void Rainbow_Loading(const char *taskName);
+
 #endif
