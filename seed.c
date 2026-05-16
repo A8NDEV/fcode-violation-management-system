@@ -143,8 +143,10 @@ int main(void) {
         make_violation("HE000009", 1, 1, 50000.0,  DAYS_AGO(90)),
         make_violation("HE000009", 0, 1, 20000.0,  DAYS_AGO(75)),
 
-        /* HE000010 - Dinh Xuan Khanh: 1 vi pham */
+        /* HE000010 - Dinh Xuan Khanh: 3 vi pham vang hop (canh bao) */
         make_violation("HE000010", 1, 0, 50000.0,  DAYS_AGO(15)),
+        make_violation("HE000010", 1, 0, 50000.0,  DAYS_AGO(10)),
+        make_violation("HE000010", 1, 0, 50000.0,  DAYS_AGO(5)),
 
         /* HE000011 - Bui Thanh Liem: 3 vi pham (nhieu nhat) */
         make_violation("HE000011", 0, 1, 20000.0,  DAYS_AGO(100)),
@@ -167,7 +169,7 @@ int main(void) {
     int violationCount = (int)(sizeof(violations) / sizeof(violations[0]));
 
     /* --------------------------------------------------
-     * 3. Sync violationCount & totalFine vao member array
+     * 3. Sync violationCount, totalFine & absences vao member array
      * -------------------------------------------------- */
     for (int i = 0; i < violationCount; i++) {
         for (int j = 0; j < memberCount; j++) {
@@ -175,6 +177,10 @@ int main(void) {
                 members[j].violationCount++;
                 if (violations[i].isPaid == 0)
                     members[j].totalFine += violations[i].fine;
+                
+                if (violations[i].reason == 1) {
+                    members[j].consecutiveAbsences++;
+                }
                 break;
             }
         }
@@ -212,6 +218,7 @@ int main(void) {
     printf("=== Tai khoan de test ===\n");
     printf("  [BCN]    HE000001 / Fcode@2024\n");
     printf("  [BCN]    HE000002 / Fcode@2024\n");
+    printf("  [Member] HE000010 / HE000010  (3 vi pham vang hop lien tiep)\n");
     printf("  [Member] HE000011 / HE000011  (3 vi pham, no 80000 VND)\n");
     printf("  [Member] HE000013 / HE000013  (vi pham bao luc, no 200000 VND)\n");
     printf("  [Member] HE000016 / HE000016  (2 vi pham, no 70000 VND)\n");

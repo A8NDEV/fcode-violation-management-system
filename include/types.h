@@ -2,7 +2,7 @@
 #define TYPES_H
 
 #include <time.h>
-#define LONG_SIZE 50
+#define LONG_SIZE 51
 #define SHORT_SIZE 15
 typedef struct Member{
     char fullName[LONG_SIZE],email[LONG_SIZE],phone[SHORT_SIZE],studentId[SHORT_SIZE];

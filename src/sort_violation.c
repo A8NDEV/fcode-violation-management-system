@@ -43,5 +43,6 @@ void sort_CLB_Violations(Member member[], int size, int isAscending) {
         UI_Header("VIOLATIONS: MOST TO LEAST", ANSI_COLOR_CYAN);
     }
     
+    
     view_CLB_Profile(hehe, size); 
 }

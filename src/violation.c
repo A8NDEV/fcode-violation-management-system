@@ -235,6 +235,13 @@ void Menu_record_violation(int *memberCount, Member memberList[],
     }
     if (!Update_members_dat(memberIdx, *m)) {
         Announcement_error_acction();
+        /* Rollback data in memory and on disk */
+        m->violationCount--;
+        m->totalFine -= newV.fine;
+        if (reason == 1) {
+            m->consecutiveAbsences--;
+        }
+        Rewrite_violations_dat(*violationCount, violationList);
         return;
     }
 
@@ -343,6 +350,10 @@ void Menu_mark_paid(int *memberCount, Member memberList[],
         }
         if (!Update_members_dat(memberIdx, *m)) {
             Announcement_error_acction();
+            /* Rollback */
+            target->isPaid = 0;
+            m->totalFine  += target->fine;
+            Update_violations_dat(gIdx, *target);
             continue;
         }
 
@@ -527,6 +538,10 @@ void Menu_batch_attendance(int memberCount, Member memberList[],
     char line[64];
 
     while (fgets(line, sizeof(line), file)) {
+        if (strchr(line, '\n') == NULL && !feof(file)) {
+            int ch;
+            while ((ch = fgetc(file)) != '\n' && ch != EOF);
+        }
         line[strcspn(line, "\r\n")] = '\0';
         if (strlen(line) > 0 && attCount < MAX_ACCOUNT) {
             strcpy(attended[attCount++], line);
