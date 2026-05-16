@@ -5,6 +5,7 @@
 #include "violation.h"
 #include <stdio.h>
 #include "sort_violation.h"
+#include "report.h"
 
 int show_bcn_menu(Account *session, Member memberList[], int *memberCount, Account accountList[], Violation violationList[], int *violationCount) {
     int choice;
@@ -62,6 +63,7 @@ int show_bcn_menu(Account *session, Member memberList[], int *memberCount, Accou
             Menu_view_deleted_members();
             break;
         case 9:
+            Export_Violation_Report(*memberCount, memberList, *violationCount, violationList);
             break;
         case 10:
             changePassword(accountList, session->role, memberCount, session);
