@@ -18,6 +18,7 @@ static int create_member(int *member_size, Member member_list[], Member new_memb
 }
 
 void Menu_create(int *member_size, Member member_list[], Account account_list[]) {
+    UI_Header("ADD NEW MEMBER", ANSI_COLOR_CYAN);
     Member new_member = Init_Member();
     Input_studentId(new_member.studentId);
     if (Find_studentId(*member_size, member_list, new_member.studentId) != -1) {
@@ -98,13 +99,14 @@ int Delete_member(const int index, char studentId[], int *member_size, Member me
 }
 
 void Menu_remove(int *member_size, Member member_list[], Account account_list[], int *violation_size, Violation violation_list[]) {
+    UI_Header("REMOVE MEMBER", ANSI_COLOR_RED);
     char studentId[SHORT_SIZE];
     int idx = Find_and_validate_studentId(*member_size, member_list, studentId);
     if (idx == -1) return;
-    printf(ANSI_COLOR_RED ANSI_BOLD "WARNING: This action will delete the member, account, and related violations.\n" ANSI_COLOR_RESET);
-    printf("Do you want to continue?\n");
-    printf(ANSI_BOLD ANSI_COLOR_YELLOW " [0] " ANSI_COLOR_RESET "No, cancel\n");
-    printf(ANSI_BOLD ANSI_COLOR_GREEN " [1] " ANSI_COLOR_RESET "Yes, delete\n");
+    printf(ANSI_COLOR_RED ANSI_BOLD "  [!] WARNING: This will delete member, account, and violations.\n" ANSI_COLOR_RESET);
+    printf("  Do you want to continue?\n");
+    printf(ANSI_BOLD ANSI_COLOR_YELLOW "  [0] " ANSI_COLOR_RESET "No, cancel\n");
+    printf(ANSI_BOLD ANSI_COLOR_GREEN "  [1] " ANSI_COLOR_RESET "Yes, delete\n");
     int user_choose = 0;
     Input_user_choose(&user_choose);
     switch (user_choose) {
@@ -122,46 +124,35 @@ void Menu_remove(int *member_size, Member member_list[], Account account_list[],
     }
 }
 
-static void print_memnu_update(const int index, Member member_list[], Account account_list[]) {
+void print_memnu_update(const int index, Member member_list[], Account account_list[]) {
     Member res = member_list[index];
-    printf(ANSI_COLOR_CYAN ANSI_BOLD);
-    printf("╔════════════════════════════════════════╗\n");
-    printf("║      CURRENT MEMBER INFORMATION        ║\n");
-    printf("╚════════════════════════════════════════╝\n");
-    printf(ANSI_COLOR_RESET "\n");
-    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Student ID   : " ANSI_COLOR_RESET "%s\n", res.studentId);
-    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Full name    : " ANSI_COLOR_RESET "%s\n", res.fullName);
-    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Email        : " ANSI_COLOR_RESET "%s\n", res.email);
-    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Phone number : " ANSI_COLOR_RESET "%s\n", res.phone);
+    UI_Card_Start("CURRENT MEMBER INFORMATION", ANSI_COLOR_CYAN);
+    printf(ANSI_BOLD ANSI_COLOR_YELLOW "    👤 Full Name    : " ANSI_COLOR_RESET "%s\n", res.fullName);
+    printf(ANSI_BOLD ANSI_COLOR_YELLOW "    🆔 Student ID   : " ANSI_COLOR_RESET "%s\n", res.studentId);
+    printf(ANSI_BOLD ANSI_COLOR_YELLOW "    📧 Email        : " ANSI_COLOR_RESET "%s\n", res.email);
+    printf(ANSI_BOLD ANSI_COLOR_YELLOW "    📞 Phone        : " ANSI_COLOR_RESET "%s\n", res.phone);
     const char *teams[] = {"Academic", "Planning", "HR", "Media"};
-    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Team         : " ANSI_COLOR_RESET "%s\n", teams[res.team]);
-    const char  *roles[] = {"Member", "Leader/Vice", "Ban Chu Nhiem"};
-    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Role         : " ANSI_COLOR_RESET "%s\n", roles[res.role]);
-    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Password     : " ANSI_COLOR_RESET "%s\n", account_list[index].password);
-    printf("\n");
-    printf(ANSI_COLOR_CYAN ANSI_BOLD);
-    printf("╔════════════════════════════════════════╗\n");
-    printf("║      INFORMATION TO BE UPDATED         ║\n");
-    printf("╚════════════════════════════════════════╝\n");
-    printf(ANSI_COLOR_RESET "\n");
-    printf(ANSI_BOLD ANSI_COLOR_GREEN " [1] " ANSI_COLOR_RESET "Full name\n");
-    printf(ANSI_BOLD ANSI_COLOR_GREEN " [2] " ANSI_COLOR_RESET "Email\n");
-    printf(ANSI_BOLD ANSI_COLOR_GREEN " [3] " ANSI_COLOR_RESET "Phone number\n");
-    printf(ANSI_BOLD ANSI_COLOR_GREEN " [4] " ANSI_COLOR_RESET "Team\n");
-    printf(ANSI_BOLD ANSI_COLOR_GREEN " [5] " ANSI_COLOR_RESET "Role\n");
-    printf(ANSI_BOLD ANSI_COLOR_GREEN " [6] " ANSI_COLOR_RESET "Password\n");
-    printf(ANSI_BOLD ANSI_COLOR_GREEN " [7] " ANSI_COLOR_RESET "Reset Locked status\n");
-    printf(ANSI_BOLD ANSI_COLOR_YELLOW " [0] " ANSI_COLOR_RESET "Exit\n");
-    printf("\n");
-    printf(ANSI_COLOR_CYAN ANSI_BOLD "------------------------------------------\n" ANSI_COLOR_RESET);
+    printf(ANSI_BOLD ANSI_COLOR_YELLOW "    👥 Team         : " ANSI_COLOR_RESET "%s\n", teams[res.team]);
+    const char *roles[] = {"Member", "Leader/Vice", "Ban Chu Nhiem"};
+    printf(ANSI_BOLD ANSI_COLOR_YELLOW "    🎖  Role         : " ANSI_COLOR_RESET "%s\n", roles[res.role]);
+    printf(ANSI_BOLD ANSI_COLOR_YELLOW "    🗝  Password     : " ANSI_COLOR_RESET "%s\n", account_list[index].password);
+    UI_Card_End(ANSI_COLOR_CYAN);
+
+    UI_Card_Start("UPDATE OPTIONS", ANSI_COLOR_YELLOW);
+    UI_Menu_Item(1, "Full name", ANSI_COLOR_YELLOW);
+    UI_Menu_Item(2, "Email", ANSI_COLOR_YELLOW);
+    UI_Menu_Item(3, "Phone number", ANSI_COLOR_YELLOW);
+    UI_Menu_Item(4, "Team", ANSI_COLOR_YELLOW);
+    UI_Menu_Item(5, "Role", ANSI_COLOR_YELLOW);
+    UI_Menu_Item(6, "Password", ANSI_COLOR_YELLOW);
+    UI_Menu_Item(7, "Reset Locked Status", ANSI_COLOR_YELLOW);
+    UI_Divider(50, ANSI_COLOR_YELLOW);
+    UI_Menu_Item(0, "Finish / Exit", ANSI_COLOR_YELLOW);
+    UI_Card_End(ANSI_COLOR_YELLOW);
 }
 
 void Menu_update(const int member_size, Member member_list[], Account account_list[]) {
-    printf(ANSI_COLOR_CYAN ANSI_BOLD);
-    printf("╔════════════════════════════════════════╗\n");
-    printf("║             UPDATE MEMBER              ║\n");
-    printf("╚════════════════════════════════════════╝\n");
-    printf(ANSI_COLOR_RESET "\n");
+    UI_Header("UPDATE MEMBER", ANSI_COLOR_CYAN);
     printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Enter Student ID of member to update:\n" ANSI_COLOR_RESET);
     char studentId[SHORT_SIZE];
     int idx = Find_and_validate_studentId(member_size, member_list, studentId);
@@ -217,22 +208,22 @@ void Menu_update(const int member_size, Member member_list[], Account account_li
     }
 }
 void Print_Deleted_Members(const int member_size, Member member_list[]) {
-    printf(ANSI_COLOR_CYAN ANSI_BOLD);
-    printf("╔════════════════════════════════════════╗\n");
-    printf("║          DELETED MEMBERS LIST          ║\n");
-    printf("╚════════════════════════════════════════╝\n");
-    printf(ANSI_COLOR_RESET "\n");
+    UI_Header("DELETED MEMBERS LIST", ANSI_COLOR_RED);
+    const char *headers[] = {"ID", "FULL NAME", "EMAIL", "PHONE"};
+    const int widths[] = {10, 25, 25, 12};
+    UI_Table_Header(4, headers, widths, ANSI_COLOR_RED);
+
     for (int i = 0; i < member_size; ++i) {
-        printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Student ID   : " ANSI_COLOR_RESET "%s\n", member_list[i].studentId);
-        printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Full name    : " ANSI_COLOR_RESET "%s\n", member_list[i].fullName);
-        printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Email        : " ANSI_COLOR_RESET "%s\n", member_list[i].email);
-        printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Phone number : " ANSI_COLOR_RESET "%s\n", member_list[i].phone);
-        const char *teams[] = {"Academic", "Planning", "HR", "Media"};
-        printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Team         : " ANSI_COLOR_RESET "%s\n", teams[member_list[i].team]);
-        const char  *roles[] = {"Member", "Leader/Vice", "Management Board"};
-        printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Role         : " ANSI_COLOR_RESET "%s\n", roles[member_list[i].role]);
-        printf(ANSI_COLOR_CYAN ANSI_BOLD "------------------------------------------\n" ANSI_COLOR_RESET);
+        const char *values[] = {
+            member_list[i].studentId,
+            member_list[i].fullName,
+            member_list[i].email,
+            member_list[i].phone
+        };
+        UI_Table_Row(4, values, widths, ANSI_COLOR_RED);
     }
+    UI_Table_End(4, widths, ANSI_COLOR_RED);
+    UI_Return_Prompt();
 }
 
 void Menu_view_deleted_members(void) {
@@ -255,47 +246,56 @@ void Menu_view_deleted_members(void) {
     Print_Deleted_Members(deleted_member_count, deleted_member_list);
 }
 void view_Profile (Member currentuser) {
-    printf(ANSI_COLOR_CYAN ANSI_BOLD);
-    printf("╔════════════════════════════════════════╗\n");
-    printf("║                PROFILE                 ║\n");
-    printf("╚════════════════════════════════════════╝\n");
-    printf(ANSI_COLOR_RESET "\n");
-
+    UI_Card_Start("YOUR PROFILE", ANSI_COLOR_CYAN);
+    
     if (currentuser.consecutiveAbsences >= 2) {
         if (currentuser.consecutiveAbsences > 3) {
             printf(ANSI_BRIGHT_RED ANSI_BOLD 
-                   " [!] DANGER: YOU HAVE %d CONSECUTIVE ABSENCES (>3).\n"
-                   "     You are subject to expulsion. Contact the Management Board immediately!\n\n" 
+                   "  [!] DANGER: %d CONSECUTIVE ABSENCES (>3)\n"
+                   "      You are subject to expulsion!\n\n" 
                    ANSI_COLOR_RESET, currentuser.consecutiveAbsences);
         } else {
             printf(ANSI_BRIGHT_YELLOW ANSI_BOLD 
-                   " [!] WARNING: YOU HAVE %d CONSECUTIVE ABSENCES.\n"
-                   "     If you exceed 3 consecutive absences, you will be expelled from the club!\n\n" 
+                   "  [!] WARNING: %d CONSECUTIVE ABSENCES\n"
+                   "      Limit is 3 before expulsion.\n\n" 
                    ANSI_COLOR_RESET, currentuser.consecutiveAbsences);
         }
     }
 
-    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Student ID   : " ANSI_COLOR_RESET "%s\n", currentuser.studentId);
-    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Full Name    : " ANSI_COLOR_RESET "%s\n", currentuser.fullName);
-    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Email        : " ANSI_COLOR_RESET "%s\n", currentuser.email);
-    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Phone        : " ANSI_COLOR_RESET "%s\n", currentuser.phone);
+    printf(ANSI_BOLD ANSI_COLOR_YELLOW "    👤 Name    : " ANSI_COLOR_RESET "%s\n", currentuser.fullName);
+    printf(ANSI_BOLD ANSI_COLOR_YELLOW "    🆔 ID      : " ANSI_COLOR_RESET "%s\n", currentuser.studentId);
+    printf(ANSI_BOLD ANSI_COLOR_YELLOW "    📧 Email   : " ANSI_COLOR_RESET "%s\n", currentuser.email);
+    printf(ANSI_BOLD ANSI_COLOR_YELLOW "    📞 Phone   : " ANSI_COLOR_RESET "%s\n", currentuser.phone);
     char *teams[] = {"Academic", "Planning", "HR", "Media"};
     char *roles[] = {"Member", "Leader/Vice", "Management Board"};
-    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Team         : " ANSI_COLOR_RESET "%s\n", teams[currentuser.team]);
-    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Role         : " ANSI_COLOR_RESET "%s\n", roles[currentuser.role]);
+    printf(ANSI_BOLD ANSI_COLOR_YELLOW "    👥 Team    : " ANSI_COLOR_RESET "%s\n", teams[currentuser.team]);
+    printf(ANSI_BOLD ANSI_COLOR_YELLOW "    🎖  Role    : " ANSI_COLOR_RESET "%s\n", roles[currentuser.role]);
+    printf(ANSI_BOLD ANSI_COLOR_YELLOW "    ⚠  Absences: " ANSI_COLOR_RESET "%d\n", currentuser.consecutiveAbsences);
+    UI_Card_End(ANSI_COLOR_CYAN);
+    UI_Return_Prompt();
 }
 void view_CLB_Profile (Member member[], int size_memberlist) {
-    printf(ANSI_COLOR_CYAN ANSI_BOLD);
-    printf("╔════════════════════════════════════════╗\n");
-    printf("║            CLUB MEMBERS LIST           ║\n");
-    printf("╚════════════════════════════════════════╝\n");
-    printf(ANSI_COLOR_RESET "\n");
+    UI_Header("CLUB MEMBERS LIST", ANSI_COLOR_CYAN);
+    
+    const char *headers[] = {"FULL NAME", "TEAM", "ROLE", "VIOLATIONS"};
+    const int widths[] = {25, 12, 12, 10};
+    UI_Table_Header(4, headers, widths, ANSI_COLOR_CYAN);
+
+    const char *teams[] = {"Academic", "Planning", "HR", "Media"};
+    const char *roles[] = {"Member", "Leader/Vice", "BCN"};
+    
     for (int i = 0; i < size_memberlist; i++) {
-        printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Full Name    : " ANSI_COLOR_RESET "%s\n", member[i].fullName);
-        const char *teams[] = {"Academic", "Planning", "HR", "Media"};
-        printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Team         : " ANSI_COLOR_RESET "%s\n",teams[member[i].team]);
-        const char  *roles[] = {"Member", "Leader/Vice", "Ban Chu Nhiem"};
-        printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Role         : " ANSI_COLOR_RESET "%s\n",roles[member[i].role]);
-        printf(ANSI_COLOR_CYAN ANSI_BOLD "------------------------------------------\n" ANSI_COLOR_RESET);
+        char countStr[12];
+        snprintf(countStr, sizeof(countStr), "%d", member[i].violationCount);
+        const char *values[] = {
+            member[i].fullName,
+            teams[member[i].team],
+            roles[member[i].role],
+            countStr
+        };
+        UI_Table_Row(4, values, widths, ANSI_COLOR_CYAN);
     }
+    UI_Table_End(4, widths, ANSI_COLOR_CYAN);
+    printf("\n" ANSI_BRIGHT_BLACK "  Total members: %d\n" ANSI_COLOR_RESET, size_memberlist);
+    UI_Return_Prompt();
 }

@@ -4,8 +4,20 @@
 #include "types.h"
 
 void print_logo(void);
+void print_member_logo(void);
+void print_bcn_logo(void);
 void clear_buffer(void);
 void Stdin_string(char str[],int siz);
+void UI_Header(const char *title, const char *color);
+void UI_Card_Start(const char *title, const char *color);
+void UI_Card_End(const char *color);
+void UI_Menu_Item(int index, const char *label, const char *color);
+void UI_Divider(int width, const char *color);
+void UI_Prompt(const char *label, const char *glyph);
+void UI_Table_Header(int num_cols, const char *headers[], const int widths[], const char *color);
+void UI_Table_Row(int num_cols, const char *values[], const int widths[], const char *color);
+void UI_Table_End(int num_cols, const int widths[], const char *color);
+void UI_Return_Prompt(void);
 
 //Input function group
 void Input_user_choose(int *input);
