@@ -195,25 +195,45 @@ void Menu_record_violation(int *memberCount, Member memberList[],
     int reason;
     Input_violation_reason(&reason);
 
-    /* Buoc 3: Xu ly truong hop bao luc */
-    if (reason == 3) {
-        printf(ANSI_BRIGHT_RED ANSI_BOLD
-               "\n!!! WARNING: VIOLENCE VIOLATION !!!\n"
-               "This member may be kicked out of the Club.\n"
-               "BCN must handle this manually via Delete Member.\n"
-               ANSI_COLOR_RESET);
-        printf("Do you want to continue recording this violation?\n");
-        printf(ANSI_BOLD ANSI_COLOR_YELLOW " [0] " ANSI_COLOR_RESET "Cancel\n");
-        printf(ANSI_BOLD ANSI_COLOR_GREEN " [1] " ANSI_COLOR_RESET "Confirm Record\n");
-        printf("\n");
-        printf(ANSI_COLOR_CYAN ANSI_BOLD "------------------------------------------\n" ANSI_COLOR_RESET);
-        int confirm = -1;
-        Input_user_choose(&confirm);
-        if (confirm != 1) {
-            printf("Recording cancelled.\n");
-            Sleep(1500);
-            system("cls");
-            return;
+    /* Buoc 3: Xu ly truong hop bao luc hoac vang hop */
+    if (reason == 3 || reason == 1) {
+        if (reason == 3) {
+            printf(ANSI_BRIGHT_RED ANSI_BOLD
+                   "\n!!! WARNING: VIOLENCE VIOLATION !!!\n"
+                   "This member may be kicked out of the Club.\n"
+                   "BCN must handle this manually via Delete Member.\n"
+                   ANSI_COLOR_RESET);
+        } else if (reason == 1) {
+            int nextAbsences = m->consecutiveAbsences + 1;
+            if (nextAbsences == 2 || nextAbsences == 3) {
+                printf(ANSI_BRIGHT_YELLOW ANSI_BOLD
+                       "\n!!! WARNING: CONSECUTIVE ABSENCES !!!\n"
+                       "Member %s will have %d consecutive absences.\n"
+                       ANSI_COLOR_RESET, m->fullName, nextAbsences);
+            } else if (nextAbsences > 3) {
+                printf(ANSI_BRIGHT_RED ANSI_BOLD
+                       "\n!!! WARNING: OUT CLB THRESHOLD REACHED !!!\n"
+                       "Member %s will have %d consecutive absences (> 3).\n"
+                       "BCN must handle this manually via Delete Member.\n"
+                       ANSI_COLOR_RESET, m->fullName, nextAbsences);
+            }
+        }
+
+        int requireConfirm = (reason == 3) || (reason == 1 && (m->consecutiveAbsences + 1) >= 2);
+        if (requireConfirm) {
+            printf("Do you want to continue recording this violation?\n");
+            printf(ANSI_BOLD ANSI_COLOR_YELLOW " [0] " ANSI_COLOR_RESET "Cancel\n");
+            printf(ANSI_BOLD ANSI_COLOR_GREEN " [1] " ANSI_COLOR_RESET "Confirm Record\n");
+            printf("\n");
+            printf(ANSI_COLOR_CYAN ANSI_BOLD "------------------------------------------\n" ANSI_COLOR_RESET);
+            int confirm = -1;
+            Input_user_choose(&confirm);
+            if (confirm != 1) {
+                printf("Recording cancelled.\n");
+                Sleep(1500);
+                system("cls");
+                return;
+            }
         }
     }
 
@@ -228,6 +248,9 @@ void Menu_record_violation(int *memberCount, Member memberList[],
     /* Buoc 5: Cap nhat member */
     m->violationCount++;
     m->totalFine += newV.fine;
+    if (reason == 1) {
+        m->consecutiveAbsences++;
+    }
 
     /* Buoc 6: Luu vao file */
     if (!Append_violations_dat(newV)) {
@@ -235,6 +258,9 @@ void Menu_record_violation(int *memberCount, Member memberList[],
         /* Rollback in-memory */
         m->violationCount--;
         m->totalFine -= newV.fine;
+        if (reason == 1) {
+            m->consecutiveAbsences--;
+        }
         return;
     }
     if (!Update_members_dat(memberIdx, *m)) {

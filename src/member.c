@@ -260,6 +260,21 @@ void view_Profile (Member currentuser) {
     printf("║                PROFILE                 ║\n");
     printf("╚════════════════════════════════════════╝\n");
     printf(ANSI_COLOR_RESET "\n");
+
+    if (currentuser.consecutiveAbsences >= 2) {
+        if (currentuser.consecutiveAbsences > 3) {
+            printf(ANSI_BRIGHT_RED ANSI_BOLD 
+                   " [!] DANGER: YOU HAVE %d CONSECUTIVE ABSENCES (>3).\n"
+                   "     You are subject to expulsion. Contact the Management Board immediately!\n\n" 
+                   ANSI_COLOR_RESET, currentuser.consecutiveAbsences);
+        } else {
+            printf(ANSI_BRIGHT_YELLOW ANSI_BOLD 
+                   " [!] WARNING: YOU HAVE %d CONSECUTIVE ABSENCES.\n"
+                   "     If you exceed 3 consecutive absences, you will be expelled from the club!\n\n" 
+                   ANSI_COLOR_RESET, currentuser.consecutiveAbsences);
+        }
+    }
+
     printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Student ID   : " ANSI_COLOR_RESET "%s\n", currentuser.studentId);
     printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Full Name    : " ANSI_COLOR_RESET "%s\n", currentuser.fullName);
     printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Email        : " ANSI_COLOR_RESET "%s\n", currentuser.email);
