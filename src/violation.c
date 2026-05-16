@@ -9,13 +9,8 @@
 #include <time.h>
 #include <windows.h>
 
-/* -------------------------------------------------------
- * Constants
- * ------------------------------------------------------- */
-#define FINE_NO_SHIRT   20000.0
-#define FINE_ABSENT     50000.0
-#define FINE_NO_ACTIVITY 30000.0
-#define FINE_VIOLENCE   200000.0
+#define FINE_MEMBER     20000.0
+#define FINE_LEADER     50000.0
 
 static const char *REASON_LABELS[] = {
     "Khong mac ao CLB",
@@ -32,19 +27,11 @@ static const char *PAID_LABELS[] = {
     "Chua thu", "Da thu"
 };
 
-/* -------------------------------------------------------
- * Static helpers
- * ------------------------------------------------------- */
 
-/* Tra ve muc phat tuong ung voi ly do vi pham */
-static double Get_fine_by_reason(int reason) {
-    switch (reason) {
-        case 0: return FINE_NO_SHIRT;
-        case 1: return FINE_ABSENT;
-        case 2: return FINE_NO_ACTIVITY;
-        case 3: return FINE_VIOLENCE;
-        default: return 0.0;
-    }
+/* Tra ve muc phat tuong ung voi chuc vu va ly do vi pham */
+static double Get_fine(int role, int reason) {
+    if (reason == 3) return 0.0; /* Bao luc = 0đ */
+    return (role == 0) ? FINE_MEMBER : FINE_LEADER;
 }
 
 /* In tieu de bang vi pham */
@@ -80,9 +67,6 @@ static void Print_violation_row(int stt, const Violation *v,
            paidColor, PAID_LABELS[v->isPaid], ANSI_COLOR_RESET);
 }
 
-/* -------------------------------------------------------
- * Member-facing functions (giu lai tu include/violation.c)
- * ------------------------------------------------------- */
 
 void check_to_Paid(Violation violation[], int total_Violations,
                    const char *logged_In_StudentID) {
@@ -154,9 +138,6 @@ void view_Own_Violations(Violation violations[], int total_Violations,
         printf("YOU HAVE NO VIOLATIONS.\n");
 }
 
-/* -------------------------------------------------------
- * BCN: Ghi nhan vi pham moi
- * ------------------------------------------------------- */
 
 void Menu_record_violation(int *memberCount, Member memberList[],
                            int *violationCount, Violation violationList[]) {
@@ -185,10 +166,10 @@ void Menu_record_violation(int *memberCount, Member memberList[],
 
     /* Buoc 2: Chon ly do vi pham */
     printf("\n" ANSI_BOLD "Select violation reason:\n" ANSI_COLOR_RESET);
-    printf(ANSI_BOLD ANSI_COLOR_GREEN " [0] " ANSI_COLOR_RESET "Khong mac ao CLB                  (+%.0f VND)\n", FINE_NO_SHIRT);
-    printf(ANSI_BOLD ANSI_COLOR_GREEN " [1] " ANSI_COLOR_RESET "Vang hop            (+%.0f VND)\n", FINE_ABSENT);
-    printf(ANSI_BOLD ANSI_COLOR_GREEN " [2] " ANSI_COLOR_RESET "Khong tham gia hoat dong        (+%.0f VND)\n", FINE_NO_ACTIVITY);
-    printf(ANSI_BOLD ANSI_COLOR_GREEN " [3] " ANSI_COLOR_RESET "Bao luc                       (+%.0f VND)\n", FINE_VIOLENCE);
+    printf(ANSI_BOLD ANSI_COLOR_GREEN " [0] " ANSI_COLOR_RESET "Khong mac ao CLB              (+%.0f VND)\n", Get_fine(m->role, 0));
+    printf(ANSI_BOLD ANSI_COLOR_GREEN " [1] " ANSI_COLOR_RESET "Vang hop                      (+%.0f VND)\n", Get_fine(m->role, 1));
+    printf(ANSI_BOLD ANSI_COLOR_GREEN " [2] " ANSI_COLOR_RESET "Khong tham gia hoat dong      (+%.0f VND)\n", Get_fine(m->role, 2));
+    printf(ANSI_BOLD ANSI_COLOR_GREEN " [3] " ANSI_COLOR_RESET "Bao luc                       (+%.0f VND)\n", Get_fine(m->role, 3));
     printf("\n");
     printf(ANSI_COLOR_CYAN ANSI_BOLD "------------------------------------------\n" ANSI_COLOR_RESET);
 
@@ -241,7 +222,7 @@ void Menu_record_violation(int *memberCount, Member memberList[],
     Violation newV = Init_Violation();
     strcpy(newV.studentId, studentId);
     newV.reason        = reason;
-    newV.fine          = Get_fine_by_reason(reason);
+    newV.fine          = Get_fine(m->role, reason);
     newV.isPaid        = 0;
     newV.violationTime = time(NULL);
 
@@ -279,9 +260,6 @@ void Menu_record_violation(int *memberCount, Member memberList[],
     system("cls");
 }
 
-/* -------------------------------------------------------
- * BCN: Danh dau da thu tien phat
- * ------------------------------------------------------- */
 
 void Menu_mark_paid(int *memberCount, Member memberList[],
                     int *violationCount, Violation violationList[]) {
@@ -392,10 +370,6 @@ void Menu_mark_paid(int *memberCount, Member memberList[],
     }
 }
 
-/* -------------------------------------------------------
- * BCN: Xem danh sach vi pham toan CLB (co bo loc)
- * ------------------------------------------------------- */
-
 void Menu_view_all_violations(int memberCount, Member memberList[],
                               int violationCount, Violation violationList[]) {
     printf(ANSI_COLOR_CYAN ANSI_BOLD);
@@ -471,9 +445,6 @@ void Menu_view_all_violations(int memberCount, Member memberList[],
     system("cls");
 }
 
-/* -------------------------------------------------------
- * BCN: Thong ke vi pham theo ban (Team)
- * ------------------------------------------------------- */
 void view_Statistics_By_Team(Member memberList[], int memberCount,
                              Violation violationList[], int violationCount) {
     printf(ANSI_COLOR_CYAN ANSI_BOLD);
