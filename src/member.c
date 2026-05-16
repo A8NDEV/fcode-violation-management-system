@@ -191,6 +191,7 @@ void Menu_update(const int member_size, Member member_list[], Account account_li
             break;
         case 5:
             Input_role(&upd_member.role);
+            upd_account.role = upd_member.role;
             break;
         case 6:
             Input_password(upd_account.password);

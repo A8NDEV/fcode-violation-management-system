@@ -1,9 +1,8 @@
 #include "auth.h"
 #include "validate.h"
+#include "windows.h"
 #ifdef _WIN32
 #include <conio.h>
-#else
-#include <termios.h>
 #endif
 
 //--------------------------------------------------------
@@ -113,7 +112,7 @@ void login(account *accountList, int *quantity, int *isLogin,
 
     if (accountList[foundIndex].isLocked == 1) { // check if account is locked
       printf(ANSI_BRIGHT_RED "ACCOUNT IS CURRENTLY LOCKED\n");
-      *currentState = loginState;
+      if (currentState != NULL) *currentState = loginState;
       return;
     }
     // bug
@@ -150,7 +149,7 @@ void login(account *accountList, int *quantity, int *isLogin,
         printf(ANSI_BRIGHT_RED "ACCOUNT LOCKED DUE TO 3 FAILED ATTEMPTS!\n");
         printf(ANSI_BRIGHT_BLUE "RETURNING TO LOGIN SCREEN...\n");
         printf("\n");
-        *currentState = loginState;
+        if (currentState != NULL) *currentState = loginState;
       }
 
       // Persist changes to file
@@ -159,6 +158,7 @@ void login(account *accountList, int *quantity, int *isLogin,
       if (accountList[foundIndex].failCount >= 3) {
         return;
       }
+      Sleep(3000);
     }
     break;
   }
@@ -180,11 +180,12 @@ void setting(int role, Menu *currentState) {
     printf(ANSI_COLOR_CYAN ANSI_BOLD
            "------------------------------------------\n" ANSI_COLOR_RESET);
     printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ SELECT FUNCTION: " ANSI_COLOR_RESET);
-    if (scanf("%d", &choice) != 1) {
-      choice = 0; // Assign invalid value if input is not a number
+    char buf[32];
+    if (fgets(buf, sizeof(buf), stdin) != NULL) {
+      if (sscanf(buf, "%d", &choice) != 1) choice = 0;
+    } else {
+      choice = 0;
     }
-    while (getchar() != '\n')
-      ; // Clear buffer to prevent hanging
     if (choice == 1) {
       /// not implemented
     } else if (choice == 2) {
@@ -208,11 +209,12 @@ void setting(int role, Menu *currentState) {
     printf(ANSI_COLOR_CYAN ANSI_BOLD
            "------------------------------------------\n" ANSI_COLOR_RESET);
     printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ SELECT FUNCTION: " ANSI_COLOR_RESET);
-    if (scanf("%d", &choice) != 1) {
+    char buf[32];
+    if (fgets(buf, sizeof(buf), stdin) != NULL) {
+      if (sscanf(buf, "%d", &choice) != 1) choice = 0;
+    } else {
       choice = 0;
     }
-    while (getchar() != '\n')
-      ;
     if (choice == 1) {
       // not implemented
     } else if (choice == 2) {
@@ -243,7 +245,7 @@ int changePassword(account *accountList, int role, int *quantity,
         
         if(Validate_password(passwordChange) == 0){
           printf(ANSI_BOLD ANSI_COLOR_RED
-                " ❯ INVALD FORMAT, TRY AGAIN!\n" ANSI_COLOR_RESET);
+                " ❯ YOUR PASSWORD NEED TO HAVE AT LEAST ONE UPPERCASE LETTER, ONE LOWERCASE LETTER, AND ONE DIGIT, TRY AGAIN!\n" ANSI_COLOR_RESET);
           continue;
         }
 

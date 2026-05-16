@@ -9,6 +9,19 @@
 #include "validate.h"
 #include "auth.h"
 
+void print_logo(void) {
+    printf("\n");
+    printf(ANSI_COLOR_GREEN ANSI_BOLD);
+    printf("  ███████╗      ██████╗ ██████╗ ██████╗ ███████╗    \n");
+    printf("  ██╔════╝     ██╔════╝██╔═══██╗██╔══██╗██╔════╝    \n");
+    printf("  █████╗  ████╗██║     ██║   ██║██║  ██║█████╗      \n");
+    printf("  ██╔══╝  ╚═══╝██║     ██║   ██║██║  ██║██╔══╝      \n");
+    printf("  ██║          ╚██████╗╚██████╔╝██████╔╝███████╗    \n");
+    printf("  ╚═╝           ╚═════╝ ╚═════╝ ╚═════╝ ╚══════╝    \n");
+    printf(ANSI_COLOR_YELLOW "                C O D E  T H E  D R E A M          \n" ANSI_COLOR_RESET);
+    printf("\n");
+}
+
 void Stdin_string(char str[],int siz){
     if(fgets(str,siz,stdin) == NULL){
         str[0] = '\0';
@@ -18,7 +31,9 @@ void Stdin_string(char str[],int siz){
     if(str[len] == '\n')    str[len] = '\0';//inputuser is not greater than SHORT_SIZE 
     else{
         // don't have '\n' => inputuser is greater than SHORT_SIZE
-        clear_buffer();//clear
+        int c;
+        // clear buffer safely
+        while((c = getchar()) != '\n' && c != EOF);
     }
 }
 void clear_buffer(void){
@@ -56,8 +71,14 @@ void Announcement_error_acction(){
 
 void Input_user_choose(int *input){
     printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Your choice   : " ANSI_COLOR_RESET);
-    scanf("%d",input);
-    clear_buffer();
+    char buf[32];
+    if (fgets(buf, sizeof(buf), stdin) != NULL) {
+        if (sscanf(buf, "%d", input) != 1) {
+            *input = -1;
+        }
+    } else {
+        *input = -1;
+    }
 }
 void Input_fullname(char fullname[]){
     bool ok = false;
@@ -113,9 +134,13 @@ void Input_team(int *input){
     while(!ok){
         if(wrong == false)  printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Team         : " ANSI_COLOR_RESET);
         else    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Invalid team, try again: " ANSI_COLOR_RESET);
-        char x;
-        scanf("%c",&x);
-        clear_buffer();
+        char buf[32];
+        if (fgets(buf, sizeof(buf), stdin) == NULL) continue;
+        if (buf[0] == '\n' || buf[1] != '\n') {
+            wrong |= 1;
+            continue;
+        }
+        char x = buf[0];
         if(is_number(x) == false){
             ok = false;
             wrong |= 1;
@@ -134,9 +159,13 @@ void Input_role(int *input){
     while(!ok){
         if(wrong == false)  printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Role         : " ANSI_COLOR_RESET);
         else    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Invalid role, try again: " ANSI_COLOR_RESET);
-        char x;
-        scanf("%c",&x);
-        clear_buffer();
+        char buf[32];
+        if (fgets(buf, sizeof(buf), stdin) == NULL) continue;
+        if (buf[0] == '\n' || buf[1] != '\n') {
+            wrong |= 1;
+            continue;
+        }
+        char x = buf[0];
         if(is_number(x) == false){
             ok = false;
             wrong |= 1;
@@ -152,8 +181,12 @@ void Input_violation_reason(int *input){
     while(!ok){
         if(wrong == false)  printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Violation    : " ANSI_COLOR_RESET);
         else    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Invalid reason, try again: " ANSI_COLOR_RESET);
-        scanf("%d",input);
-        clear_buffer();
+        char buf[32];
+        if (fgets(buf, sizeof(buf), stdin) == NULL) continue;
+        if (sscanf(buf, "%d", input) != 1) {
+            wrong |= 1;
+            continue;
+        }
         ok |= Validate_violation_reason(*input);
         wrong |= 1;
     }

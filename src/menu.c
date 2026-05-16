@@ -4,6 +4,7 @@
 #include "utils.h"
 #include "violation.h"
 #include <stdio.h>
+#include "sort_violation.h"
 
 int show_bcn_menu(Account *session, Member memberList[], int *memberCount, Account accountList[], Violation violationList[], int *violationCount) {
     int choice;
@@ -28,10 +29,12 @@ int show_bcn_menu(Account *session, Member memberList[], int *memberCount, Accou
         printf(ANSI_COLOR_CYAN ANSI_BOLD
                "------------------------------------------\n" ANSI_COLOR_RESET);
         printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ SELECT FUNCTION: " ANSI_COLOR_RESET);
-        if (scanf("%d", &choice) != 1) {
+        char buf[32];
+        if (fgets(buf, sizeof(buf), stdin) != NULL) {
+            if (sscanf(buf, "%d", &choice) != 1) choice = -1;
+        } else {
             choice = -1;
         }
-        clear_buffer();
         switch (choice) {
         case 1:
             Menu_create(memberCount, memberList, accountList);
@@ -92,10 +95,12 @@ int show_member_menu(Account *session, Member memberList[], int memberCount, Acc
         printf(ANSI_COLOR_CYAN ANSI_BOLD
                "------------------------------------------\n" ANSI_COLOR_RESET);
         printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ SELECT FUNCTION: " ANSI_COLOR_RESET);
-        if (scanf("%d", &choice) != 1) {
+        char buf[32];
+        if (fgets(buf, sizeof(buf), stdin) != NULL) {
+            if (sscanf(buf, "%d", &choice) != 1) choice = -1;
+        } else {
             choice = -1;
         }
-        clear_buffer();
 
 
 
@@ -129,7 +134,8 @@ int show_member_menu(Account *session, Member memberList[], int memberCount, Acc
             printf(ANSI_BOLD ANSI_COLOR_GREEN "[1]" ANSI_COLOR_RESET " ASCENDING\n");
             printf(ANSI_BOLD ANSI_COLOR_GREEN "[2]" ANSI_COLOR_RESET " DESCENDING\n");
             int choice;
-            if (scanf("%d",&choice) == 1) {
+            char buf[32];
+            if (fgets(buf, sizeof(buf), stdin) != NULL && sscanf(buf, "%d", &choice) == 1) {
                 if (choice == 1) {
                     sort_CLB_Violations(memberList,memberCount,1);
 
