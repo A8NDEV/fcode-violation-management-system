@@ -17,6 +17,8 @@ void Input_team(int *input);
 void Input_role(int *input);
 void Input_violation_reason(int *input);
 void Input_password(char pass[]);
+/* Parse a date string DD/MM/YYYY into time_t. Returns -1 on invalid input. */
+time_t Input_date(const char *prompt);
 
 //Announment function  group
 void Announcement_unaivailable_option();

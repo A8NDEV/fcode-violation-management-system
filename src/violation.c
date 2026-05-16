@@ -384,6 +384,7 @@ void Menu_view_all_violations(int memberCount, Member memberList[],
     printf(ANSI_BOLD ANSI_COLOR_GREEN " [1] " ANSI_COLOR_RESET "Filter by Team\n");
     printf(ANSI_BOLD ANSI_COLOR_GREEN " [2] " ANSI_COLOR_RESET "Filter by Violation Reason\n");
     printf(ANSI_BOLD ANSI_COLOR_GREEN " [3] " ANSI_COLOR_RESET "Filter by Payment Status\n");
+    printf(ANSI_BOLD ANSI_COLOR_GREEN " [4] " ANSI_COLOR_RESET "Filter by Date Range\n");
     printf("\n");
     printf(ANSI_COLOR_CYAN ANSI_BOLD "------------------------------------------\n" ANSI_COLOR_RESET);
 
@@ -393,6 +394,8 @@ void Menu_view_all_violations(int memberCount, Member memberList[],
     int filterTeam   = -1;
     int filterReason = -1;
     int filterPaid   = -1;
+    time_t filterDateFrom = (time_t)(-1);
+    time_t filterDateTo   = (time_t)(-1);
 
     if (filterBy == 1) {
         Input_team(&filterTeam);
@@ -405,6 +408,11 @@ void Menu_view_all_violations(int memberCount, Member memberList[],
         Input_user_choose(&paid);
         if (paid == 0 || paid == 1)
             filterPaid = paid;
+    } else if (filterBy == 4) {
+        filterDateFrom = Input_date("Start date");
+        /* Normalize end date to 23:59:59 of that day */
+        filterDateTo = Input_date("End date  ");
+        if (filterDateTo != (time_t)(-1)) filterDateTo += 86399;
     } else if (filterBy != 0) {
         Announcement_unaivailable_option();
         return;
@@ -425,9 +433,11 @@ void Menu_view_all_violations(int memberCount, Member memberList[],
             ? TEAM_LABELS[team] : "???";
 
         /* Ap dung bo loc */
-        if (filterTeam   != -1 && team != filterTeam)      continue;
-        if (filterReason != -1 && v->reason != filterReason) continue;
-        if (filterPaid   != -1 && v->isPaid != filterPaid)  continue;
+        if (filterTeam     != -1 && team != filterTeam)              continue;
+        if (filterReason   != -1 && v->reason != filterReason)       continue;
+        if (filterPaid     != -1 && v->isPaid != filterPaid)         continue;
+        if (filterDateFrom != (time_t)(-1) && v->violationTime < filterDateFrom) continue;
+        if (filterDateTo   != (time_t)(-1) && v->violationTime > filterDateTo)   continue;
 
         displayCount++;
         Print_violation_row(displayCount, v, name, teamStr);
