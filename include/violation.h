@@ -35,4 +35,8 @@ void Menu_view_all_violations(int memberCount, Member memberList[],
 void view_Statistics_By_Team(Member memberList[], int memberCount,
                              Violation violationList[], int violationCount);
 
+/* Diem danh tu dong qua file (Batch process attendance) */
+void Menu_batch_attendance(int memberCount, Member memberList[],
+                           int *violationCount, Violation violationList[]);
+
 #endif

@@ -24,6 +24,7 @@ int show_bcn_menu(Account *session, Member memberList[], int *memberCount, Accou
         printf(ANSI_BOLD ANSI_COLOR_GREEN " [8] " ANSI_COLOR_RESET "VIEW DELETED MEMBERS\n");
         printf(ANSI_BOLD ANSI_COLOR_GREEN " [9] " ANSI_COLOR_RESET "EXPORT REPORT\n");
         printf(ANSI_BOLD ANSI_COLOR_GREEN "[10] " ANSI_COLOR_RESET "CHANGE PASSWORD\n");
+        printf(ANSI_BOLD ANSI_COLOR_GREEN "[11] " ANSI_COLOR_RESET "PROCESS MEETING ATTENDANCE\n");
         printf(ANSI_BOLD ANSI_COLOR_YELLOW " [0] " ANSI_COLOR_RESET "LOGOUT\n");
         printf("\n");
         printf(ANSI_COLOR_CYAN ANSI_BOLD
@@ -64,6 +65,9 @@ int show_bcn_menu(Account *session, Member memberList[], int *memberCount, Accou
             break;
         case 10:
             changePassword(accountList, session->role, memberCount, session);
+            break;
+        case 11:
+            Menu_batch_attendance(*memberCount, memberList, violationCount, violationList);
             break;
         case 0:
             printf(ANSI_BRIGHT_CYAN "LOGGED OUT SUCCESSFULLY!\n" ANSI_COLOR_RESET);

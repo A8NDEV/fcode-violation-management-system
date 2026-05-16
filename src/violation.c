@@ -503,3 +503,109 @@ void view_Statistics_By_Team(Member memberList[], int memberCount,
     getchar();
     system("cls");
 }
+
+/* -------------------------------------------------------
+ * BCN: Diem danh tu dong qua file (Batch process attendance)
+ * ------------------------------------------------------- */
+void Menu_batch_attendance(int memberCount, Member memberList[],
+                           int *violationCount, Violation violationList[]) {
+    printf(ANSI_COLOR_CYAN ANSI_BOLD);
+    printf("╔════════════════════════════════════════╗\n");
+    printf("║       PROCESS MEETING ATTENDANCE       ║\n");
+    printf("╚════════════════════════════════════════╝\n");
+    printf(ANSI_COLOR_RESET "\n");
+
+    FILE *file = fopen("data/attendance.txt", "r");
+    if (!file) {
+        printf(ANSI_BRIGHT_RED "Error: Could not open data/attendance.txt\n"
+               "Please ensure the attendance file exists.\n" ANSI_COLOR_RESET);
+        Sleep(2500);
+        system("cls");
+        return;
+    }
+
+    char attended[MAX_ACCOUNT][SHORT_SIZE];
+    int attCount = 0;
+    char line[64];
+
+    while (fgets(line, sizeof(line), file)) {
+        line[strcspn(line, "\r\n")] = '\0';
+        if (strlen(line) > 0 && attCount < MAX_ACCOUNT) {
+            strcpy(attended[attCount++], line);
+        }
+    }
+    fclose(file);
+
+    int presentCount = 0;
+    int absentCount  = 0;
+    int dangerCount  = 0;
+    char dangerList[MAX_ACCOUNT][100];
+
+    time_t currentTime = time(NULL);
+
+    for (int i = 0; i < memberCount; i++) {
+        Member *m = &memberList[i];
+        int isPresent = 0;
+
+        for (int j = 0; j < attCount; j++) {
+            if (strcmp(m->studentId, attended[j]) == 0) {
+                isPresent = 1;
+                break;
+            }
+        }
+
+        if (isPresent) {
+            m->consecutiveAbsences = 0;
+            presentCount++;
+        } else {
+            m->consecutiveAbsences++;
+            absentCount++;
+
+            /* Record violation */
+            Violation newV = Init_Violation();
+            strcpy(newV.studentId, m->studentId);
+            newV.reason        = 1; /* Vang hop */
+            newV.fine          = Get_fine(m->role, 1);
+            newV.isPaid        = 0;
+            newV.violationTime = currentTime;
+
+            m->violationCount++;
+            m->totalFine += newV.fine;
+
+            violationList[*violationCount] = newV;
+            (*violationCount)++;
+
+            if (m->consecutiveAbsences >= 2) {
+                snprintf(dangerList[dangerCount++], sizeof(dangerList[0]), 
+                         "%-10s | %-20s | %d absences", m->studentId, m->fullName, m->consecutiveAbsences);
+            }
+        }
+    }
+
+    /* Save to files */
+    if (!Rewrite_members_dat(memberCount, memberList) || 
+        !Rewrite_violations_dat(*violationCount, violationList)) {
+        Announcement_error_acction();
+        return;
+    }
+
+    printf(ANSI_BRIGHT_GREEN "Attendance processing complete!\n" ANSI_COLOR_RESET);
+    printf("------------------------------------------\n");
+    printf("Total Club Members : %d\n", memberCount);
+    printf("Members Present    : %d (Reset absences to 0)\n", presentCount);
+    printf("Members Absent     : %d (Recorded Absent violation + fine)\n", absentCount);
+    printf("------------------------------------------\n");
+
+    if (dangerCount > 0) {
+        printf(ANSI_BRIGHT_YELLOW "\n[!] WARNING: MEMBERS AT KICK-OUT THRESHOLD:\n" ANSI_COLOR_RESET);
+        for (int i = 0; i < dangerCount; i++) {
+            printf(" ❯ %s\n", dangerList[i]);
+        }
+    } else {
+        printf(ANSI_BRIGHT_GREEN "\nNo members are at kick-out risk.\n" ANSI_COLOR_RESET);
+    }
+
+    printf("\nPress Enter to return...");
+    getchar();
+    system("cls");
+}
