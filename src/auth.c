@@ -111,57 +111,70 @@ void login(account *accountList, int *quantity, int *isLogin,
       continue;
     }
 
-    if (accountList[foundIndex].isLocked == 1) { // check if account is locked
+    if (accountList[foundIndex].isLocked == 1) {
       printf(ANSI_BRIGHT_RED "ACCOUNT IS CURRENTLY LOCKED\n");
       if (currentState != NULL) *currentState = loginState;
       return;
     }
-    // bug
-    printf(ANSI_BOLD ANSI_COLOR_YELLOW
-           " ❯ PASSWORD    : " ANSI_COLOR_RESET); // WILL ADD PASSWORD MASKING
-                                                  // (*) THÀNH *
-    inputPassword(studentPasswordInput, MAX_PASS_LEN);
 
-    if (strcmp(accountList[foundIndex].password, studentPasswordInput) ==
-        0) { // password match check
-      printf("\n");
-      Rainbow_Loading("Verifying Account");
-      system("cls");
-      printf(ANSI_BRIGHT_GREEN "LOGIN SUCCESSFUL!\n");
-      *isLogin = 1;
-      accountList[foundIndex].failCount = 0;
-      *session = accountList[foundIndex]; // get session
-      ///// check if session initialized correctly!
-      printf("\n");
-      printf("CHECK SESSION upon successful login\n");
-      printf("%s | %s | %d | %d\n", (*(session)).studentId,
-             (*(session)).password, (*(session)).role, (*(session)).isLocked);
-      printf("\n");
+    while (1) {
+      printf(ANSI_BOLD ANSI_COLOR_YELLOW
+             " ❯ PASSWORD    : " ANSI_COLOR_RESET);
+      inputPassword(studentPasswordInput, MAX_PASS_LEN);
 
-      // persist reset failCount (file sync)
-      saveAccount(foundIndex, &accountList[foundIndex]);
-
-    } else {
-      printf("\n");
-      printf(ANSI_BRIGHT_RED "INCORRECT PASSWORD!\n");
-      (accountList[foundIndex].failCount)++;
-
-      if (accountList[foundIndex].failCount >= 3) {
-        accountList[foundIndex].isLocked = 1;
+      if (strcmp(accountList[foundIndex].password, studentPasswordInput) == 0) {
         printf("\n");
-        printf(ANSI_BRIGHT_RED "ACCOUNT LOCKED DUE TO 3 FAILED ATTEMPTS!\n");
-        printf(ANSI_BRIGHT_BLUE "RETURNING TO LOGIN SCREEN...\n");
+        Rainbow_Loading("Verifying Account");
+        system("cls");
+        printf(ANSI_BRIGHT_GREEN "LOGIN SUCCESSFUL!\n");
+        *isLogin = 1;
+        accountList[foundIndex].failCount = 0;
+        *session = accountList[foundIndex];
+
+        saveAccount(foundIndex, &accountList[foundIndex]);
+        break;
+      } else {
         printf("\n");
-        if (currentState != NULL) *currentState = loginState;
-      }
+        printf(ANSI_BRIGHT_RED "INCORRECT PASSWORD!\n");
+        (accountList[foundIndex].failCount)++;
 
-      // Persist changes to file
-      saveAccount(foundIndex, &accountList[foundIndex]);
+        if (accountList[foundIndex].failCount >= 3) {
+          accountList[foundIndex].isLocked = 1;
+          printf("\n");
+          printf(ANSI_BRIGHT_RED "ACCOUNT LOCKED DUE TO 3 FAILED ATTEMPTS!\n");
+          printf(ANSI_BRIGHT_BLUE "RETURNING TO LOGIN SCREEN...\n");
+          printf("\n");
+          if (currentState != NULL) *currentState = loginState;
+          saveAccount(foundIndex, &accountList[foundIndex]);
+          return;
+        }
 
-      if (accountList[foundIndex].failCount >= 3) {
-        return;
+        saveAccount(foundIndex, &accountList[foundIndex]);
+
+        char retryChoice[32];
+        int wantRetry = 0;
+        while (1) {
+          printf("\n" ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Do you want to try entering password again? (y/n): " ANSI_COLOR_RESET);
+          inputString(retryChoice, sizeof(retryChoice));
+          if (strlen(retryChoice) == 0) continue;
+          if (retryChoice[0] == 'y' || retryChoice[0] == 'Y') {
+            wantRetry = 1;
+            break;
+          } else if (retryChoice[0] == 'n' || retryChoice[0] == 'N') {
+            wantRetry = 0;
+            break;
+          } else {
+            printf(ANSI_COLOR_RED "Invalid choice! Please enter 'y' or 'n'." ANSI_COLOR_RESET "\n");
+          }
+        }
+
+        if (wantRetry) {
+          printf("\n");
+          continue;
+        } else {
+          return;
+        }
       }
-      Sleep(3000);
     }
     break;
   }
@@ -357,8 +370,9 @@ void inputString(char *buffer, int size) {
   if (fgets(buffer, size, stdin) != NULL) {
     size_t len = strlen(buffer);
     if (len > 0 && buffer[len - 1] == '\n') {
-      buffer[len - 1] = '\0';
+      buffer[strcspn(buffer, "\r\n")] = '\0';
     } else {
+      buffer[strcspn(buffer, "\r\n")] = '\0';
       // Buffer was too small, clear the rest of the line
       int c;
       while ((c = getchar()) != '\n' && c != EOF)
