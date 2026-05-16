@@ -1,5 +1,6 @@
 #include "report.h"
 #include "auth.h"
+#include "utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,11 +8,7 @@
 
 void Export_Violation_Report(int memberCount, Member memberList[],
                              int violationCount, Violation violationList[]) {
-    printf(ANSI_COLOR_CYAN ANSI_BOLD);
-    printf("╔════════════════════════════════════════╗\n");
-    printf("║         EXPORT VIOLATION REPORT        ║\n");
-    printf("╚════════════════════════════════════════╝\n");
-    printf(ANSI_COLOR_RESET "\n");
+    UI_Header("EXPORT VIOLATION REPORT", ANSI_COLOR_CYAN);
 
     const char *filepath = "data/violation_report.txt";
     FILE *file = fopen(filepath, "w");
@@ -140,14 +137,14 @@ void Export_Violation_Report(int memberCount, Member memberList[],
 
     fclose(file);
 
-    printf(ANSI_BRIGHT_GREEN "Report successfully exported to %s!\n" ANSI_COLOR_RESET, filepath);
-    printf("Report summary:\n");
-    fprintf(stdout, " ❯ Generated at : %s\n", timeStr);
-    fprintf(stdout, " ❯ Total Members: %d\n", memberCount);
-    fprintf(stdout, " ❯ Total Debtors: %d members\n", debtorCount);
-    fprintf(stdout, " ❯ Members at Risk: %d members\n", riskCount);
+    UI_Card_Start("EXPORT SUMMARY", ANSI_COLOR_GREEN);
+    printf(ANSI_BOLD "    📄 File Path   : " ANSI_COLOR_RESET "data/violation_report.txt\n");
+    printf(ANSI_BOLD "    ⏰ Time        : " ANSI_COLOR_RESET "%s\n", timeStr);
+    printf(ANSI_BOLD "    👥 Total Mem   : " ANSI_COLOR_RESET "%d\n", memberCount);
+    printf(ANSI_BOLD "    💰 Debtors     : " ANSI_COLOR_RESET "%d members\n", debtorCount);
+    printf(ANSI_BOLD "    ⚠  At Risk     : " ANSI_COLOR_RESET "%d members\n", riskCount);
+    UI_Card_End(ANSI_COLOR_GREEN);
 
-    printf("\nPress Enter to return...");
-    getchar();
-    system("cls");
+    printf("\n" ANSI_BRIGHT_CYAN "Report successfully exported!" ANSI_COLOR_RESET "\n");
+    UI_Return_Prompt();
 }

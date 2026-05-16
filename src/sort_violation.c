@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "sort_violation.h"
 #include "auth.h"
+#include "utils.h"
 
 
 
@@ -37,19 +38,10 @@ void sort_CLB_Violations(Member member[], int size, int isAscending) {
     
     
     if (isAscending == 1) {
-        printf(ANSI_COLOR_CYAN ANSI_BOLD);
-        printf("╔═══════════════════════════════════════════════════════════╗\n");
-        printf("║    LIST OF VIOLATIONS (FROM LEAST TO MOST VIOLATIONS)     ║\n");
-        printf("╚═══════════════════════════════════════════════════════════╝\n");
-        printf(ANSI_COLOR_RESET "\n");
+        UI_Header("VIOLATIONS: LEAST TO MOST", ANSI_COLOR_CYAN);
     } else {
-        printf(ANSI_COLOR_CYAN ANSI_BOLD);
-        printf("╔═══════════════════════════════════════════════════════════╗\n");
-        printf("║    LIST OF VIOLATIONS (FROM MOST TO LEAST VIOLATIONS)     ║\n");
-        printf("╚═══════════════════════════════════════════════════════════╝\n");
-        printf(ANSI_COLOR_RESET "\n");
+        UI_Header("VIOLATIONS: MOST TO LEAST", ANSI_COLOR_CYAN);
     }
     
-    
-    view_CLB_Profile(member, size); 
+    view_CLB_Profile(hehe, size); 
 }

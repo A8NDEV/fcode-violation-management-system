@@ -11,33 +11,25 @@
 int show_bcn_menu(Account *session, Member memberList[], int *memberCount, Account accountList[], Violation violationList[], int *violationCount) {
     int choice;
     while (1) {
-        printf(ANSI_COLOR_CYAN ANSI_BOLD);
-        printf("╔════════════════════════════════════════╗\n");
-        printf("║          BCN MANAGEMENT MENU           ║\n");
-        printf("╚════════════════════════════════════════╝\n");
-        printf(ANSI_COLOR_RESET "\n");
-        printf(ANSI_BOLD ANSI_COLOR_GREEN " [1] " ANSI_COLOR_RESET "ADD MEMBER\n");
-        printf(ANSI_BOLD ANSI_COLOR_GREEN " [2] " ANSI_COLOR_RESET "UPDATE MEMBER INFO\n");
-        printf(ANSI_BOLD ANSI_COLOR_GREEN " [3] " ANSI_COLOR_RESET "REMOVE MEMBER\n");
-        printf(ANSI_BOLD ANSI_COLOR_GREEN " [4] " ANSI_COLOR_RESET "RECORD VIOLATION\n");
-        printf(ANSI_BOLD ANSI_COLOR_GREEN " [5] " ANSI_COLOR_RESET "MARK FINE AS PAID\n");
-        printf(ANSI_BOLD ANSI_COLOR_GREEN " [6] " ANSI_COLOR_RESET "VIEW ALL VIOLATIONS\n");
-        printf(ANSI_BOLD ANSI_COLOR_GREEN " [7] " ANSI_COLOR_RESET "STATISTICS BY TEAM\n");
-        printf(ANSI_BOLD ANSI_COLOR_GREEN " [8] " ANSI_COLOR_RESET "VIEW DELETED MEMBERS\n");
-        printf(ANSI_BOLD ANSI_COLOR_GREEN " [9] " ANSI_COLOR_RESET "EXPORT REPORT\n");
-        printf(ANSI_BOLD ANSI_COLOR_GREEN "[10] " ANSI_COLOR_RESET "CHANGE PASSWORD\n");
-        printf(ANSI_BOLD ANSI_COLOR_GREEN "[11] " ANSI_COLOR_RESET "PROCESS MEETING ATTENDANCE\n");
-        printf(ANSI_BOLD ANSI_COLOR_YELLOW " [0] " ANSI_COLOR_RESET "LOGOUT\n");
-        printf("\n");
-        printf(ANSI_COLOR_CYAN ANSI_BOLD
-               "------------------------------------------\n" ANSI_COLOR_RESET);
-        printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ SELECT FUNCTION: " ANSI_COLOR_RESET);
-        char buf[32];
-        if (fgets(buf, sizeof(buf), stdin) != NULL) {
-            if (sscanf(buf, "%d", &choice) != 1) choice = -1;
-        } else {
-            choice = -1;
-        }
+        system("cls");
+        print_bcn_logo();
+        UI_Header("BCN MANAGEMENT MENU", ANSI_COLOR_CYAN);
+        UI_Menu_Item(1, "ADD MEMBER", ANSI_COLOR_CYAN);
+        UI_Menu_Item(2, "UPDATE MEMBER INFO", ANSI_COLOR_CYAN);
+        UI_Menu_Item(3, "REMOVE MEMBER", ANSI_COLOR_CYAN);
+        UI_Menu_Item(4, "RECORD VIOLATION", ANSI_COLOR_CYAN);
+        UI_Menu_Item(5, "MARK FINE AS PAID", ANSI_COLOR_CYAN);
+        UI_Menu_Item(6, "VIEW ALL VIOLATIONS", ANSI_COLOR_CYAN);
+        UI_Menu_Item(7, "STATISTICS BY TEAM", ANSI_COLOR_CYAN);
+        UI_Menu_Item(8, "VIEW DELETED MEMBERS", ANSI_COLOR_CYAN);
+        UI_Menu_Item(9, "EXPORT REPORT", ANSI_COLOR_CYAN);
+        UI_Menu_Item(10, "CHANGE PASSWORD", ANSI_COLOR_CYAN);
+        UI_Menu_Item(11, "PROCESS MEETING ATTENDANCE", ANSI_COLOR_CYAN);
+        UI_Divider(50, ANSI_COLOR_CYAN);
+        UI_Menu_Item(0, "LOGOUT", ANSI_COLOR_CYAN);
+        UI_Card_End(ANSI_COLOR_CYAN);
+        
+        Input_user_choose(&choice);
         switch (choice) {
         case 1:
             Menu_create(memberCount, memberList, accountList);
@@ -84,30 +76,20 @@ int show_bcn_menu(Account *session, Member memberList[], int *memberCount, Accou
 int show_member_menu(Account *session, Member memberList[], int memberCount, Account accountList[], int accountCount, Violation violationList[], int violationCount) {
     int choice;
     while (1) {
+        system("cls");
+        print_member_logo();
+        UI_Header("MEMBER MENU", ANSI_COLOR_CYAN);
+        UI_Menu_Item(1, "VIEW PROFILE", ANSI_COLOR_CYAN);
+        UI_Menu_Item(2, "VIEW VIOLATION HISTORY", ANSI_COLOR_CYAN);
+        UI_Menu_Item(3, "VIEW TOTAL DEBT", ANSI_COLOR_CYAN);
+        UI_Menu_Item(4, "VIEW CLUB MEMBER LIST", ANSI_COLOR_CYAN);
+        UI_Menu_Item(5, "CHANGE PASSWORD", ANSI_COLOR_CYAN);
+        UI_Menu_Item(6, "VIEW SORTED LIST", ANSI_COLOR_CYAN);
+        UI_Divider(50, ANSI_COLOR_CYAN);
+        UI_Menu_Item(0, "LOGOUT", ANSI_COLOR_CYAN);
+        UI_Card_End(ANSI_COLOR_CYAN);
 
-
-        printf(ANSI_COLOR_CYAN ANSI_BOLD);
-        printf("╔════════════════════════════════════════╗\n");
-        printf("║              MEMBER MENU               ║\n");
-        printf("╚════════════════════════════════════════╝\n");
-        printf(ANSI_COLOR_RESET "\n");
-        printf(ANSI_BOLD ANSI_COLOR_GREEN " [1] " ANSI_COLOR_RESET "VIEW PROFILE\n");
-        printf(ANSI_BOLD ANSI_COLOR_GREEN " [2] " ANSI_COLOR_RESET "VIEW VIOLATION HISTORY\n");
-        printf(ANSI_BOLD ANSI_COLOR_GREEN " [3] " ANSI_COLOR_RESET "VIEW TOTAL DEBT\n");
-        printf(ANSI_BOLD ANSI_COLOR_GREEN " [4] " ANSI_COLOR_RESET "VIEW CLUB MEMBER LIST\n");
-        printf(ANSI_BOLD ANSI_COLOR_GREEN " [5] " ANSI_COLOR_RESET "CHANGE PASSWORD\n");
-        printf(ANSI_BOLD ANSI_COLOR_GREEN " [6] " ANSI_COLOR_RESET "VIEW MEMBER SORTED LIST BY NUMBER OF VIOLATIONS\n");
-        printf(ANSI_BOLD ANSI_COLOR_YELLOW " [0] " ANSI_COLOR_RESET "LOGOUT\n");
-        printf("\n");
-        printf(ANSI_COLOR_CYAN ANSI_BOLD
-               "------------------------------------------\n" ANSI_COLOR_RESET);
-        printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ SELECT FUNCTION: " ANSI_COLOR_RESET);
-        char buf[32];
-        if (fgets(buf, sizeof(buf), stdin) != NULL) {
-            if (sscanf(buf, "%d", &choice) != 1) choice = -1;
-        } else {
-            choice = -1;
-        }
+        Input_user_choose(&choice);
 
 
 
