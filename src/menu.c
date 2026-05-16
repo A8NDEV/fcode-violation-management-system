@@ -3,6 +3,7 @@
 #include "member.h"
 #include "utils.h"
 #include "violation.h"
+#include "sort_violation.h"
 #include <stdio.h>
 #include "sort_violation.h"
 #include "report.h"

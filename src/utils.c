@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <time.h>
 #include "types.h"
 #include "validate.h"
 #include "auth.h"
@@ -200,6 +201,25 @@ void Input_password(char pass[]){
         ok |= Validate_password(pass);
         wrong |= 1;
     }
+}
+
+/* Parse date input DD/MM/YYYY and convert to time_t.
+ * Returns (time_t)(-1) if the format is invalid. */
+time_t Input_date(const char *prompt) {
+    char buf[12];
+    int day, mon, year;
+    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ %s (DD/MM/YYYY): " ANSI_COLOR_RESET, prompt);
+    if (fgets(buf, sizeof(buf), stdin) == NULL) return (time_t)(-1);
+    /* Strip trailing newline */
+    buf[strcspn(buf, "\n")] = '\0';
+    if (sscanf(buf, "%d/%d/%d", &day, &mon, &year) != 3) return (time_t)(-1);
+    struct tm t = {0};
+    t.tm_mday  = day;
+    t.tm_mon   = mon - 1;
+    t.tm_year  = year - 1900;
+    t.tm_hour  = 0; t.tm_min = 0; t.tm_sec = 0;
+    time_t result = mktime(&t);
+    return result;
 }
 
 int Find_studentId(int member_size,Member member_list[],char studentId[]){
