@@ -1,0 +1,16 @@
+# Các file biên dịch trung gian
+*.o
+obj/
+
+# File thực thi
+*.exe
+
+# Các file rác của Dev-C++
+*.layout
+Makefile.win
+*.depend
+*.win
+
+*.dat
+docs
+data
