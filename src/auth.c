@@ -392,5 +392,6 @@ void inputPassword(char *password, int maxSize) {
             fflush(stdout);
         }
     }
+    password[i] = '\0';
     printf("\n");
 }
