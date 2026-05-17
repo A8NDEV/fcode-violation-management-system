@@ -137,14 +137,11 @@ void login(account *accountList, int *quantity, int *isLogin,
         (accountList[foundIndex].failCount)++;
 
         if (accountList[foundIndex].failCount >= 3) {
-          accountList[foundIndex].isLocked = 1;
-          printf("\n");
-          printf(ANSI_BRIGHT_RED "ACCOUNT LOCKED DUE TO 3 FAILED ATTEMPTS!\n");
-          printf(ANSI_BRIGHT_BLUE "RETURNING TO LOGIN SCREEN...\n");
-          printf("\n");
-          if (currentState != NULL) *currentState = loginState;
+          accountList[foundIndex].failCount = 0;
           saveAccount(foundIndex, &accountList[foundIndex]);
-          return;
+          printf("\n" ANSI_BRIGHT_RED "TOO MANY FAILED ATTEMPTS! SESSION TERMINATED.\n" ANSI_COLOR_RESET);
+          Sleep(3000);
+          exit(0);
         }
 
         saveAccount(foundIndex, &accountList[foundIndex]);
