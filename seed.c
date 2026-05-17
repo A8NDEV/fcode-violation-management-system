@@ -74,56 +74,56 @@ int main(void) {
      * -------------------------------------------------- */
     Member members[] = {
         /* BCN */
-        make_member("HE000001", "Nguyen Van An",   "an.nv@fcode.vn",     "0912345678", 0, 2),
-        make_member("HE000002", "Tran Thi Bich",   "bich.tt@fcode.vn",   "0987654321", 1, 2),
+        make_member("SE200001", "Nguyen Van An",   "an.nv@fcode.vn",     "0912345678", 0, 2),
+        make_member("SE200002", "Tran Thi Bich",   "bich.tt@fcode.vn",   "0987654321", 1, 2),
         /* Leader / Vice */
-        make_member("HE000003", "Le Minh Cuong",   "cuong.lm@fcode.vn",  "0901234567", 0, 1),
-        make_member("HE000004", "Pham Quynh Dao",  "dao.pq@fcode.vn",    "0934567890", 1, 1),
-        make_member("HE000005", "Hoang Tuan Em",   "em.ht@fcode.vn",     "0945678901", 2, 1),
-        make_member("HE000006", "Vu Ngoc Phuong",  "phuong.vn@fcode.vn", "0956789012", 3, 1),
+        make_member("SE200003", "Le Minh Cuong",   "cuong.lm@fcode.vn",  "0901234567", 0, 1),
+        make_member("SE200004", "Pham Quynh Dao",  "dao.pq@fcode.vn",    "0934567890", 1, 1),
+        make_member("SE200005", "Hoang Tuan Em",   "em.ht@fcode.vn",     "0945678901", 2, 1),
+        make_member("SE200006", "Vu Ngoc Phuong",  "phuong.vn@fcode.vn", "0956789012", 3, 1),
         /* Academic */
-        make_member("HE000007", "Do Thanh Giang",  "giang.dt@fcode.vn",  "0967890123", 0, 0),
-        make_member("HE000008", "Nguyen Bao Hung", "hung.nb@fcode.vn",   "0978901234", 0, 0),
-        make_member("HE000009", "Mai Thi Lan",     "lan.mt@fcode.vn",    "0989012345", 0, 0),
+        make_member("SE200007", "Do Thanh Giang",  "giang.dt@fcode.vn",  "0967890123", 0, 0),
+        make_member("SE200008", "Nguyen Bao Hung", "hung.nb@fcode.vn",   "0978901234", 0, 0),
+        make_member("SE200009", "Mai Thi Lan",     "lan.mt@fcode.vn",    "0989012345", 0, 0),
         /* Planning */
-        make_member("HE000010", "Dinh Xuan Khanh", "khanh.dx@fcode.vn",  "0990123456", 1, 0),
-        make_member("HE000011", "Bui Thanh Liem",  "liem.bt@fcode.vn",   "0901234568", 1, 0),
-        make_member("HE000012", "Cao Ngoc Mai",    "mai.cn@fcode.vn",    "0912345679", 1, 0),
+        make_member("SE200010", "Dinh Xuan Khanh", "khanh.dx@fcode.vn",  "0990123456", 1, 0),
+        make_member("SE200011", "Bui Thanh Liem",  "liem.bt@fcode.vn",   "0901234568", 1, 0),
+        make_member("SE200012", "Cao Ngoc Mai",    "mai.cn@fcode.vn",    "0912345679", 1, 0),
         /* HR */
-        make_member("HE000013", "Trinh Thi Nam",   "nam.tt@fcode.vn",    "0923456780", 2, 0),
-        make_member("HE000014", "Ly Hoang Oanh",   "oanh.lh@fcode.vn",   "0934567891", 2, 0),
-        make_member("HE000015", "Ngo Van Phuc",    "phuc.nv@fcode.vn",   "0945678902", 2, 0),
+        make_member("SE200013", "Trinh Thi Nam",   "nam.tt@fcode.vn",    "0923456780", 2, 0),
+        make_member("SE200014", "Ly Hoang Oanh",   "oanh.lh@fcode.vn",   "0934567891", 2, 0),
+        make_member("SE200015", "Ngo Van Phuc",    "phuc.nv@fcode.vn",   "0945678902", 2, 0),
         /* Media */
-        make_member("HE000016", "Dang Thi Quynh",  "quynh.dt@fcode.vn",  "0956789013", 3, 0),
-        make_member("HE000017", "Luong Van Rong",  "rong.lv@fcode.vn",   "0967890124", 3, 0),
-        make_member("HE000018", "Phan Ngoc Son",   "son.pn@fcode.vn",    "0978901235", 3, 0),
-        make_member("HE000019", "Tran Bich Thuy",  "thuy.tb@fcode.vn",   "0989012346", 3, 0),
-        make_member("HE000020", "Vo Thanh Ung",    "ung.vt@fcode.vn",    "0990123457", 3, 0),
+        make_member("SE200016", "Dang Thi Quynh",  "quynh.dt@fcode.vn",  "0956789013", 3, 0),
+        make_member("SE200017", "Luong Van Rong",  "rong.lv@fcode.vn",   "0967890124", 3, 0),
+        make_member("SE200018", "Phan Ngoc Son",   "son.pn@fcode.vn",    "0978901235", 3, 0),
+        make_member("SE200019", "Tran Bich Thuy",  "thuy.tb@fcode.vn",   "0989012346", 3, 0),
+        make_member("SE200020", "Vo Thanh Ung",    "ung.vt@fcode.vn",    "0990123457", 3, 0),
     };
     int memberCount = (int)(sizeof(members) / sizeof(members[0]));
 
     /* Accounts: BCN dung pass manh, con lai pass = MSSV */
     Account accounts[] = {
-        make_account("HE000001", "Fcode@2024", 2),
-        make_account("HE000002", "Fcode@2024", 2),
-        make_account("HE000003", "HE000003",   1),
-        make_account("HE000004", "HE000004",   1),
-        make_account("HE000005", "HE000005",   1),
-        make_account("HE000006", "HE000006",   1),
-        make_account("HE000007", "HE000007",   0),
-        make_account("HE000008", "HE000008",   0),
-        make_account("HE000009", "HE000009",   0),
-        make_account("HE000010", "HE000010",   0),
-        make_account("HE000011", "HE000011",   0),
-        make_account("HE000012", "HE000012",   0),
-        make_account("HE000013", "HE000013",   0),
-        make_account("HE000014", "HE000014",   0),
-        make_account("HE000015", "HE000015",   0),
-        make_account("HE000016", "HE000016",   0),
-        make_account("HE000017", "HE000017",   0),
-        make_account("HE000018", "HE000018",   0),
-        make_account("HE000019", "HE000019",   0),
-        make_account("HE000020", "HE000020",   0),
+        make_account("SE200001", "Fcode@2026", 2),
+        make_account("SE200002", "Fcode@2026", 2),
+        make_account("SE200003", "SE200003",   1),
+        make_account("SE200004", "SE200004",   1),
+        make_account("SE200005", "SE200005",   1),
+        make_account("SE200006", "SE200006",   1),
+        make_account("SE200007", "SE200007",   0),
+        make_account("SE200008", "SE200008",   0),
+        make_account("SE200009", "SE200009",   0),
+        make_account("SE200010", "SE200010",   0),
+        make_account("SE200011", "SE200011",   0),
+        make_account("SE200012", "SE200012",   0),
+        make_account("SE200013", "SE200013",   0),
+        make_account("SE200014", "SE200014",   0),
+        make_account("SE200015", "SE200015",   0),
+        make_account("SE200016", "SE200016",   0),
+        make_account("SE200017", "SE200017",   0),
+        make_account("SE200018", "SE200018",   0),
+        make_account("SE200019", "SE200019",   0),
+        make_account("SE200020", "SE200020",   0),
     };
 
     /* --------------------------------------------------
@@ -132,39 +132,39 @@ int main(void) {
      * fine  : 20000 / 50000 / 30000 / 200000
      * -------------------------------------------------- */
     Violation violations[] = {
-        /* HE000007 - Do Thanh Giang: 2 vi pham */
-        make_violation("HE000007", 0, 1, 20000.0,  DAYS_AGO(60)),
-        make_violation("HE000007", 1, 0, 50000.0,  DAYS_AGO(30)),
+        /* SE200007 - Do Thanh Giang: 2 vi pham */
+        make_violation("SE200007", 0, 1, 20000.0,  DAYS_AGO(60)),
+        make_violation("SE200007", 1, 0, 50000.0,  DAYS_AGO(30)),
 
-        /* HE000008 - Nguyen Bao Hung: 1 vi pham */
-        make_violation("HE000008", 2, 0, 30000.0,  DAYS_AGO(45)),
+        /* SE200008 - Nguyen Bao Hung: 1 vi pham */
+        make_violation("SE200008", 2, 0, 30000.0,  DAYS_AGO(45)),
 
-        /* HE000009 - Mai Thi Lan: 2 vi pham da thu het */
-        make_violation("HE000009", 1, 1, 50000.0,  DAYS_AGO(90)),
-        make_violation("HE000009", 0, 1, 20000.0,  DAYS_AGO(75)),
+        /* SE200009 - Mai Thi Lan: 2 vi pham da thu het */
+        make_violation("SE200009", 1, 1, 50000.0,  DAYS_AGO(90)),
+        make_violation("SE200009", 0, 1, 20000.0,  DAYS_AGO(75)),
 
-        /* HE000010 - Dinh Xuan Khanh: 3 vi pham vang hop (canh bao) */
-        make_violation("HE000010", 1, 0, 50000.0,  DAYS_AGO(15)),
-        make_violation("HE000010", 1, 0, 50000.0,  DAYS_AGO(10)),
-        make_violation("HE000010", 1, 0, 50000.0,  DAYS_AGO(5)),
+        /* SE200010 - Dinh Xuan Khanh: 3 vi pham vang hop (canh bao) */
+        make_violation("SE200010", 1, 0, 50000.0,  DAYS_AGO(15)),
+        make_violation("SE200010", 1, 0, 50000.0,  DAYS_AGO(10)),
+        make_violation("SE200010", 1, 0, 50000.0,  DAYS_AGO(5)),
 
-        /* HE000011 - Bui Thanh Liem: 3 vi pham (nhieu nhat) */
-        make_violation("HE000011", 0, 1, 20000.0,  DAYS_AGO(100)),
-        make_violation("HE000011", 1, 0, 50000.0,  DAYS_AGO(50)),
-        make_violation("HE000011", 2, 0, 30000.0,  DAYS_AGO(10)),
+        /* SE200011 - Bui Thanh Liem: 3 vi pham (nhieu nhat) */
+        make_violation("SE200011", 0, 1, 20000.0,  DAYS_AGO(100)),
+        make_violation("SE200011", 1, 0, 50000.0,  DAYS_AGO(50)),
+        make_violation("SE200011", 2, 0, 30000.0,  DAYS_AGO(10)),
 
-        /* HE000013 - Trinh Thi Nam: vi pham bao luc */
-        make_violation("HE000013", 3, 0, 200000.0, DAYS_AGO(20)),
+        /* SE200013 - Trinh Thi Nam: vi pham bao luc */
+        make_violation("SE200013", 3, 0, 200000.0, DAYS_AGO(20)),
 
-        /* HE000016 - Dang Thi Quynh: 2 vi pham gan day */
-        make_violation("HE000016", 0, 0, 20000.0,  DAYS_AGO(5)),
-        make_violation("HE000016", 1, 0, 50000.0,  DAYS_AGO(3)),
+        /* SE200016 - Dang Thi Quynh: 2 vi pham gan day */
+        make_violation("SE200016", 0, 0, 20000.0,  DAYS_AGO(5)),
+        make_violation("SE200016", 1, 0, 50000.0,  DAYS_AGO(3)),
 
-        /* HE000017 - Luong Van Rong: 1 vi pham da thu */
-        make_violation("HE000017", 2, 1, 30000.0,  DAYS_AGO(40)),
+        /* SE200017 - Luong Van Rong: 1 vi pham da thu */
+        make_violation("SE200017", 2, 1, 30000.0,  DAYS_AGO(40)),
 
-        /* HE000020 - Vo Thanh Ung: 1 vi pham */
-        make_violation("HE000020", 1, 0, 50000.0,  DAYS_AGO(7)),
+        /* SE200020 - Vo Thanh Ung: 1 vi pham */
+        make_violation("SE200020", 1, 0, 50000.0,  DAYS_AGO(7)),
     };
     int violationCount = (int)(sizeof(violations) / sizeof(violations[0]));
 
@@ -215,14 +215,14 @@ int main(void) {
     printf("     Accounts : %d\n", memberCount);
     printf("     Violations: %d\n\n", violationCount);
 
-    printf("=== Tai khoan de test ===\n");
-    printf("  [BCN]    HE000001 / Fcode@2024\n");
-    printf("  [BCN]    HE000002 / Fcode@2024\n");
-    printf("  [Member] HE000010 / HE000010  (3 vi pham vang hop lien tiep)\n");
-    printf("  [Member] HE000011 / HE000011  (3 vi pham, no 80000 VND)\n");
-    printf("  [Member] HE000013 / HE000013  (vi pham bao luc, no 200000 VND)\n");
-    printf("  [Member] HE000016 / HE000016  (2 vi pham, no 70000 VND)\n");
-    printf("  [Member] HE000009 / HE000009  (da thu het, so du = 0)\n");
+    printf("=== Tai khoan de test (2026 Edition) ===\n");
+    printf("  [BCN]    SE200001 / Fcode@2026\n");
+    printf("  [BCN]    SE200002 / Fcode@2026\n");
+    printf("  [Member] SE200010 / SE200010  (3 vi pham vang hop lien tiep)\n");
+    printf("  [Member] SE200011 / SE200011  (3 vi pham, no 80000 VND)\n");
+    printf("  [Member] SE200013 / SE200013  (vi pham bao luc, no 200000 VND)\n");
+    printf("  [Member] SE200016 / SE200016  (2 vi pham, no 70000 VND)\n");
+    printf("  [Member] SE200009 / SE200009  (da thu het, so du = 0)\n");
 
     return 0;
 }
