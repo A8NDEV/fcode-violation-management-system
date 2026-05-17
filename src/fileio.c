@@ -7,7 +7,6 @@
 #include "types.h"
 
 static int Count_records(const char path[],size_t record_size){
-    //function to count records in specific binary file
     FILE *file = fopen(path,"rb");
     if(file == NULL)    return 0;
 
