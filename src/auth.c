@@ -6,8 +6,6 @@
 #include <conio.h>
 #endif
 
-//--------------------------------------------------------
-// Auth - Login program flow!
 void menu(account *accountList, int *quantity, int *isLogin, account *session) {
   Menu currentState = startState;
   while (currentState != exitState) {
@@ -41,11 +39,11 @@ void menu(account *accountList, int *quantity, int *isLogin, account *session) {
                  "AGAIN!\n" ANSI_COLOR_RESET);
           currentState = logoutState;
         } else {
-          currentState = loginState; // Stay logged in if failed
+          currentState = loginState;
         }
       } else {
         changePassword(accountList, session->role, quantity, session);
-        currentState = loginState; // Management Board stays logged in
+        currentState = loginState;
       }
       break;
     case exitState:
@@ -243,7 +241,7 @@ void setting(int role, Menu *currentState) {
 int changePassword(account *accountList, int role, int *quantity,
                    account *session) {
   int found = 0;
-  int foundIndex = -1; // <-- initialize to -1
+  int foundIndex = -1;
   if (role == 0) {
     char passwordChange[MAX_PASS_LEN], oldPassword[MAX_PASS_LEN];
     printf("\n");
@@ -277,9 +275,6 @@ int changePassword(account *accountList, int role, int *quantity,
         }
       }
       printf("\n");
-      
-      // Loop to find session account in accountList, then update
-      // password and sync with file
       for (int i = 0; i < *quantity; i++) {
         if (strcmp(accountList[i].studentId, session->studentId) == 0) {
           foundIndex = i;
@@ -290,14 +285,12 @@ int changePassword(account *accountList, int role, int *quantity,
       if (foundIndex != -1) {
         strcpy(session->password, passwordChange);
         strcpy(accountList[foundIndex].password, passwordChange);
-        // Persist by seeking directly to record offset
         saveAccount(foundIndex, &accountList[foundIndex]);
         printf("\n");
         printf(ANSI_BRIGHT_GREEN "PASSWORD CHANGED SUCCESSFULLY!\n");
         printf("\n");
         return 1;
       } else {
-        // not found
         printf(ANSI_BRIGHT_RED "ACCOUNT NOT FOUND IN SYSTEM\n");
         return 0;
       }
@@ -373,7 +366,6 @@ void inputString(char *buffer, int size) {
       buffer[strcspn(buffer, "\r\n")] = '\0';
     } else {
       buffer[strcspn(buffer, "\r\n")] = '\0';
-      // Buffer was too small, clear the rest of the line
       int c;
       while ((c = getchar()) != '\n' && c != EOF)
         ;
@@ -389,16 +381,13 @@ void inputPassword(char *password, int maxSize) {
 #ifdef _WIN32
         c = _getch();
 #else
-        // Simplified fallback for non-Windows if needed
         c = getchar(); 
 #endif
 
-        // Check for Enter key
         if (c == '\n' || c == '\r') {
             password[i] = '\0';
             break;
         }
-        // Handle Backspace
         else if (c == 127 || c == 8) {
             if (i > 0) {
                 i--;
@@ -406,7 +395,6 @@ void inputPassword(char *password, int maxSize) {
                 fflush(stdout);
             }
         }
-        // Capture other printable characters
         else if (c >= 32 && c <= 126) {
             password[i++] = c;
             printf("*");

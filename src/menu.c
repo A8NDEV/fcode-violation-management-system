@@ -5,7 +5,6 @@
 #include "violation.h"
 #include "sort_violation.h"
 #include <stdio.h>
-#include "sort_violation.h"
 #include "report.h"
 
 int show_bcn_menu(Account *session, Member memberList[], int *memberCount, Account accountList[], Violation violationList[], int *violationCount) {
@@ -27,6 +26,7 @@ int show_bcn_menu(Account *session, Member memberList[], int *memberCount, Accou
         printf(ANSI_BOLD ANSI_COLOR_GREEN " [9] " ANSI_COLOR_RESET "EXPORT REPORT\n");
         printf(ANSI_BOLD ANSI_COLOR_GREEN "[10] " ANSI_COLOR_RESET "CHANGE PASSWORD\n");
         printf(ANSI_BOLD ANSI_COLOR_GREEN "[11] " ANSI_COLOR_RESET "PROCESS MEETING ATTENDANCE\n");
+        printf(ANSI_BOLD ANSI_COLOR_GREEN "[12] " ANSI_COLOR_RESET "SORT MEMBERS BY VIOLATION COUNT\n");
         printf(ANSI_BOLD ANSI_COLOR_YELLOW " [0] " ANSI_COLOR_RESET "LOGOUT\n");
         printf("\n");
         printf(ANSI_COLOR_CYAN ANSI_BOLD
@@ -72,6 +72,9 @@ int show_bcn_menu(Account *session, Member memberList[], int *memberCount, Accou
         case 11:
             Menu_batch_attendance(*memberCount, memberList, violationCount, violationList);
             break;
+        case 12:
+            Menu_sort_violations(memberList, *memberCount);
+            break;
         case 0:
             printf(ANSI_BRIGHT_CYAN "LOGGED OUT SUCCESSFULLY!\n" ANSI_COLOR_RESET);
             return 0;
@@ -96,7 +99,6 @@ int show_member_menu(Account *session, Member memberList[], int memberCount, Acc
         printf(ANSI_BOLD ANSI_COLOR_GREEN " [3] " ANSI_COLOR_RESET "VIEW TOTAL DEBT\n");
         printf(ANSI_BOLD ANSI_COLOR_GREEN " [4] " ANSI_COLOR_RESET "VIEW CLUB MEMBER LIST\n");
         printf(ANSI_BOLD ANSI_COLOR_GREEN " [5] " ANSI_COLOR_RESET "CHANGE PASSWORD\n");
-        printf(ANSI_BOLD ANSI_COLOR_GREEN " [6] " ANSI_COLOR_RESET "VIEW MEMBER SORTED LIST BY NUMBER OF VIOLATIONS\n");
         printf(ANSI_BOLD ANSI_COLOR_YELLOW " [0] " ANSI_COLOR_RESET "LOGOUT\n");
         printf("\n");
         printf(ANSI_COLOR_CYAN ANSI_BOLD
@@ -135,23 +137,6 @@ int show_member_menu(Account *session, Member memberList[], int memberCount, Acc
         }
         case 5:
             changePassword(accountList, session->role, &accountCount, session);
-            break;
-        case 6:
-            printf("ENTER YOUR CHOICE\n");
-            printf(ANSI_BOLD ANSI_COLOR_GREEN "[1]" ANSI_COLOR_RESET " ASCENDING\n");
-            printf(ANSI_BOLD ANSI_COLOR_GREEN "[2]" ANSI_COLOR_RESET " DESCENDING\n");
-            int choice;
-            char buf[32];
-            if (fgets(buf, sizeof(buf), stdin) != NULL && sscanf(buf, "%d", &choice) == 1) {
-                if (choice == 1) {
-                    sort_CLB_Violations(memberList,memberCount,1);
-
-                } else if (choice == 2 ) {
-                    sort_CLB_Violations(memberList,memberCount,0);
-                } else {
-                    Announcement_unaivailable_option();
-                }
-            }
             break;
         case 0:
             printf(ANSI_BRIGHT_CYAN "LOGGED OUT SUCCESSFULLY!\n" ANSI_COLOR_RESET);

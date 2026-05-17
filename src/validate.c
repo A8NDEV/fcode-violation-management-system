@@ -6,14 +6,12 @@
 #include <stdbool.h>
 #include "auth.h"
 static int is_alpha(char x){
-    //check variable x is character ?
     if((int)x < 65)  return 0;
     if((int)x > 122) return 0;
     if(91 <= (int)x && (int)x <= 96)    return 0;
     return 1;
 }
 int is_number(char x){
-    //check variable x is number ?
     if((int)x < 48) return 0;
     if(57 < (int)x) return 0;
     return 1;
@@ -86,7 +84,7 @@ static int Validate_email_local_part(char local_part[]){
     int n = strlen(local_part);
     if(n == 0)   return 0;
 
-    if(is_alpha(local_part[0]) == 0 && is_number(local_part[0]) == 0)   return 0; //ở cuối nên là chữ hoặc số
+    if(is_alpha(local_part[0]) == 0 && is_number(local_part[0]) == 0)   return 0;
     if(is_alpha(local_part[n - 1]) == 0 && is_number(local_part[n - 1]) == 0)    return 0;
 
     for(int i = 0;i < n;++i){

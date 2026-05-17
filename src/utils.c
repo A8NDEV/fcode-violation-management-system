@@ -29,11 +29,9 @@ void Stdin_string(char str[],int siz){
         return;
     }
     size_t len = strcspn(str, "\n");
-    if(str[len] == '\n')    str[len] = '\0';//inputuser is not greater than SHORT_SIZE 
+    if(str[len] == '\n')    str[len] = '\0';
     else{
-        // don't have '\n' => inputuser is greater than SHORT_SIZE
         int c;
-        // clear buffer safely
         while((c = getchar()) != '\n' && c != EOF);
     }
 }
@@ -223,9 +221,6 @@ time_t Input_date(const char *prompt) {
 }
 
 int Find_studentId(int member_size,Member member_list[],char studentId[]){
-    //WARNNING
-    //have : return index
-    //don't have : return -1
     for(int i = 0;i < member_size;++i){
         if(strcmp(member_list[i].studentId,studentId) == 0){
             return i;
