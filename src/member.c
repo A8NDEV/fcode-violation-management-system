@@ -10,6 +10,7 @@
 #include <windows.h>
 
 static int create_member(int *member_size, Member member_list[], Member new_member, int *account_size, Account account_list[], Account new_account) {
+    if (*member_size >= MAX_ACCOUNT || *account_size >= MAX_ACCOUNT) return 0;
     member_list[*member_size] = new_member;
     account_list[*account_size] = new_account;
     if (Append_members_dat(new_member) == 0 || Append_accounts_dat(new_account) == 0) return 0;
@@ -20,6 +21,12 @@ static int create_member(int *member_size, Member member_list[], Member new_memb
 
 void Menu_create(int *member_size, Member member_list[], int *account_size, Account account_list[]) {
     UI_Header("ADD NEW MEMBER", ANSI_COLOR_CYAN);
+    if (*member_size >= MAX_ACCOUNT || *account_size >= MAX_ACCOUNT) {
+        printf("\n" ANSI_BRIGHT_RED "  [!] SYSTEM CAPACITY FULL! CANNOT ADD MORE MEMBERS (MAX %d).\n" ANSI_COLOR_RESET, MAX_ACCOUNT);
+        Sleep(3000);
+        system("cls");
+        return;
+    }
     Member new_member = Init_Member();
     Input_studentId(new_member.studentId);
     if (Find_studentId(*member_size, member_list, new_member.studentId) != -1) {

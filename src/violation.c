@@ -138,6 +138,13 @@ void Menu_record_violation(int *memberCount, Member memberList[],
     printf("╚════════════════════════════════════════╝\n");
     printf(ANSI_COLOR_RESET "\n");
 
+    if (*violationCount >= MAX_ACCOUNT * 10) {
+        printf("\n" ANSI_BRIGHT_RED "  [!] VIOLATION RECORD CAPACITY FULL (MAX %d).\n" ANSI_COLOR_RESET, MAX_ACCOUNT * 10);
+        Sleep(3000);
+        system("cls");
+        return;
+    }
+
     char studentId[SHORT_SIZE];
     Input_studentId(studentId);
 
