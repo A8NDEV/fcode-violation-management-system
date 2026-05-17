@@ -107,9 +107,6 @@ int show_member_menu(Account *session, Member memberList[], int memberCount, Acc
             choice = -1;
         }
 
-
-
-
         switch (choice) {
         case 1: {
             int idx = Find_studentId(memberCount, memberList, session->studentId);
