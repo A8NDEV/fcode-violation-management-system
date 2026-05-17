@@ -18,6 +18,7 @@ void UI_Table_Header(int num_cols, const char *headers[], const int widths[], co
 void UI_Table_Row(int num_cols, const char *values[], const int widths[], const char *color);
 void UI_Table_End(int num_cols, const int widths[], const char *color);
 void UI_Return_Prompt(void);
+int UTF8_Display_Width(const char *s);
 
 //Input function group
 void Input_user_choose(int *input);
