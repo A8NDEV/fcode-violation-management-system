@@ -6,6 +6,14 @@
 #include <stdbool.h>
 #include "types.h"
 
+#ifdef _WIN32
+#include <direct.h>
+#define MAKE_DIR(p) _mkdir(p)
+#else
+#include <sys/stat.h>
+#define MAKE_DIR(p) mkdir(p, 0777)
+#endif
+
 static int Count_records(const char path[],size_t record_size){
     FILE *file = fopen(path,"rb");
     if(file == NULL)    return 0;
@@ -64,6 +72,8 @@ bool Read_deleted_members_dat(const int size,Member member_list[]){
 static bool Append_dat(const char path[],const void *record,size_t record_size){
     if(record == NULL)  return false;
 
+    MAKE_DIR("data");
+
     FILE *file = fopen(path,"ab");
     if(file == NULL)    return false;
     size_t written = fwrite(record,record_size,1,file);
@@ -113,6 +123,8 @@ bool Update_violations_dat(const int index,const Violation record){
 
 static bool Rewrite_dat(const char path[],const int size,const void *record,size_t record_size){
     if(size < 0 || (size > 0 && record == NULL))  return false;
+
+    MAKE_DIR("data");
 
     FILE *file = fopen(path,"wb");
     if(file == NULL)    return false;

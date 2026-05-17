@@ -6,9 +6,19 @@
 #include <string.h>
 #include <time.h>
 
+#ifdef _WIN32
+#include <direct.h>
+#define MAKE_DIR(p) _mkdir(p)
+#else
+#include <sys/stat.h>
+#define MAKE_DIR(p) mkdir(p, 0777)
+#endif
+
 void Export_Violation_Report(int memberCount, Member memberList[],
                              int violationCount, Violation violationList[]) {
     UI_Header("EXPORT VIOLATION REPORT", ANSI_COLOR_CYAN);
+
+    MAKE_DIR("data");
 
     const char *filepath = "data/violation_report.txt";
     FILE *file = fopen(filepath, "w");
@@ -136,6 +146,10 @@ void Export_Violation_Report(int memberCount, Member memberList[],
     fprintf(file, "================================================================================\n");
 
     fclose(file);
+
+    Rainbow_Loading("Exporting Report");
+    system("cls");
+    UI_Header("EXPORT VIOLATION REPORT", ANSI_COLOR_CYAN);
 
     UI_Card_Start("EXPORT SUMMARY", ANSI_COLOR_GREEN);
     printf(ANSI_BOLD "    📄 File Path   : " ANSI_COLOR_RESET "data/violation_report.txt\n");

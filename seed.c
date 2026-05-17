@@ -8,6 +8,14 @@
 #include "include/types.h"
 #include "include/fileio.h"
 
+#ifdef _WIN32
+#include <direct.h>
+#define MAKE_DIR(p) _mkdir(p)
+#else
+#include <sys/stat.h>
+#define MAKE_DIR(p) mkdir(p, 0777)
+#endif
+
 /* -------------------------------------------------------
  * Helper macros
  * ------------------------------------------------------- */
@@ -60,6 +68,7 @@ static Violation make_violation(const char *sid, int reason,
  * Wipe a .dat file
  * ------------------------------------------------------- */
 static void clear_file(const char *path) {
+    MAKE_DIR("data");
     FILE *f = fopen(path, "wb");
     if (f) fclose(f);
 }
