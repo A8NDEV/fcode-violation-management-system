@@ -34,34 +34,22 @@ static double Get_fine(int role, int reason) {
 }
 
 static void Print_violation_table_header(void) {
-    printf(ANSI_COLOR_CYAN ANSI_BOLD);
-    printf("\n%-4s %-12s %-25s %-10s %-30s %-12s %-12s %-10s\n",
-           "NO", "STUDENT ID", "FULL NAME", "TEAM", "REASON",
-           "DATE", "FINE", "STATUS");
-    printf("%-4s %-12s %-25s %-10s %-30s %-12s %-12s %-10s\n",
-           "---", "----------", "---------", "----", "------",
-           "----", "----", "------");
-    printf(ANSI_COLOR_RESET);
+    UI_Table_Header(8, V_HEADERS, V_WIDTHS, ANSI_COLOR_CYAN);
 }
 
 static void Print_violation_row(int stt, const Violation *v,
                                 const char *fullName, const char *team) {
-    char timeStr[13];
+    char timeStr[13], sttStr[8], fineStr[16];
     struct tm *ti = localtime(&v->violationTime);
     strftime(timeStr, sizeof(timeStr), "%d/%m/%Y", ti);
+    snprintf(sttStr, sizeof(sttStr), "%d", stt);
+    snprintf(fineStr, sizeof(fineStr), "%.0f", v->fine);
 
-    const char *paidColor = (v->isPaid == 1)
-        ? ANSI_BRIGHT_GREEN : ANSI_BRIGHT_RED;
-
-    printf("%-4d %-12s %-25s %-10s %-30s %-12s %-12.0f %s%-10s%s\n",
-           stt,
-           v->studentId,
-           fullName,
-           team,
-           REASON_LABELS[v->reason],
-           timeStr,
-           v->fine,
-           paidColor, PAID_LABELS[v->isPaid], ANSI_COLOR_RESET);
+    const char *values[] = {
+        sttStr, v->studentId, fullName, team, 
+        REASON_LABELS[v->reason], timeStr, fineStr, PAID_LABELS[v->isPaid]
+    };
+    UI_Table_Row(8, values, V_WIDTHS, ANSI_COLOR_CYAN);
 }
 
 
@@ -70,24 +58,27 @@ void check_to_Paid(Violation violation[], int total_Violations,
     double sum_fine = 0.0;
     int found = 0;
 
-    printf(ANSI_COLOR_CYAN ANSI_BOLD);
-    printf("\n%-30s | %-12s | %-12s\n",
-           "VIOLATION REASON", "FINE", "STATUS");
-    printf("%-30s | %-12s | %-12s\n",
-           "------------------------------", "----------", "----------");
-    printf(ANSI_COLOR_RESET);
+    UI_Header("OUTSTANDING DEBT", ANSI_COLOR_YELLOW);
+    const char *headers[] = {"VIOLATION REASON", "FINE", "STATUS"};
+    const int widths[] = {30, 12, 12};
+    UI_Table_Header(3, headers, widths, ANSI_COLOR_YELLOW);
 
     for (int i = 0; i < total_Violations; i++) {
         if (strcmp(violation[i].studentId, logged_In_StudentID) == 0
             && violation[i].isPaid == 0) {
             found = 1;
-            printf("%-30s | %-12.0f | %-12s\n",
-                   REASON_LABELS[violation[i].reason],
-                   violation[i].fine,
-                   PAID_LABELS[0]);
+            char fineStr[16];
+            snprintf(fineStr, sizeof(fineStr), "%.0f", violation[i].fine);
+            const char *values[] = {
+                REASON_LABELS[violation[i].reason],
+                fineStr,
+                PAID_LABELS[0]
+            };
+            UI_Table_Row(3, values, widths, ANSI_COLOR_YELLOW);
             sum_fine += violation[i].fine;
         }
     }
+    UI_Table_End(3, widths, ANSI_COLOR_YELLOW);
 
     if (!found) {
         printf(ANSI_BRIGHT_GREEN "YOU HAVE NO OUTSTANDING FINES.\n" ANSI_COLOR_RESET);
@@ -95,22 +86,18 @@ void check_to_Paid(Violation violation[], int total_Violations,
     }
     printf(ANSI_BRIGHT_YELLOW "\nTOTAL AMOUNT DUE: %.0f VND\n" ANSI_COLOR_RESET,
            sum_fine);
+    UI_Return_Prompt();
 }
 
 void view_Own_Violations(Violation violations[], int total_Violations,
                          const char *logged_In_StudentID) {
     int found = 0;
-
-    printf(ANSI_COLOR_CYAN ANSI_BOLD);
-    printf("╔════════════════════════════════════════╗\n");
-    printf("║           VIOLATION HISTORY            ║\n");
-    printf("╚════════════════════════════════════════╝\n");
-    printf("\n" ANSI_BOLD ANSI_COLOR_YELLOW " ❯ STUDENT ID : " ANSI_COLOR_RESET "%s\n", logged_In_StudentID);
-    printf("\n%-30s | %-12s | %-12s | %-10s\n",
-           "REASON", "DATE", "FINE", "STATUS");
-    printf("%-30s | %-12s | %-12s | %-10s\n",
-           "------------------------------", "------------", "----------", "----------");
-    printf(ANSI_COLOR_RESET);
+    UI_Header("VIOLATION HISTORY", ANSI_COLOR_YELLOW);
+    printf("  " ANSI_BOLD ANSI_COLOR_WHITE "Student ID: " ANSI_COLOR_RESET "%s\n\n", logged_In_StudentID);
+    
+    const char *headers[] = {"REASON", "DATE", "FINE", "STATUS"};
+    const int widths[] = {30, 12, 12, 10};
+    UI_Table_Header(4, headers, widths, ANSI_COLOR_YELLOW);
 
     for (int i = 0; i < total_Violations; i++) {
         if (strcmp(violations[i].studentId, logged_In_StudentID) != 0)
@@ -121,18 +108,22 @@ void view_Own_Violations(Violation violations[], int total_Violations,
         struct tm *ti = localtime(&violations[i].violationTime);
         strftime(timeStr, sizeof(timeStr), "%d/%m/%Y", ti);
 
-        const char *paidColor = (violations[i].isPaid == 1)
-            ? ANSI_BRIGHT_GREEN : ANSI_BRIGHT_RED;
+        char fineStr[16];
+        snprintf(fineStr, sizeof(fineStr), "%.0f", violations[i].fine);
 
-        printf("%-30s | %-12s | %-12.0f | %s%-10s%s\n",
-               REASON_LABELS[violations[i].reason],
-               timeStr,
-               violations[i].fine,
-               paidColor, PAID_LABELS[violations[i].isPaid], ANSI_COLOR_RESET);
+        const char *values[] = {
+            REASON_LABELS[violations[i].reason],
+            timeStr,
+            fineStr,
+            PAID_LABELS[violations[i].isPaid]
+        };
+        UI_Table_Row(4, values, widths, ANSI_COLOR_YELLOW);
     }
+    UI_Table_End(4, widths, ANSI_COLOR_YELLOW);
 
     if (!found)
         printf("YOU HAVE NO VIOLATIONS.\n");
+    UI_Return_Prompt();
 }
 
 
@@ -253,11 +244,7 @@ void Menu_record_violation(int *memberCount, Member memberList[],
 
 void Menu_mark_paid(int *memberCount, Member memberList[],
                     int *violationCount, Violation violationList[]) {
-    printf(ANSI_COLOR_CYAN ANSI_BOLD);
-    printf("╔════════════════════════════════════════╗\n");
-    printf("║             MARK AS PAID               ║\n");
-    printf("╚════════════════════════════════════════╝\n");
-    printf(ANSI_COLOR_RESET "\n");
+    UI_Header("MARK AS PAID", ANSI_COLOR_GREEN);
 
     char studentId[SHORT_SIZE];
     Input_studentId(studentId);
@@ -302,15 +289,16 @@ void Menu_mark_paid(int *memberCount, Member memberList[],
 
         for (int i = 0; i < unpaidCount; i++) {
             Violation *v = &violationList[unpaidIdx[i]];
-            char timeStr[13];
+            char timeStr[13], sttStr[8], fineStr[16];
             struct tm *ti = localtime(&v->violationTime);
             strftime(timeStr, sizeof(timeStr), "%d/%m/%Y", ti);
-            printf("%-4d %-30s %-12s %-12.0f\n",
-                   i + 1,
-                   REASON_LABELS[v->reason],
-                   timeStr,
-                   v->fine);
+            snprintf(sttStr, sizeof(sttStr), "%d", i + 1);
+            snprintf(fineStr, sizeof(fineStr), "%.0f", v->fine);
+
+            const char *values[] = {sttStr, REASON_LABELS[v->reason], timeStr, fineStr};
+            UI_Table_Row(4, values, widths, ANSI_COLOR_CYAN);
         }
+        UI_Table_End(4, widths, ANSI_COLOR_CYAN);
         printf(ANSI_BOLD ANSI_COLOR_YELLOW " [0] " ANSI_COLOR_RESET "Exit\n");
         printf("\n");
         printf(ANSI_COLOR_CYAN ANSI_BOLD "------------------------------------------\n" ANSI_COLOR_RESET);
@@ -355,11 +343,7 @@ void Menu_mark_paid(int *memberCount, Member memberList[],
 
 void Menu_view_all_violations(int memberCount, Member memberList[],
                               int violationCount, Violation violationList[]) {
-    printf(ANSI_COLOR_CYAN ANSI_BOLD);
-    printf("╔════════════════════════════════════════╗\n");
-    printf("║        ALL CLUB VIOLATIONS LIST        ║\n");
-    printf("╚════════════════════════════════════════╝\n");
-    printf(ANSI_COLOR_RESET "\n");
+    UI_Header("ALL CLUB VIOLATIONS", ANSI_COLOR_CYAN);
 
     printf(ANSI_BOLD "Select filter type:\n" ANSI_COLOR_RESET);
     printf(ANSI_BOLD ANSI_COLOR_GREEN " [0] " ANSI_COLOR_RESET "All (No filter)\n");
@@ -421,25 +405,19 @@ void Menu_view_all_violations(int memberCount, Member memberList[],
         displayCount++;
         Print_violation_row(displayCount, v, name, teamStr);
     }
+    UI_Table_End(8, V_WIDTHS, ANSI_COLOR_CYAN);
 
     printf(ANSI_BRIGHT_YELLOW
            "\nTotal displayed violations: %d\n"
            ANSI_COLOR_RESET, displayCount);
     if (displayCount == 0)
         printf("No violations match the conditions.\n");
-
-    printf("\nPress Enter to return...");
-    getchar();
-    system("cls");
+    UI_Return_Prompt();
 }
 
 void view_Statistics_By_Team(Member memberList[], int memberCount,
                              Violation violationList[], int violationCount) {
-    printf(ANSI_COLOR_CYAN ANSI_BOLD);
-    printf("╔════════════════════════════════════════╗\n");
-    printf("║       VIOLATION STATISTICS BY TEAM     ║\n");
-    printf("╚════════════════════════════════════════╝\n");
-    printf(ANSI_COLOR_RESET "\n");
+    UI_Header("VIOLATION STATISTICS", ANSI_COLOR_MAGENTA);
 
     double totalFineTeam[4] = {0, 0, 0, 0};
     int totalViolationsTeam[4] = {0, 0, 0, 0};
@@ -473,29 +451,46 @@ void view_Statistics_By_Team(Member memberList[], int memberCount,
     int grandTotalViolations = 0;
 
     for (int i = 0; i < 4; i++) {
-        printf("%-12s | %-12d | %-12d | %-15.0f VND\n",
-               TEAM_LABELS[i], membersInTeam[i], totalViolationsTeam[i], totalFineTeam[i]);
+        char memStr[8], violStr[8], fineStr[20];
+        snprintf(memStr, sizeof(memStr), "%d", membersInTeam[i]);
+        snprintf(violStr, sizeof(violStr), "%d", totalViolationsTeam[i]);
+        snprintf(fineStr, sizeof(fineStr), "%.0f VND", totalFineTeam[i]);
+
+        const char *values[] = {TEAM_LABELS[i], memStr, violStr, fineStr};
+        UI_Table_Row(4, values, statWidths, ANSI_COLOR_MAGENTA);
+        
+        // Integrated Trend Bar within table borders
+        printf("  " ANSI_COLOR_MAGENTA "│" ANSI_COLOR_RESET "      " ANSI_BRIGHT_BLACK "↳ Trend: " ANSI_COLOR_MAGENTA);
+        int barWidth = (totalViolationsTeam[i] > 20) ? 20 : totalViolationsTeam[i];
+        for(int b=0; b<barWidth; b++) printf("█");
+        
+        // Calculate remaining spaces to close the table border correctly
+        // Total width of internal table is sum(statWidths) + 2*num_cols - 1 (approximately)
+        // Let's just pad it manually to match the 4-column layout
+        int current_pos = 6 + 9 + barWidth; // spaces + "↳ Trend: " + bars
+        int total_table_inner_width = 0;
+        for(int w=0; w<4; w++) total_table_inner_width += (statWidths[w] + 2);
+        total_table_inner_width += 3; // for separators
+
+        for(int s=0; s < (total_table_inner_width - current_pos - 1); s++) printf(" ");
+        printf(ANSI_COLOR_MAGENTA "│" ANSI_COLOR_RESET "\n");
+
         grandTotalFine += totalFineTeam[i];
         grandTotalViolations += totalViolationsTeam[i];
     }
-
-    printf(ANSI_COLOR_YELLOW "------------------------------------------------------------\n");
-    printf("%-12s | %-12s | %-12d | %-15.0f VND\n",
-           "GRAND TOTAL", "", grandTotalViolations, grandTotalFine);
-    printf(ANSI_COLOR_RESET);
-
-    printf("\nPress Enter to return...");
-    getchar();
-    system("cls");
+    
+    char gViolStr[16], gFineStr[32];
+    snprintf(gViolStr, sizeof(gViolStr), "%d", grandTotalViolations);
+    snprintf(gFineStr, sizeof(gFineStr), "%.0f VND", grandTotalFine);
+    const char *totals[] = {"GRAND TOTAL", "", gViolStr, gFineStr};
+    UI_Table_Row(4, totals, statWidths, ANSI_COLOR_MAGENTA);
+    UI_Table_End(4, statWidths, ANSI_COLOR_MAGENTA);
+    UI_Return_Prompt();
 }
 
 void Menu_batch_attendance(int memberCount, Member memberList[],
                            int *violationCount, Violation violationList[]) {
-    printf(ANSI_COLOR_CYAN ANSI_BOLD);
-    printf("╔════════════════════════════════════════╗\n");
-    printf("║       PROCESS MEETING ATTENDANCE       ║\n");
-    printf("╚════════════════════════════════════════╝\n");
-    printf(ANSI_COLOR_RESET "\n");
+    UI_Header("ATTENDANCE PROCESSOR", ANSI_COLOR_CYAN);
 
     FILE *file = fopen("data/attendance.txt", "r");
     if (!file) {
@@ -571,23 +566,20 @@ void Menu_batch_attendance(int memberCount, Member memberList[],
         return;
     }
 
-    printf(ANSI_BRIGHT_GREEN "Attendance processing complete!\n" ANSI_COLOR_RESET);
-    printf("------------------------------------------\n");
-    printf("Total Club Members : %d\n", memberCount);
-    printf("Members Present    : %d (Reset absences to 0)\n", presentCount);
-    printf("Members Absent     : %d (Recorded Absent violation + fine)\n", absentCount);
-    printf("------------------------------------------\n");
+    UI_Card_Start("ATTENDANCE SUMMARY", ANSI_COLOR_CYAN);
+    printf(ANSI_BOLD "    👥 Total Members   : " ANSI_COLOR_RESET "%d\n", memberCount);
+    printf(ANSI_BOLD "    ✅ Present Count   : " ANSI_COLOR_RESET "%d\n", presentCount);
+    printf(ANSI_BOLD "    ❌ Absent Count    : " ANSI_COLOR_RESET "%d\n", absentCount);
+    UI_Card_End(ANSI_COLOR_CYAN);
 
     if (dangerCount > 0) {
-        printf(ANSI_BRIGHT_YELLOW "\n[!] WARNING: MEMBERS AT KICK-OUT THRESHOLD:\n" ANSI_COLOR_RESET);
+        printf(ANSI_BRIGHT_RED "\n  [!] KICK-OUT RISK DETECTED (%d members):\n" ANSI_COLOR_RESET, dangerCount);
         for (int i = 0; i < dangerCount; i++) {
-            printf(" ❯ %s\n", dangerList[i]);
+            printf("      " ANSI_BRIGHT_RED "❯" ANSI_COLOR_RESET " %s\n", dangerList[i]);
         }
     } else {
-        printf(ANSI_BRIGHT_GREEN "\nNo members are at kick-out risk.\n" ANSI_COLOR_RESET);
+        printf("\n" ANSI_BRIGHT_GREEN "  ✔ All members are in good standing." ANSI_COLOR_RESET "\n");
     }
 
-    printf("\nPress Enter to return...");
-    getchar();
-    system("cls");
+    UI_Return_Prompt();
 }

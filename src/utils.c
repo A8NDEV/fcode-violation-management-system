@@ -12,7 +12,7 @@
 
 void print_logo(void) {
     printf("\n");
-    printf(ANSI_COLOR_GREEN ANSI_BOLD);
+    printf(ANSI_COLOR_CYAN ANSI_BOLD);
     printf("  ███████╗      ██████╗ ██████╗ ██████╗ ███████╗    \n");
     printf("  ██╔════╝     ██╔════╝██╔═══██╗██╔══██╗██╔════╝    \n");
     printf("  █████╗  ████╗██║     ██║   ██║██║  ██║█████╗      \n");
@@ -21,6 +21,137 @@ void print_logo(void) {
     printf("  ╚═╝           ╚═════╝ ╚═════╝ ╚═════╝ ╚══════╝    \n");
     printf(ANSI_COLOR_YELLOW "                C O D E  T H E  D R E A M          \n" ANSI_COLOR_RESET);
     printf("\n");
+}
+
+void print_member_logo(void) {
+    printf(ANSI_COLOR_GREEN ANSI_BOLD);
+    printf("  ███╗   ███╗███████╗███╗   ███╗██████╗ ███████╗██████╗ \n");
+    printf("  ████╗ ████║██╔════╝████╗ ████║██╔══██╗██╔════╝██╔══██╗\n");
+    printf("  ██╔████╔██║█████╗  ██╔████╔██║██████╔╝█████╗  ██████╔╝\n");
+    printf("  ██║╚██╔╝██║██╔══╝  ██║╚██╔╝██║██╔══██╗██╔══╝  ██╔══██╗\n");
+    printf("  ██║ ╚═╝ ██║███████╗██║ ╚═╝ ██║██████╔╝███████╗██║  ██║\n");
+    printf("  ╚═╝     ╚═╝╚══════╝╚═╝     ╚═╝╚═════╝ ╚══════╝╚═╝  ╚═╝\n");
+    printf(ANSI_COLOR_RESET "\n");
+}
+
+void print_bcn_logo(void) {
+    printf(ANSI_COLOR_CYAN ANSI_BOLD);
+    printf("  ██████╗  ██████╗███╗   ██╗\n");
+    printf("  ██╔══██╗██╔════╝████╗  ██║\n");
+    printf("  ██████╔╝██║     ██╔██╗ ██║\n");
+    printf("  ██╔══██╗██║     ██║╚██╗██║\n");
+    printf("  ██████╔╝╚██████╗██║ ╚████║\n");
+    printf("  ╚═════╝  ╚═════╝╚═╝  ╚═══╝\n");
+    printf(ANSI_COLOR_RESET "\n");
+}
+
+void UI_Header(const char *title, const char *color) {
+    int width = 48; // Internal width (dashes)
+    printf("\n%s╭", color);
+    for (int i = 0; i < width; i++) printf("─");
+    printf("╮\n");
+
+    printf("│" ANSI_BOLD ANSI_COLOR_WHITE " %-46s " ANSI_COLOR_RESET "%s│\n", title, color);
+
+    printf("╰");
+    for (int i = 0; i < width; i++) printf("─");
+    printf("╯" ANSI_COLOR_RESET "\n");
+}
+
+void UI_Card_Start(const char *title, const char *color) {
+    int width = 48;
+    int title_len = strlen(title);
+    int side_dashes = (width - title_len - 2) / 2;
+
+    printf("\n%s╭", color);
+    for (int i = 0; i < side_dashes; i++) printf("─");
+    printf(" " ANSI_BOLD ANSI_COLOR_WHITE "%s" ANSI_COLOR_RESET "%s ", title, color);
+    for (int i = 0; i < (width - title_len - 2 - side_dashes); i++) printf("─");
+    printf("╮" ANSI_COLOR_RESET "\n");
+}
+
+void UI_Card_End(const char *color) {
+    int width = 48;
+    printf("%s╰", color);
+    for (int i = 0; i < width; i++) printf("─");
+    printf("╯" ANSI_COLOR_RESET "\n");
+}
+
+void UI_Menu_Item(int index, const char *label, const char *color) {
+    char buf[64];
+    if (index >= 0) {
+        snprintf(buf, sizeof(buf), "[%d] %s", index, label);
+    } else {
+        snprintf(buf, sizeof(buf), "%s", label);
+    }
+    printf("%s│ " ANSI_BOLD ANSI_COLOR_CYAN "%-46s " ANSI_COLOR_RESET "%s│\n", color, buf, color);
+}
+
+void UI_Divider(int width, const char *color) {
+    int w = 48; // Fixed for consistency
+    printf("%s├", color);
+    for (int i = 0; i < w; i++) printf("─");
+    printf("┤" ANSI_COLOR_RESET "\n");
+}
+
+void UI_Prompt(const char *label, const char *glyph) {
+    printf(ANSI_BOLD ANSI_COLOR_YELLOW "  %s %-15s " ANSI_COLOR_RESET ": ", glyph, label);
+}
+
+int UTF8_Display_Width(const char *s) {
+    int len = 0;
+    while (*s) {
+        if ((*s & 0xc0) != 0x80) len++;
+        s++;
+    }
+    return len;
+}
+
+void UI_Table_Header(int num_cols, const char *headers[], const int widths[], const char *color) {
+    printf("  %s╭", color);
+    for (int i = 0; i < num_cols; i++) {
+        for (int j = 0; j < widths[i] + 2; j++) printf("─");
+        if (i < num_cols - 1) printf("┬");
+    }
+    printf("╮" ANSI_COLOR_RESET "\n");
+
+    printf("  %s│" ANSI_COLOR_RESET, color);
+    for (int i = 0; i < num_cols; i++) {
+        int d_width = UTF8_Display_Width(headers[i]);
+        printf(" %s%-*s" ANSI_COLOR_RESET " %s│" ANSI_COLOR_RESET, 
+               ANSI_BOLD, widths[i] + (strlen(headers[i]) - d_width), headers[i], color);
+    }
+    printf("\n");
+
+    printf("  %s├", color);
+    for (int i = 0; i < num_cols; i++) {
+        for (int j = 0; j < widths[i] + 2; j++) printf("─");
+        if (i < num_cols - 1) printf("┼");
+    }
+    printf("┤" ANSI_COLOR_RESET "\n");
+}
+
+void UI_Table_Row(int num_cols, const char *values[], const int widths[], const char *color) {
+    printf("  %s│" ANSI_COLOR_RESET, color);
+    for (int i = 0; i < num_cols; i++) {
+        int d_width = UTF8_Display_Width(values[i]);
+        printf(" %-*s %s│" ANSI_COLOR_RESET, widths[i] + (strlen(values[i]) - d_width), values[i], color);
+    }
+    printf("\n");
+}
+
+void UI_Table_End(int num_cols, const int widths[], const char *color) {
+    printf("  %s╰", color);
+    for (int i = 0; i < num_cols; i++) {
+        for (int j = 0; j < widths[i] + 2; j++) printf("─");
+        if (i < num_cols - 1) printf("┴");
+    }
+    printf("╯" ANSI_COLOR_RESET "\n");
+}
+
+void UI_Return_Prompt(void) {
+    printf("\n" ANSI_BOLD ANSI_COLOR_YELLOW "  ❯ Press Enter to return... " ANSI_COLOR_RESET);
+    getchar();
 }
 
 void Stdin_string(char str[],int siz){
@@ -69,7 +200,7 @@ void Announcement_error_acction(){
 }
 
 void Input_user_choose(int *input){
-    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Your choice   : " ANSI_COLOR_RESET);
+    UI_Prompt("Your Choice", "❯");
     char buf[32];
     if (fgets(buf, sizeof(buf), stdin) != NULL) {
         if (sscanf(buf, "%d", input) != 1) {
@@ -83,8 +214,8 @@ void Input_fullname(char fullname[]){
     bool ok = false;
     bool wrong = false;
     while(!ok){
-        if(wrong == false)  printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Full name    : " ANSI_COLOR_RESET);
-        else    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Invalid full name, try again: " ANSI_COLOR_RESET);
+        if(wrong == false)  UI_Prompt("Full Name", "❯");
+        else    UI_Prompt("Invalid Name, try again", "❯");
         Stdin_string(fullname,LONG_SIZE);
         ok = (ok || Validate_fullname(fullname));
         wrong |= 1;
@@ -94,8 +225,8 @@ void Input_email(char email[]){
     bool ok = false;
     bool wrong = false;
     while(!ok){
-        if(wrong == false)   printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Email        : " ANSI_COLOR_RESET);
-        else    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Invalid email, try again: " ANSI_COLOR_RESET);
+        if(wrong == false)   UI_Prompt("Email", "❯");
+        else    UI_Prompt("Invalid Email, try again", "❯");
         Stdin_string(email,LONG_SIZE);
         ok = (ok || Validate_email(email));
         wrong |= 1;
@@ -105,8 +236,8 @@ void Input_studentId(char studentId[]){
     bool ok = false;
     bool wrong = false;
     while(!ok){
-        if(wrong == false)   printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Student ID   : " ANSI_COLOR_RESET);
-        else    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Invalid Student ID, try again: " ANSI_COLOR_RESET);
+        if(wrong == false)   UI_Prompt("Student ID", "❯");
+        else    UI_Prompt("Invalid ID, try again", "❯");
         Stdin_string(studentId,SHORT_SIZE);
         ok = (ok || Validate_studentId(studentId));
         wrong |= 1;
@@ -116,8 +247,8 @@ void Input_phone(char phone_num[]){
     bool ok = false;
     bool wrong = false;
     while(!ok){
-        if(wrong == false)  printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Phone number : " ANSI_COLOR_RESET);
-        else    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Invalid phone number, try again: " ANSI_COLOR_RESET);
+        if(wrong == false)  UI_Prompt("Phone Number", "❯");
+        else    UI_Prompt("Invalid Phone, try again", "❯");
         Stdin_string(phone_num,SHORT_SIZE);
         ok |= Validate_phone(phone_num);
         wrong |= 1;
@@ -126,13 +257,14 @@ void Input_phone(char phone_num[]){
 void Input_team(int *input){
     bool ok = false;
     bool wrong = false;
-    printf(ANSI_BOLD ANSI_COLOR_GREEN " [0] " ANSI_COLOR_RESET "Academic\n");
-    printf(ANSI_BOLD ANSI_COLOR_GREEN " [1] " ANSI_COLOR_RESET "Planning\n");
-    printf(ANSI_BOLD ANSI_COLOR_GREEN " [2] " ANSI_COLOR_RESET "HR\n");
-    printf(ANSI_BOLD ANSI_COLOR_GREEN " [3] " ANSI_COLOR_RESET "Media\n");
+    printf("\n" ANSI_BOLD "  Select Team:\n" ANSI_COLOR_RESET);
+    printf(ANSI_BOLD ANSI_COLOR_GREEN "  [0] " ANSI_COLOR_RESET "Academic\n");
+    printf(ANSI_BOLD ANSI_COLOR_GREEN "  [1] " ANSI_COLOR_RESET "Planning\n");
+    printf(ANSI_BOLD ANSI_COLOR_GREEN "  [2] " ANSI_COLOR_RESET "HR\n");
+    printf(ANSI_BOLD ANSI_COLOR_GREEN "  [3] " ANSI_COLOR_RESET "Media\n");
     while(!ok){
-        if(wrong == false)  printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Team         : " ANSI_COLOR_RESET);
-        else    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Invalid team, try again: " ANSI_COLOR_RESET);
+        if(wrong == false)  UI_Prompt("Team", "❯");
+        else    UI_Prompt("Invalid Team, try again", "❯");
         char buf[32];
         if (fgets(buf, sizeof(buf), stdin) == NULL) continue;
         if (buf[0] == '\n' || buf[1] != '\n') {
@@ -152,12 +284,13 @@ void Input_team(int *input){
 }
 void Input_role(int *input){
     bool ok = false,wrong = false;
-    printf(ANSI_BOLD ANSI_COLOR_GREEN " [0] " ANSI_COLOR_RESET "Member\n");
-    printf(ANSI_BOLD ANSI_COLOR_GREEN " [1] " ANSI_COLOR_RESET "Leader/Vice\n");
-    printf(ANSI_BOLD ANSI_COLOR_GREEN " [2] " ANSI_COLOR_RESET "BCN\n");
+    printf("\n" ANSI_BOLD "  Select Role:\n" ANSI_COLOR_RESET);
+    printf(ANSI_BOLD ANSI_COLOR_GREEN "  [0] " ANSI_COLOR_RESET "Member\n");
+    printf(ANSI_BOLD ANSI_COLOR_GREEN "  [1] " ANSI_COLOR_RESET "Leader/Vice\n");
+    printf(ANSI_BOLD ANSI_COLOR_GREEN "  [2] " ANSI_COLOR_RESET "BCN\n");
     while(!ok){
-        if(wrong == false)  printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Role         : " ANSI_COLOR_RESET);
-        else    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Invalid role, try again: " ANSI_COLOR_RESET);
+        if(wrong == false)  UI_Prompt("Role", "❯");
+        else    UI_Prompt("Invalid Role, try again", "❯");
         char buf[32];
         if (fgets(buf, sizeof(buf), stdin) == NULL) continue;
         if (buf[0] == '\n' || buf[1] != '\n') {
@@ -178,8 +311,8 @@ void Input_role(int *input){
 void Input_violation_reason(int *input){
     bool ok = false,wrong = false;
     while(!ok){
-        if(wrong == false)  printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Violation    : " ANSI_COLOR_RESET);
-        else    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Invalid reason, try again: " ANSI_COLOR_RESET);
+        if(wrong == false)  UI_Prompt("Violation", "❯");
+        else    UI_Prompt("Invalid Reason, try again", "❯");
         char buf[32];
         if (fgets(buf, sizeof(buf), stdin) == NULL) continue;
         if (sscanf(buf, "%d", input) != 1) {
@@ -193,8 +326,8 @@ void Input_violation_reason(int *input){
 void Input_password(char pass[]){
     bool ok = false,wrong = false;
     while(!ok){
-        if(wrong == false)  printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Password     : " ANSI_COLOR_RESET);
-        else    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ Invalid password, try again: " ANSI_COLOR_RESET);
+        if(wrong == false)  UI_Prompt("Password", "🗝");
+        else    UI_Prompt("Invalid Password, try again", "🗝");
         Stdin_string(pass,LONG_SIZE);
         ok |= Validate_password(pass);
         wrong |= 1;

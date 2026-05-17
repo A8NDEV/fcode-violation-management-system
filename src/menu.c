@@ -87,6 +87,18 @@ int show_bcn_menu(Account *session, Member memberList[], int *memberCount, Accou
 int show_member_menu(Account *session, Member memberList[], int memberCount, Account accountList[], int accountCount, Violation violationList[], int violationCount) {
     int choice;
     while (1) {
+        system("cls");
+        print_member_logo();
+        UI_Header("MEMBER MENU", ANSI_COLOR_CYAN);
+        UI_Menu_Item(1, "VIEW PROFILE", ANSI_COLOR_CYAN);
+        UI_Menu_Item(2, "VIEW VIOLATION HISTORY", ANSI_COLOR_CYAN);
+        UI_Menu_Item(3, "VIEW TOTAL DEBT", ANSI_COLOR_CYAN);
+        UI_Menu_Item(4, "VIEW CLUB MEMBER LIST", ANSI_COLOR_CYAN);
+        UI_Menu_Item(5, "CHANGE PASSWORD", ANSI_COLOR_CYAN);
+        UI_Menu_Item(6, "VIEW SORTED LIST", ANSI_COLOR_CYAN);
+        UI_Divider(50, ANSI_COLOR_CYAN);
+        UI_Menu_Item(0, "LOGOUT", ANSI_COLOR_CYAN);
+        UI_Card_End(ANSI_COLOR_CYAN);
 
 
         printf(ANSI_COLOR_CYAN ANSI_BOLD);

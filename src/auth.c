@@ -244,27 +244,23 @@ int changePassword(account *accountList, int role, int *quantity,
   int foundIndex = -1;
   if (role == 0) {
     char passwordChange[MAX_PASS_LEN], oldPassword[MAX_PASS_LEN];
-    printf("\n");
-    printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ OLD PASSWORD : " ANSI_COLOR_RESET);
+    UI_Header("CHANGE PASSWORD", ANSI_COLOR_YELLOW);
+    UI_Prompt("Old Password", "🗝");
     inputPassword(oldPassword, MAX_PASS_LEN);
     if (strcmp(oldPassword, session->password) == 0) {
-      printf("\n");
-      printf(ANSI_BRIGHT_GREEN "OLD PASSWORD VERIFIED SUCCESSFULLY!\n");
-      printf("\n");
+      printf("\n" ANSI_BRIGHT_GREEN "  ✔ OLD PASSWORD VERIFIED SUCCESSFULLY!\n" ANSI_COLOR_RESET);
       while(1){
         char passwordComfirm[MAX_PASS_LEN];
-        printf(ANSI_BOLD ANSI_COLOR_YELLOW
-               " ❯ ENTER NEW PASSWORD : " ANSI_COLOR_RESET);
+        UI_Prompt("New Password", "🗝");
         inputPassword(passwordChange, MAX_PASS_LEN);
         
         if(Validate_password(passwordChange) == 0){
           printf(ANSI_BOLD ANSI_COLOR_RED
-                " ❯ YOUR PASSWORD NEED TO HAVE AT LEAST ONE UPPERCASE LETTER, ONE LOWERCASE LETTER, AND ONE DIGIT, TRY AGAIN!\n" ANSI_COLOR_RESET);
+                "  ✖ YOUR PASSWORD NEEDS AT LEAST ONE UPPERCASE, ONE LOWERCASE, AND ONE DIGIT!\n" ANSI_COLOR_RESET);
           continue;
         }
 
-        printf(ANSI_BOLD ANSI_COLOR_YELLOW
-               " ❯ COMFIRM NEW PASSWORD: " ANSI_COLOR_RESET);
+        UI_Prompt("Confirm Password", "🗝");
         inputPassword(passwordComfirm,MAX_PASS_LEN);
         if(strcmp(passwordChange,passwordComfirm) == 0){
           break;
@@ -306,22 +302,17 @@ int changePassword(account *accountList, int role, int *quantity,
   }
 
   else {
-    printf("\n");
-    printf(ANSI_BOLD ANSI_COLOR_YELLOW
-           " ❯ ENTER STUDENT ID TO CHANGE PASSWORD: " ANSI_COLOR_RESET);
+    UI_Header("ADMIN PASSWORD OVERRIDE", ANSI_COLOR_RED);
+    UI_Prompt("Target Student ID", "🔍");
     char studentIDneedtochangePassword[MAX_ID_LEN];
     inputString(studentIDneedtochangePassword, MAX_ID_LEN);
     for (int i = 0; i < *quantity; i++) {
       if (strcmp(accountList[i].studentId, studentIDneedtochangePassword) ==
           0) {
         found = 1;
-        printf("\n");
-        printf(ANSI_BRIGHT_GREEN "STUDENT ID VERIFIED!: %s\n",
+        printf("\n" ANSI_BRIGHT_GREEN "  ✔ STUDENT ID VERIFIED: %s\n" ANSI_COLOR_RESET,
                studentIDneedtochangePassword);
-        printf("\n");
-        printf(ANSI_BOLD ANSI_COLOR_YELLOW
-               " ❯ ENTER NEW PASSWORD FOR STUDENT %s: ",
-               studentIDneedtochangePassword);
+        UI_Prompt("New Password", "🗝");
         char passwordChange[MAX_PASS_LEN];
         inputPassword(passwordChange, MAX_PASS_LEN);
         printf("\n");
