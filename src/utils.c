@@ -12,7 +12,7 @@
 
 void print_logo(void) {
     printf("\n");
-    printf(ANSI_COLOR_CYAN ANSI_BOLD);
+    printf(ANSI_BRIGHT_GREEN ANSI_BOLD);
     printf("  ███████╗      ██████╗ ██████╗ ██████╗ ███████╗    \n");
     printf("  ██╔════╝     ██╔════╝██╔═══██╗██╔══██╗██╔════╝    \n");
     printf("  █████╗  ████╗██║     ██║   ██║██║  ██║█████╗      \n");
@@ -119,7 +119,7 @@ void UI_Table_Header(int num_cols, const char *headers[], const int widths[], co
     for (int i = 0; i < num_cols; i++) {
         int d_width = UTF8_Display_Width(headers[i]);
         printf(" %s%-*s" ANSI_COLOR_RESET " %s│" ANSI_COLOR_RESET, 
-               ANSI_BOLD, widths[i] + (strlen(headers[i]) - d_width), headers[i], color);
+               ANSI_BOLD, (int)(widths[i] + (strlen(headers[i]) - d_width)), headers[i], color);
     }
     printf("\n");
 
@@ -135,7 +135,7 @@ void UI_Table_Row(int num_cols, const char *values[], const int widths[], const 
     printf("  %s│" ANSI_COLOR_RESET, color);
     for (int i = 0; i < num_cols; i++) {
         int d_width = UTF8_Display_Width(values[i]);
-        printf(" %-*s %s│" ANSI_COLOR_RESET, widths[i] + (strlen(values[i]) - d_width), values[i], color);
+        printf(" %-*s %s│" ANSI_COLOR_RESET, (int)(widths[i] + (strlen(values[i]) - d_width)), values[i], color);
     }
     printf("\n");
 }

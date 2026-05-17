@@ -27,6 +27,9 @@ static const char *PAID_LABELS[] = {
     "Chua thu", "Da thu"
 };
 
+static const char *V_HEADERS[] = {"NO", "STUDENT ID", "FULL NAME", "TEAM", "REASON", "DATE", "FINE", "STATUS"};
+static const int V_WIDTHS[] = {4, 12, 25, 10, 30, 12, 12, 10};
+
 
 static double Get_fine(int role, int reason) {
     if (reason == 3) return 0.0; /* Bao luc = 0đ */
@@ -280,12 +283,10 @@ void Menu_mark_paid(int *memberCount, Member memberList[],
             return;
         }
 
-        printf(ANSI_BOLD "\nUnpaid violations for %s:\n"
-               ANSI_COLOR_RESET, m->fullName);
-        printf(ANSI_COLOR_CYAN "%-4s %-30s %-12s %-12s\n",
-               "NO", "REASON", "DATE", "FINE");
-        printf("%-4s %-30s %-12s %-12s\n" ANSI_COLOR_RESET,
-               "---", "------------------------------", "----------", "----------");
+        printf(ANSI_BOLD "\nUnpaid violations for %s:\n" ANSI_COLOR_RESET, m->fullName);
+        const char *markPaidHeaders[] = {"NO", "REASON", "DATE", "FINE"};
+        const int markPaidWidths[] = {4, 30, 12, 12};
+        UI_Table_Header(4, markPaidHeaders, markPaidWidths, ANSI_COLOR_CYAN);
 
         for (int i = 0; i < unpaidCount; i++) {
             Violation *v = &violationList[unpaidIdx[i]];
@@ -296,9 +297,9 @@ void Menu_mark_paid(int *memberCount, Member memberList[],
             snprintf(fineStr, sizeof(fineStr), "%.0f", v->fine);
 
             const char *values[] = {sttStr, REASON_LABELS[v->reason], timeStr, fineStr};
-            UI_Table_Row(4, values, widths, ANSI_COLOR_CYAN);
+            UI_Table_Row(4, values, markPaidWidths, ANSI_COLOR_CYAN);
         }
-        UI_Table_End(4, widths, ANSI_COLOR_CYAN);
+        UI_Table_End(4, markPaidWidths, ANSI_COLOR_CYAN);
         printf(ANSI_BOLD ANSI_COLOR_YELLOW " [0] " ANSI_COLOR_RESET "Exit\n");
         printf("\n");
         printf(ANSI_COLOR_CYAN ANSI_BOLD "------------------------------------------\n" ANSI_COLOR_RESET);
@@ -440,12 +441,9 @@ void view_Statistics_By_Team(Member memberList[], int memberCount,
         }
     }
 
-    printf(ANSI_BOLD "%-12s | %-12s | %-12s | %-15s\n",
-           "TEAM NAME", "MEMS WITH", "TOTAL", "TOTAL FINE");
-    printf("%-12s | %-12s | %-12s | %-15s\n",
-           "", "VIOLATIONS", "VIOLATIONS", "");
-    printf("%-12s | %-12s | %-12s | %-15s\n" ANSI_COLOR_RESET,
-           "------------", "------------", "------------", "---------------");
+    const char *statHeaders[] = {"TEAM NAME", "MEMS WITH VIOL", "TOTAL VIOL", "TOTAL FINE"};
+    const int statWidths[] = {15, 15, 12, 18};
+    UI_Table_Header(4, statHeaders, statWidths, ANSI_COLOR_MAGENTA);
 
     double grandTotalFine = 0;
     int grandTotalViolations = 0;
@@ -465,8 +463,6 @@ void view_Statistics_By_Team(Member memberList[], int memberCount,
         for(int b=0; b<barWidth; b++) printf("█");
         
         // Calculate remaining spaces to close the table border correctly
-        // Total width of internal table is sum(statWidths) + 2*num_cols - 1 (approximately)
-        // Let's just pad it manually to match the 4-column layout
         int current_pos = 6 + 9 + barWidth; // spaces + "↳ Trend: " + bars
         int total_table_inner_width = 0;
         for(int w=0; w<4; w++) total_table_inner_width += (statWidths[w] + 2);
@@ -567,9 +563,9 @@ void Menu_batch_attendance(int memberCount, Member memberList[],
     }
 
     UI_Card_Start("ATTENDANCE SUMMARY", ANSI_COLOR_CYAN);
-    printf(ANSI_BOLD "    👥 Total Members   : " ANSI_COLOR_RESET "%d\n", memberCount);
-    printf(ANSI_BOLD "    ✅ Present Count   : " ANSI_COLOR_RESET "%d\n", presentCount);
-    printf(ANSI_BOLD "    ❌ Absent Count    : " ANSI_COLOR_RESET "%d\n", absentCount);
+    printf(ANSI_BOLD "    Total Members   : " ANSI_COLOR_RESET "%d\n", memberCount);
+    printf(ANSI_BOLD "    Present Count   : " ANSI_COLOR_RESET "%d\n", presentCount);
+    printf(ANSI_BOLD "    Absent Count    : " ANSI_COLOR_RESET "%d\n", absentCount);
     UI_Card_End(ANSI_COLOR_CYAN);
 
     if (dangerCount > 0) {
