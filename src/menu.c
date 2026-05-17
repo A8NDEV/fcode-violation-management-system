@@ -129,7 +129,11 @@ int show_member_menu(Account *session, Member memberList[], int memberCount, Acc
             break;
         }
         case 5:
-            changePassword(accountList, session->role, &accountCount, session);
+            if (changePassword(accountList, session->role, &accountCount, session) == 1) {
+                printf(ANSI_BRIGHT_YELLOW "\n[!] Your password has been changed. Please log in again.\n" ANSI_COLOR_RESET);
+                UI_Return_Prompt();
+                return 0;
+            }
             break;
         case 0:
             printf(ANSI_BRIGHT_CYAN "LOGGED OUT SUCCESSFULLY!\n" ANSI_COLOR_RESET);
