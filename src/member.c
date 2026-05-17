@@ -9,15 +9,16 @@
 #include <string.h>
 #include <windows.h>
 
-static int create_member(int *member_size, Member member_list[], Member new_member, Account account_list[], Account new_account) {
+static int create_member(int *member_size, Member member_list[], Member new_member, int *account_size, Account account_list[], Account new_account) {
     member_list[*member_size] = new_member;
-    account_list[*member_size] = new_account;
+    account_list[*account_size] = new_account;
     if (Append_members_dat(new_member) == 0 || Append_accounts_dat(new_account) == 0) return 0;
     ++(*member_size);
+    ++(*account_size);
     return 1;
 }
 
-void Menu_create(int *member_size, Member member_list[], Account account_list[]) {
+void Menu_create(int *member_size, Member member_list[], int *account_size, Account account_list[]) {
     UI_Header("ADD NEW MEMBER", ANSI_COLOR_CYAN);
     Member new_member = Init_Member();
     Input_studentId(new_member.studentId);
@@ -38,7 +39,7 @@ void Menu_create(int *member_size, Member member_list[], Account account_list[])
     strcpy(new_account.password, new_member.studentId);
     new_account.role = new_member.role;
 
-    if (create_member(member_size, member_list, new_member, account_list, new_account) == 0) {
+    if (create_member(member_size, member_list, new_member, account_size, account_list, new_account) == 0) {
         Announcement_error_acction();
     } else Announcement_complete_action();
 }
@@ -62,13 +63,14 @@ static int Find_and_validate_studentId(const int member_size, Member member_list
     return idx;
 }
 
-static int Delete_member_account(const int index, int *member_size, Member member_list[], Account account_list[]) {
+static int Delete_member_account(const int index, int *member_size, Member member_list[], int *account_size, Account account_list[]) {
     for (int i = index + 1; i < (*member_size); ++i) {
         member_list[i - 1] = member_list[i];
         account_list[i - 1] = account_list[i];
     }
     --(*member_size);
-    if (Rewrite_members_dat(*member_size, member_list) == 0 || Rewrite_accounts_dat(*member_size, account_list) == 0) {
+    --(*account_size);
+    if (Rewrite_members_dat(*member_size, member_list) == 0 || Rewrite_accounts_dat(*account_size, account_list) == 0) {
         return 0;
     }
     return 1;
@@ -90,15 +92,15 @@ static int Delete_violation(const char studentId[], int *violation_size, Violati
     return 1;
 }
 
-int Delete_member(const int index, char studentId[], int *member_size, Member member_list[], Account account_list[], int *violation_size, Violation violation_list[]) {
+int Delete_member(const int index, char studentId[], int *member_size, Member member_list[], int *account_size, Account account_list[], int *violation_size, Violation violation_list[]) {
     if (Append_deleted_members_dat(member_list[index]) == 0) return 0;
     if (Append_deleted_accounts_dat(account_list[index]) == 0) return 0;
-    if (Delete_member_account(index, member_size, member_list, account_list) == 0) return 0;
+    if (Delete_member_account(index, member_size, member_list, account_size, account_list) == 0) return 0;
     if (Delete_violation(studentId, violation_size, violation_list) == 0) return 0;
     return 1;
 }
 
-void Menu_remove(int *member_size, Member member_list[], Account account_list[], int *violation_size, Violation violation_list[]) {
+void Menu_remove(int *member_size, Member member_list[], int *account_size, Account account_list[], int *violation_size, Violation violation_list[]) {
     UI_Header("REMOVE MEMBER", ANSI_COLOR_RED);
     char studentId[SHORT_SIZE];
     int idx = Find_and_validate_studentId(*member_size, member_list, studentId);
@@ -114,7 +116,7 @@ void Menu_remove(int *member_size, Member member_list[], Account account_list[],
         system("cls");
         return;
     case 1:
-        if (Delete_member(idx, studentId, member_size, member_list, account_list, violation_size, violation_list) == 0) {
+        if (Delete_member(idx, studentId, member_size, member_list, account_size, account_list, violation_size, violation_list) == 0) {
             Announcement_error_acction();
         } else Announcement_complete_action();
         break;

@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include "report.h"
 
-int show_bcn_menu(Account *session, Member memberList[], int *memberCount, Account accountList[], Violation violationList[], int *violationCount) {
+int show_bcn_menu(Account *session, Member memberList[], int *memberCount, Account accountList[], int *accountCount, Violation violationList[], int *violationCount) {
     int choice;
     while (1) {
         printf(ANSI_COLOR_CYAN ANSI_BOLD);
@@ -40,13 +40,13 @@ int show_bcn_menu(Account *session, Member memberList[], int *memberCount, Accou
         }
         switch (choice) {
         case 1:
-            Menu_create(memberCount, memberList, accountList);
+            Menu_create(memberCount, memberList, accountCount, accountList);
             break;
         case 2:
             Menu_update(*memberCount, memberList, accountList);
             break;
         case 3:
-            Menu_remove(memberCount, memberList, accountList, violationCount, violationList);
+            Menu_remove(memberCount, memberList, accountCount, accountList, violationCount, violationList);
             break;
         case 4:
             Menu_record_violation(memberCount, memberList, violationCount, violationList);
@@ -67,7 +67,7 @@ int show_bcn_menu(Account *session, Member memberList[], int *memberCount, Accou
             Export_Violation_Report(*memberCount, memberList, *violationCount, violationList);
             break;
         case 10:
-            changePassword(accountList, session->role, memberCount, session);
+            changePassword(accountList, session->role, accountCount, session);
             break;
         case 11:
             Menu_batch_attendance(*memberCount, memberList, violationCount, violationList);
@@ -95,26 +95,10 @@ int show_member_menu(Account *session, Member memberList[], int memberCount, Acc
         UI_Menu_Item(3, "VIEW TOTAL DEBT", ANSI_COLOR_CYAN);
         UI_Menu_Item(4, "VIEW CLUB MEMBER LIST", ANSI_COLOR_CYAN);
         UI_Menu_Item(5, "CHANGE PASSWORD", ANSI_COLOR_CYAN);
-        UI_Menu_Item(6, "VIEW SORTED LIST", ANSI_COLOR_CYAN);
         UI_Divider(50, ANSI_COLOR_CYAN);
         UI_Menu_Item(0, "LOGOUT", ANSI_COLOR_CYAN);
         UI_Card_End(ANSI_COLOR_CYAN);
 
-
-        printf(ANSI_COLOR_CYAN ANSI_BOLD);
-        printf("╔════════════════════════════════════════╗\n");
-        printf("║              MEMBER MENU               ║\n");
-        printf("╚════════════════════════════════════════╝\n");
-        printf(ANSI_COLOR_RESET "\n");
-        printf(ANSI_BOLD ANSI_COLOR_GREEN " [1] " ANSI_COLOR_RESET "VIEW PROFILE\n");
-        printf(ANSI_BOLD ANSI_COLOR_GREEN " [2] " ANSI_COLOR_RESET "VIEW VIOLATION HISTORY\n");
-        printf(ANSI_BOLD ANSI_COLOR_GREEN " [3] " ANSI_COLOR_RESET "VIEW TOTAL DEBT\n");
-        printf(ANSI_BOLD ANSI_COLOR_GREEN " [4] " ANSI_COLOR_RESET "VIEW CLUB MEMBER LIST\n");
-        printf(ANSI_BOLD ANSI_COLOR_GREEN " [5] " ANSI_COLOR_RESET "CHANGE PASSWORD\n");
-        printf(ANSI_BOLD ANSI_COLOR_YELLOW " [0] " ANSI_COLOR_RESET "LOGOUT\n");
-        printf("\n");
-        printf(ANSI_COLOR_CYAN ANSI_BOLD
-               "------------------------------------------\n" ANSI_COLOR_RESET);
         printf(ANSI_BOLD ANSI_COLOR_YELLOW " ❯ SELECT FUNCTION: " ANSI_COLOR_RESET);
         char buf[32];
         if (fgets(buf, sizeof(buf), stdin) != NULL) {

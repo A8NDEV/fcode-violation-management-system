@@ -51,7 +51,8 @@ int main() {
             }
         } else if (session.role == 2) {
             isLogin = show_bcn_menu(&session, memberList, &memberCount,
-                                    accountList, violationList, &violationCount);
+                                    accountList, &accountCount,
+                                    violationList, &violationCount);
         } else {
             isLogin = show_member_menu(&session, memberList, memberCount,
                                        accountList, accountCount,
