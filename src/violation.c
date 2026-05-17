@@ -474,20 +474,6 @@ void view_Statistics_By_Team(Member memberList[], int memberCount,
 
         const char *values[] = {TEAM_LABELS[i], memStr, violStr, fineStr};
         UI_Table_Row(4, values, statWidths, ANSI_COLOR_MAGENTA);
-        
-        // Integrated Trend Bar within table borders
-        printf("  " ANSI_COLOR_MAGENTA "│" ANSI_COLOR_RESET "      " ANSI_BRIGHT_BLACK "↳ Trend: " ANSI_COLOR_MAGENTA);
-        int barWidth = (totalViolationsTeam[i] > 20) ? 20 : totalViolationsTeam[i];
-        for(int b=0; b<barWidth; b++) printf("█");
-        
-        // Calculate remaining spaces to close the table border correctly
-        int current_pos = 6 + 9 + barWidth; // spaces + "↳ Trend: " + bars
-        int total_table_inner_width = 0;
-        for(int w=0; w<4; w++) total_table_inner_width += (statWidths[w] + 2);
-        total_table_inner_width += 3; // for separators
-
-        for(int s=0; s < (total_table_inner_width - current_pos - 1); s++) printf(" ");
-        printf(ANSI_COLOR_MAGENTA "│" ANSI_COLOR_RESET "\n");
 
         grandTotalFine += totalFineTeam[i];
         grandTotalViolations += totalViolationsTeam[i];

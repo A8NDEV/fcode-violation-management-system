@@ -31,8 +31,7 @@ void shellSortMembers(Member arr[], int size, int isAscending) {
 void sort_CLB_Violations(Member member[], int size, int isAscending) {
     if (size <= 0) {
         printf("No members in the club to sort.\n");
-        printf("\nPress Enter to return...");
-        getchar();
+        UI_Return_Prompt();
         system("cls");
         return;
     }
@@ -46,53 +45,49 @@ void sort_CLB_Violations(Member member[], int size, int isAscending) {
     shellSortMembers(hehe, size, isAscending);
     
     system("cls");
-    printf(ANSI_COLOR_CYAN ANSI_BOLD);
     if (isAscending == 1) {
-        printf("╔═════════════════════════════════════════════════════════════════════════╗\n");
-        printf("║       LIST OF MEMBERS SORTED BY VIOLATIONS (ASCENDING: LEAST -> MOST)   ║\n");
-        printf("╚═════════════════════════════════════════════════════════════════════════╝\n");
+        UI_Header("SORTED BY VIOLATIONS (ASCENDING: LEAST -> MOST)", ANSI_COLOR_CYAN);
     } else {
-        printf("╔═════════════════════════════════════════════════════════════════════════╗\n");
-        printf("║       LIST OF MEMBERS SORTED BY VIOLATIONS (DESCENDING: MOST -> LEAST)  ║\n");
-        printf("╚═════════════════════════════════════════════════════════════════════════╝\n");
+        UI_Header("SORTED BY VIOLATIONS (DESCENDING: MOST -> LEAST)", ANSI_COLOR_CYAN);
     }
-    printf(ANSI_COLOR_RESET "\n");
     
-    printf(ANSI_COLOR_CYAN "%-4s %-12s %-25s %-12s %-16s %-12s\n",
-           "NO", "STUDENT ID", "FULL NAME", "TEAM", "ROLE", "VIOLATIONS");
-    printf("%-4s %-12s %-25s %-12s %-16s %-12s\n" ANSI_COLOR_RESET,
-           "---", "----------", "---------", "----", "----", "----------");
+    const char *headers[] = {"NO", "STUDENT ID", "FULL NAME", "TEAM", "ROLE", "VIOLATIONS"};
+    const int widths[] = {4, 12, 25, 12, 16, 12};
+    UI_Table_Header(6, headers, widths, ANSI_COLOR_CYAN);
 
     const char *teams[] = {"Academic", "Planning", "HR", "Media"};
     const char *roles[] = {"Member", "Leader/Vice", "Ban Chu Nhiem"};
 
     for (int i = 0; i < size; i++) {
-        printf("%-4d %-12s %-25s %-12s %-16s " ANSI_BRIGHT_YELLOW "%-12d\n" ANSI_COLOR_RESET,
-               i + 1,
-               hehe[i].studentId,
-               hehe[i].fullName,
-               teams[hehe[i].team],
-               roles[hehe[i].role],
-               hehe[i].violationCount);
+        char noStr[8];
+        snprintf(noStr, sizeof(noStr), "%d", i + 1);
+        
+        char countStr[12];
+        snprintf(countStr, sizeof(countStr), "%d", hehe[i].violationCount);
+        
+        const char *values[] = {
+            noStr,
+            hehe[i].studentId,
+            hehe[i].fullName,
+            teams[hehe[i].team],
+            roles[hehe[i].role],
+            countStr
+        };
+        UI_Table_Row(6, values, widths, ANSI_COLOR_CYAN);
     }
 
-    printf("\nPress Enter to return...");
-    getchar();
+    UI_Table_End(6, widths, ANSI_COLOR_CYAN);
+    UI_Return_Prompt();
     system("cls");
 }
 
 void Menu_sort_violations(Member memberList[], int memberCount) {
-    printf(ANSI_COLOR_CYAN ANSI_BOLD);
-    printf("╔════════════════════════════════════════╗\n");
-    printf("║         SORT MEMBERS BY VIOLATION      ║\n");
-    printf("╚════════════════════════════════════════╝\n");
-    printf(ANSI_COLOR_RESET "\n");
-    printf("SELECT SORT ORDER:\n");
-    printf(ANSI_BOLD ANSI_COLOR_GREEN " [1] " ANSI_COLOR_RESET "ASCENDING (Least -> Most)\n");
-    printf(ANSI_BOLD ANSI_COLOR_GREEN " [2] " ANSI_COLOR_RESET "DESCENDING (Most -> Least)\n");
-    printf(ANSI_BOLD ANSI_COLOR_YELLOW " [0] " ANSI_COLOR_RESET "Exit\n");
-    printf("\n");
-    printf(ANSI_COLOR_CYAN ANSI_BOLD "------------------------------------------\n" ANSI_COLOR_RESET);
+    UI_Card_Start("SORT MEMBERS BY VIOLATION", ANSI_COLOR_CYAN);
+    UI_Menu_Item(1, "ASCENDING (Least -> Most)", ANSI_COLOR_CYAN);
+    UI_Menu_Item(2, "DESCENDING (Most -> Least)", ANSI_COLOR_CYAN);
+    UI_Divider(50, ANSI_COLOR_CYAN);
+    UI_Menu_Item(0, "Exit", ANSI_COLOR_CYAN);
+    UI_Card_End(ANSI_COLOR_CYAN);
 
     int sortChoice;
     Input_user_choose(&sortChoice);
