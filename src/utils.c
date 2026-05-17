@@ -324,13 +324,26 @@ void Input_violation_reason(int *input){
     }
 }
 void Input_password(char pass[]){
-    bool ok = false,wrong = false;
+    bool ok = false, wrong = false;
     while(!ok){
-        if(wrong == false)  UI_Prompt("Password", "🗝");
+        if(wrong == false)  UI_Prompt("New Password", "🗝");
         else    UI_Prompt("Invalid Password, try again", "🗝");
-        Stdin_string(pass,LONG_SIZE);
-        ok |= Validate_password(pass);
-        wrong |= 1;
+        inputPassword(pass, LONG_SIZE);
+        if (Validate_password(pass) == false) {
+            printf(ANSI_BOLD ANSI_COLOR_RED
+                   "  ✖ YOUR PASSWORD NEEDS AT LEAST ONE UPPERCASE, ONE LOWERCASE, AND ONE DIGIT (MIN 9 CHARS)!\n" ANSI_COLOR_RESET);
+            wrong = true;
+            continue;
+        }
+        char confirm[LONG_SIZE];
+        UI_Prompt("Confirm Password", "🗝");
+        inputPassword(confirm, LONG_SIZE);
+        if (strcmp(pass, confirm) != 0) {
+            printf(ANSI_BOLD ANSI_COLOR_RED " ❯ PASSWORDS DO NOT MATCH, TRY AGAIN!\n" ANSI_COLOR_RESET);
+            wrong = true;
+            continue;
+        }
+        ok = true;
     }
 }
 
